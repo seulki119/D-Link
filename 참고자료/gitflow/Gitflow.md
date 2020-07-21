@@ -8,7 +8,7 @@
 
 다음 이미지는 `gitflow`의 동작을 잘 나타낸다. `gitflow`는 아래와 같이 `master`, `hotfixes`, `release`, `develop`, `feature`의 다섯개 핵심브랜치로 동작한다(`support`등의 다른 브랜치도 존재함). 
 
-![image-20200720131229698](images/gitflow)
+![image-20200720220826439](images/image-20200720220826439.png)
 
 >**gitflow 흐름도** | 출처: [nvie.com](https://nvie.com/posts/a-successful-git-branching-model/)
 
@@ -313,7 +313,7 @@ Date:   Mon Jul 20 09:42:26 2020 +0900
 
 실제 개발은 `local`에서 이루어지며, 각 개발자들은 `feature`에서 개발하고 `develop`으로 병합하는 방식으로 개발을 진행한다. 이 때 사용되는 원격 저장소는 `origin`이므로 메인 저장소인 `upstream`에 영향을 끼치지 않는다.
 
-기능적인 구현이 완료되고 `origin`의 `develop`에 문제가 없을 경우, 개발자는 `upstream`에 PR를 하고 프로젝트의 maintainer가 각 개발자들의 PR을 확인한 후 merge를 진행한다. 이로서 upstream이 갱신되므로 각 개발자들은 새로운 개발을 착수할 때마다 `upstream`으로 부터 `origin`으로 pull을 하는 과정을 거쳐야한다([해당문서참고](https://github.com/minseokkang8571/TIL/blob/master/linux/git/fork한%20저장소%20싱크%20맞추기/fork한%20저장소%20싱크맞추기.md)).
+기능적인 구현이 완료되고 `origin`의 `develop`에 문제가 없을 경우, 개발자는 `upstream`에 PR를 하고 프로젝트의 maintainer가 각 개발자들의 PR을 확인한 후 merge를 진행한다. 이로서 upstream이 갱신되므로 각 개발자들은 새로운 개발을 착수할 때마다 `upstream`으로 부터 `origin`으로 pull을 하는 과정을 거쳐야한다([해당문서참고](https://github.com/minseokkang8571/TIL/blob/master/linux/git/fork한%20저장소%20싱크%20맞추기/fork한%20저장소%20싱크%20맞추기.md)).
 
 앞서 버그픽스에서 언급된 것처럼 해당 워크플로우에서는 `develop`, `bugfix`, `hotfix`등의 브랜치를 **PR - merge를 통해 관리**하도록 한다. 
 

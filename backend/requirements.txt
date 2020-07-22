@@ -19,6 +19,7 @@ matplotlib==3.0.3
 mysql-connector-python==8.0.21
 numpy==1.18.5
 oauthlib==3.1.0
+Pillow==7.2.0
 pyparsing==2.4.7
 python-dateutil==2.8.1
 python3-openid==3.2.0

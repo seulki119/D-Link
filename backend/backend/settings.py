@@ -145,3 +145,5 @@ STATIC_URL = '/static/'
 SITE_ID = 1
 
 CORS_ORIGIN_ALOWW_ALL = True
+
+AUTH_USER_MODEL = 'accounts.User'

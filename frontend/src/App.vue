@@ -25,7 +25,7 @@
 
       <v-btn>
         <span>Favorites</span>
-        <v-icon>mdi-heart</v-icon>
+        <v-icon>mdi-heardt</v-icon>
       </v-btn>
 
       <v-btn>

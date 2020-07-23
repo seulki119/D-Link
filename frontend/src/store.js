@@ -5,6 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    userInfo: null,
     //차후 DB랑 검사한다.
     allUsers: [
       { id: 1, name: "test", email: "test@gmail.com", password: "123456" }
@@ -14,13 +15,14 @@ export default new Vuex.Store({
   },
   mutations: {
     // 로그인 성공
-    loginSuccess(state) {
-      state.isLogin = true
+    loginSuccess(state, payload) {
+      state.isLogin = true;
       state.isLoginError = false;
+      state.userInfo = payload;
     },
     // 로그인 실패
     loginError(state) {
-      state.isLogin = false
+      state.isLogin = false;
       state.isLoginError = true;
     }
   },
@@ -34,8 +36,8 @@ export default new Vuex.Store({
       if (selectedUser === null || selectedUser.password !== loginObj.password)
         commit("loginError")
       else {
-        commit("loginSuccess")
-        router.push({ name: "home" })
+        commit("loginSuccess", selectedUser)
+        router.push({ name: "mypage" })
       }
     }
 

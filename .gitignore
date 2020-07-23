@@ -8,6 +8,7 @@
 *.mdb
 *.pdb
 *.sqlite3
+photos
 
 ### Django ###
 *.log

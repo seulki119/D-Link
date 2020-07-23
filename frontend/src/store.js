@@ -45,10 +45,15 @@ export default new Vuex.Store({
         commit("loginSuccess", selectedUser)
         router.push({ name: "mypage" })
       }
-    }
+    },
+    logout({ commit }) {
+      commit("logout")
+      router.push({ name: "home" }).catch(error => {
+        if (error.name != "NavigationDuplicated") {
+          throw error;
+        }
+      });
+    },
   },
-  logout({ commit }) {
-    commit("logout")
-    router.push({ name: "home" })
-  },
+
 });

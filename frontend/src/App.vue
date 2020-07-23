@@ -3,10 +3,12 @@
     <v-app-bar v-if="isLogin" app grow color="indigo" dark>
       <v-btn icon router :to="{name:'home'}">
         <v-icon>mdi-history</v-icon>
+        <span>홈</span>
       </v-btn>
       <v-spacer></v-spacer>
-      <v-btn icon router :to="{name:'login'}">
+      <v-btn icon @click="$store.dispatch('logout')">
         <v-icon>mdi-heart</v-icon>
+        <span>로그아웃</span>
       </v-btn>
       <v-spacer></v-spacer>
       <v-btn icon>
@@ -17,7 +19,7 @@
     <v-main>
       <router-view></router-view>
     </v-main>
-    <v-bottom-navigation v-if="isLogin" :value="activeBtn" grow color="teal">
+    <v-bottom-navigation v-if="isLogin" grow color="teal">
       <v-btn>
         <span>Recents</span>
         <v-icon>mdi-history</v-icon>

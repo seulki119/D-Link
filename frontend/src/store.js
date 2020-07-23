@@ -24,6 +24,12 @@ export default new Vuex.Store({
     loginError(state) {
       state.isLogin = false;
       state.isLoginError = true;
+    },
+    //로그아웃
+    logout(state) {
+      state.isLogin = false;
+      state.isLoginError = false;
+      state.userInfo = null;
     }
   },
   actions: {

@@ -46,7 +46,9 @@ export default new Vuex.Store({
         router.push({ name: "mypage" })
       }
     }
-
   },
-  modules: {}
+  logout({ commit }) {
+    commit("logout")
+    router.push({ name: "home" })
+  },
 });

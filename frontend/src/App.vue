@@ -1,32 +1,23 @@
 <template>
   <v-app id="inspire">
     <v-main>
-      <v-container class="fill-height" fluid>
-        <v-row align="center" justify="center">
-          <v-col cols="12" sm="8" md="4">
-            <v-card class="elevation-12">
-              <v-toolbar color="primary" dark flat>
-                <v-toolbar-title>Login form</v-toolbar-title>
-                <v-spacer></v-spacer>
+      <v-container class="fill-height" style="max-width:450px">
+        <v-row align-center row wrap>
+          <v-flex xs12>
+            <v-alert class="mb-3" :value="isError" type="error">이메일과 비밀번호를 확인해주세요.</v-alert>
+            <v-alert :value="loginSuccess" type="success">로그인에 성공하였습니다.</v-alert>
+            <!-- 차후에는 바로 화면 변경시킬에정!!-->
+            <v-card>
+              <v-toolbar flat>
+                <v-toolbar-title>로그인</v-toolbar-title>
               </v-toolbar>
-              <v-card-text>
-                <v-form>
-                  <v-text-field label="Login" name="login" prepend-icon="mdi-account" type="text"></v-text-field>
-                  <v-text-field
-                    id="password"
-                    label="Password"
-                    name="password"
-                    prepend-icon="mdi-lock"
-                    type="password"
-                  ></v-text-field>
-                </v-form>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="primary">Login</v-btn>
-              </v-card-actions>
+              <div class="pa-3">
+                <v-text-field v-model="email" label="이메일을 입력하세요"></v-text-field>
+                <v-text-field v-model="password" type="password" label="비밀번호를 입력하세요"></v-text-field>
+                <v-btn color="primary" depressed block large @click="login()">로그인</v-btn>
+              </div>
             </v-card>
-          </v-col>
+          </v-flex>
         </v-row>
       </v-container>
     </v-main>
@@ -35,8 +26,30 @@
 
 <script>
 export default {
-  props: {
-    source: String
+  data() {
+    return {
+      email: null,
+      password: null,
+      allUsers: [
+        { id: 1, name: "test", email: "test@gmail.com", password: "123456" }
+      ],
+      isError: false,
+      loginSuccess: false
+    };
+  },
+  methods: {
+    login() {
+      let selectedUser = null;
+      this.allUsers.forEach(user => {
+        if (user.email === this.email) selectedUser = user;
+      });
+      selectedUser === null
+        ? (this.isError = true)
+        : selectedUser.password !== this.password
+        ? (this.isError = true)
+        : (this.loginSuccess = true);
+      console.log(this.email, this.password);
+    }
   }
 };
 </script>

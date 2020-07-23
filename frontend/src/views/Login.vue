@@ -1,3 +1,39 @@
 <template>
-  <div>로그인</div>
+  <v-container class="fill-height" style="max-width:450px">
+    <v-row align-center row wrap>
+      <v-flex xs12>
+        <v-alert class="mb-3" :value="isLoginError" type="error">이메일과 비밀번호를 확인해주세요.</v-alert>
+        <v-alert :value="isLogin" type="success">로그인에 성공하였습니다.</v-alert>
+        <!-- 차후에는 바로 화면 변경시킬에정!!-->
+        <v-card>
+          <v-toolbar flat>
+            <v-toolbar-title>로그인</v-toolbar-title>
+          </v-toolbar>
+          <div class="pa-3">
+            <v-text-field v-model="email" label="이메일을 입력하세요"></v-text-field>
+            <v-text-field v-model="password" type="password" label="비밀번호를 입력하세요"></v-text-field>
+            <v-btn color="primary" depressed block large @click="login({email,password})">로그인</v-btn>
+          </div>
+        </v-card>
+      </v-flex>
+    </v-row>
+  </v-container>
 </template>
+
+<script>
+import { mapState, mapActions } from "vuex";
+export default {
+  data() {
+    return {
+      email: null,
+      password: null
+    };
+  },
+  computed: {
+    ...mapState(["isLogin", "isLoginError"])
+  },
+  methods: {
+    ...mapActions(["login"])
+  }
+};
+</script>

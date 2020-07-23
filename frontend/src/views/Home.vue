@@ -1,18 +1,40 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
-  </div>
+  <v-app id="inspire">
+    <v-main v-if="!isLogin">
+      <v-container class="fill-height" fluid>
+        <v-row align="center" justify="center">
+          <v-col cols="12" sm="8" md="4">
+            <v-card class="elevation-12">
+              <v-toolbar color="primary" dark flat>
+                <v-toolbar-title>오신걸 환영합니다</v-toolbar-title>
+              </v-toolbar>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn icon router :to="{name:'login'}">
+                  <span>로그인</span>
+                </v-btn>
+                <v-spacer></v-spacer>
+                <v-btn icon router :to="{name:'signup'}">
+                  <span>회원가입</span>
+                </v-btn>
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
-
+import { mapState } from "vuex";
 export default {
-  name: "Home",
-  components: {
-    HelloWorld
+  props: {
+    source: String
+  },
+  computed: {
+    ...mapState(["isLogin"])
   }
 };
 </script>

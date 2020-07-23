@@ -11,7 +11,7 @@ class Article(models.Model):
     updatedAt = models.DateTimeField(auto_now=True)
     content = models.TextField()
 
-    scrap = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='scrap_set')
+    scrap = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='scrapSet')
 
 
 class Comment(models.Model):
@@ -21,7 +21,7 @@ class Comment(models.Model):
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
     
-    like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='commentLike_set')
+    like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='commentLikeSet')
 
 class Recomment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -30,7 +30,7 @@ class Recomment(models.Model):
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
 
-    like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='recommentLike_set')
+    like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='recommentLikeSet')
 
 
 

@@ -9,6 +9,11 @@ from .serializers import ChangePasswordSerializer
 
 # Create your views here.
 
+@api_view(['POST'])
+def mypage(request, username): 
+    serializer = UserSerializer(request.user)
+    return Response(serializer.data)
+    
 class ChangePasswordView(generics.UpdateAPIView):
     """
     An endpoint for changing password.

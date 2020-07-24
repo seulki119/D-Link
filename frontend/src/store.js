@@ -1,15 +1,12 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import router from "./router"
+import router from "./router";
+import axios from "axios";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     userInfo: null,
-    //차후 DB랑 검사한다.
-    allUsers: [
-      { id: 1, name: "test", email: "test@gmail.com", password: "123456" }
-    ],
     isLogin: false,
     isLoginError: false
   },
@@ -34,17 +31,28 @@ export default new Vuex.Store({
   },
   actions: {
     //로그인 시도
-    login({ state, commit }, loginObj) {
-      let selectedUser = null;
-      state.allUsers.forEach(user => {
-        if (user.email === loginObj.email) selectedUser = user;
-      });
-      if (selectedUser === null || selectedUser.password !== loginObj.password)
-        commit("loginError")
-      else {
-        commit("loginSuccess", selectedUser)
-        router.push({ name: "mypage" })
-      }
+    login({ commit }, loginObj) {
+      axios.post("http://127.0.0.1:8000/rest-auth/login/", loginObj)
+        .then(res => {
+          let token = res.data.key;
+          let config = {
+            headers: {
+              "Authorization": `Token ${token}`
+            }
+          }
+          console.log(config)
+          axios.get("http://127.0.0.1:8000/rest-auth/user/", config)
+            .then(response => {
+              console.log(response)
+            })
+            .catch(error => {
+              console.log(error)
+            })
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     logout({ commit }) {
       commit("logout")

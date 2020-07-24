@@ -57,4 +57,4 @@
 
 ---
 
-![image-20200724103706774](C:\Users\multicampus\AppData\Roaming\Typora\typora-user-images\image-20200724103706774.png)
+![image-20200724103706774](참고자료/images/image-20200724103706774.png)

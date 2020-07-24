@@ -11,8 +11,9 @@
         <span>로그아웃</span>
       </v-btn>
       <v-spacer></v-spacer>
-      <v-btn icon>
+      <v-btn icon router :to="{name:'mypage'}">
         <v-icon>mdi-map-marker</v-icon>
+        <span>마이페이지</span>
       </v-btn>
     </v-app-bar>
 

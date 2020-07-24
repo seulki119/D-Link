@@ -1,3 +1,4 @@
+<!-- eslint-disable -->
 <template>
   <v-app id="inspire">
     <v-main v-if="!isLogin">

@@ -40,9 +40,9 @@ export default {
 
     test() {
       axios
-        .post("http://127.0.0.1:8000/rest-auth/login", {
-          email: "test@gmail.com",
-          password: "123456"
+        .post("http://127.0.0.1:8000/rest-auth/login/", {
+          username: "admin",
+          password: "admin"
         })
         .then(res => {
           console.log(res);

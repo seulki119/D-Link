@@ -40,18 +40,23 @@ export default new Vuex.Store({
               "Authorization": `Token ${token}`
             }
           }
-          console.log(config)
           axios.get("http://127.0.0.1:8000/rest-auth/user/", config)
             .then(response => {
-              console.log(response)
+              let userInfo = {
+                pk: response.data.pk,
+                first_name: response.data.first_name,
+                last_name: response.data.last_name,
+                email: response.data.email,
+                username: response.data.username
+              }
+              commit('loginSuccess', userInfo)
             })
-            .catch(error => {
-              console.log(error)
+            .catch(() => {
+              alert('이메일과 비밀번호를 확인하세요.')
             })
-          console.log(res)
         })
-        .catch(err => {
-          console.log(err)
+        .catch(() => {
+          alert('이메일과 비밀번호를 확인하세요.')
         })
     },
     logout({ commit }) {

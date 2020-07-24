@@ -8,23 +8,21 @@ Vue.use(VueRouter);
 const rejectAuthUser = (to, from, next) => {
   //이미 로그인 된 유저는 몇몇 페이지 차단
   if (store.state.isLogin === true) {
-    alert("이미 로그인을 하였습니다.")
-    next("/")
+    alert("이미 로그인을 하였습니다.");
+    next("/");
+  } else {
+    next();
   }
-  else {
-    next()
-  }
-}
+};
 const onlyAuthUser = (to, from, next) => {
   //로그인 된 유저만 접속 가능
   if (store.state.isLogin === true || localStorage.getItem("token") !== null) {
-    next()
+    next();
+  } else {
+    alert("로그인을 해야합니다.");
+    next("/");
   }
-  else {
-    alert("로그인을 해야합니다.")
-    next("/")
-  }
-}
+};
 const routes = [
   {
     path: "/",
@@ -35,14 +33,22 @@ const routes = [
     path: "/login",
     name: "login",
     beforeEnter: rejectAuthUser,
-    component: () => import(/* webpackChunkName: "login" */ "./views/Login.vue"),
+    component: () =>
+      import(/* webpackChunkName: "login" */ "./views/Login.vue"),
   },
   {
     path: "/signup",
     name: "signup",
-    beforeEnter: rejectAuthUser,
+    beforeEnter: rejuectAuthUser,
     component: () =>
       import(/* webpackChunkName: "signup" */ "./views/Signup.vue"),
+  },
+  {
+    path: "/taste",
+    name: "taste",
+    beforeEnter: rejuectAuthUser,
+    component: () =>
+      import(/* webpackChunkName: "taste" */ "./views/Taste.vue"),
   },
   {
     path: "/mypage",

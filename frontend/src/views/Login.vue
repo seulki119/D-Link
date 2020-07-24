@@ -37,9 +37,13 @@ export default {
   },
   methods: {
     ...mapActions(["login"]),
+
     test() {
       axios
-        .get("http://127.0.0.1:8000/user?email=test@gmail.com")
+        .post("http://127.0.0.1:8000/login", {
+          email: "test@gmail.com",
+          password: "123456"
+        })
         .then(res => {
           console.log(res);
         })

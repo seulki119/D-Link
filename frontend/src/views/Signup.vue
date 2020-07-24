@@ -69,7 +69,7 @@ import {
   ValidationProvider,
   setInteractionMode
 } from "vee-validate";
-// import Steps from "./Steps";
+import axios from "axios";
 
 setInteractionMode("eager");
 
@@ -109,7 +109,6 @@ export default {
   components: {
     ValidationProvider,
     ValidationObserver
-    // Steps
   },
   data: () => ({
     name: "",
@@ -124,7 +123,20 @@ export default {
     async submit() {
       const isValid = await this.$refs.observer.validate();
       if (isValid) {
-        this.$router.push("taste");
+        axios
+          .post("http://127.0.0.1:8000/rest-auth/signup/", {
+            email: this.email,
+            username: this.name,
+            password1: this.password,
+            password2: this.confirmation
+          })
+          .then(response => {
+            console.log(response);
+            this.$router.push("taste");
+          })
+          .catch(error => {
+            console.dir(error.data);
+          });
       }
     }
     // clear() {

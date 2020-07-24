@@ -44,10 +44,10 @@ export default new Vuex.Store({
             .then(response => {
               let userInfo = {
                 pk: response.data.pk,
-                first_name: response.data.first_name,
-                last_name: response.data.last_name,
+                username: response.data.username,
                 email: response.data.email,
-                username: response.data.username
+                first_name: response.data.first_name,
+                last_name: response.data.last_name
               }
               commit('loginSuccess', userInfo)
             })

@@ -1,3 +1,4 @@
+<!-- eslint-disable -->
 <template>
   <v-app id="inspire">
     <v-app-bar v-if="isLogin" app grow color="indigo" dark>

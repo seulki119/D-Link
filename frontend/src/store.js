@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Vue from "vue";
 import Vuex from "vuex";
 import router from "./router";
@@ -32,14 +33,18 @@ export default new Vuex.Store({
   actions: {
     //로그인 시도
     login({ commit }, loginObj) {
+      //로그인 -> 토큰 반환
       axios.post("http://127.0.0.1:8000/rest-auth/login/", loginObj)
         .then(res => {
+          // 로그인 성공시, token을 헤더에 포함시킴
           let token = res.data.key;
           let config = {
             headers: {
               "Authorization": `Token ${token}`
             }
           }
+          // 헤더 with 토큰 -> 유저 정보를 반환
+          // 새로고침 하더라도 토큰만으로 계속 유저 정보를 요청하게 한다!
           axios.get("http://127.0.0.1:8000/rest-auth/user/", config)
             .then(response => {
               let userInfo = {

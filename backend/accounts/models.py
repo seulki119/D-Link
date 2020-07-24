@@ -12,7 +12,7 @@ class User(AbstractUser):
     taste3 = models.CharField(max_length=30, null=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username']
 
     objects = CustomUserManager()
 

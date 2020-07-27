@@ -1,78 +1,64 @@
 <template>
-  <v-app id="inspire">
-    <v-app-bar app color="#F8C471" dark>
-      <v-spacer></v-spacer>
-    </v-app-bar>
+  <v-container class="fill-height" fluid>
+    <v-row align="center" justify="center">
+      <ValidationObserver ref="observer">
+        <v-form v-model="valid">
+          <ValidationProvider v-slot="{ errors }" name="email" rules="required|email">
+            <v-text-field v-model="email" :error-messages="errors" label="이메일" required></v-text-field>
+          </ValidationProvider>
 
-    <v-main>
-      <v-container class="fill-height" fluid>
-        <v-row align="center" justify="center">
-          <ValidationObserver ref="observer">
-            <v-form v-model="valid">
-              <ValidationProvider v-slot="{ errors }" name="email" rules="required|email">
-                <v-text-field v-model="email" :error-messages="errors" label="이메일" required></v-text-field>
-              </ValidationProvider>
+          <ValidationProvider name="password" rules="required|min:8|max:16" v-slot="{ errors }">
+            <v-text-field
+              v-model="password"
+              :counter="16"
+              type="password"
+              :error-messages="errors"
+              label="비밀번호"
+              required
+            ></v-text-field>
+          </ValidationProvider>
 
-              <ValidationProvider name="password" rules="required|min:8|max:16" v-slot="{ errors }">
-                <v-text-field
-                  v-model="password"
-                  :counter="16"
-                  type="password"
-                  :error-messages="errors"
-                  label="비밀번호"
-                  required
-                ></v-text-field>
-              </ValidationProvider>
+          <ValidationProvider
+            name="confirm"
+            rules="required|passswordConfirm:@password"
+            v-slot="{ errors }"
+          >
+            <v-text-field
+              v-model="confirmation"
+              :counter="password.length"
+              type="password"
+              :error-messages="errors"
+              label="비밀번호 확인"
+              required
+            ></v-text-field>
+          </ValidationProvider>
 
-              <ValidationProvider
-                name="confirm"
-                rules="required|passswordConfirm:@password"
-                v-slot="{ errors }"
-              >
-                <v-text-field
-                  v-model="confirmation"
-                  :counter="password.length"
-                  type="password"
-                  :error-messages="errors"
-                  label="비밀번호 확인"
-                  required
-                ></v-text-field>
-              </ValidationProvider>
+          <ValidationProvider v-slot="{ errors }" name="Name" rules="required|max:10">
+            <v-text-field
+              v-model="name"
+              :counter="10"
+              :error-messages="errors"
+              label="닉네임"
+              required
+            ></v-text-field>
+          </ValidationProvider>
 
-              <ValidationProvider v-slot="{ errors }" name="Name" rules="required|max:10">
-                <v-text-field
-                  v-model="name"
-                  :counter="10"
-                  :error-messages="errors"
-                  label="닉네임"
-                  required
-                ></v-text-field>
-              </ValidationProvider>
+          <ValidationProvider v-slot="{ errors }" rules="agree" name="checkbox">
+            <v-checkbox
+              v-model="checkbox"
+              :error-messages="errors"
+              value="1"
+              label="약관"
+              type="checkbox"
+              required
+            ></v-checkbox>
+          </ValidationProvider>
 
-              <ValidationProvider v-slot="{ errors }" rules="agree" name="checkbox">
-                <v-checkbox
-                  v-model="checkbox"
-                  :error-messages="errors"
-                  value="1"
-                  label="약관"
-                  type="checkbox"
-                  required
-                ></v-checkbox>
-              </ValidationProvider>
-
-              <v-btn :disabled="!valid" class="mr-4" @click="submit">다음</v-btn>
-            </v-form>
-          </ValidationObserver>
-        </v-row>
-      </v-container>
-    </v-main>
-
-    <v-footer color="#F8C471" app>
-      <v-spacer></v-spacer>
-
-      <span class="white--text">&copy; {{ new Date().getFullYear() }}</span>
-    </v-footer>
-  </v-app>
+          <v-btn color="primary" :disabled="!valid" class="mr-4" @click="submit">다음</v-btn>
+        </v-form>
+      </ValidationObserver>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -83,7 +69,7 @@ import {
   ValidationProvider,
   setInteractionMode
 } from "vee-validate";
-// import Steps from "./Steps";
+import axios from "axios";
 
 setInteractionMode("eager");
 
@@ -123,7 +109,6 @@ export default {
   components: {
     ValidationProvider,
     ValidationObserver
-    // Steps
   },
   data: () => ({
     name: "",
@@ -135,8 +120,24 @@ export default {
   }),
 
   methods: {
-    submit() {
-      this.$refs.observer.validate();
+    async submit() {
+      const isValid = await this.$refs.observer.validate();
+      if (isValid) {
+        axios
+          .post("http://127.0.0.1:8000/rest-auth/signup/", {
+            email: this.email,
+            username: this.name,
+            password1: this.password,
+            password2: this.confirmation
+          })
+          .then(response => {
+            console.log(response);
+            this.$router.push("taste");
+          })
+          .catch(error => {
+            console.dir(error.data);
+          });
+      }
     }
     // clear() {
     //   this.name = "";

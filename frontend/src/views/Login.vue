@@ -1,3 +1,4 @@
+<!-- eslint-disable -->
 <template>
   <v-container class="fill-height" style="max-width:450px">
     <v-row align-center row wrap>
@@ -13,7 +14,6 @@
             <v-text-field v-model="email" label="이메일을 입력하세요"></v-text-field>
             <v-text-field v-model="password" type="password" label="비밀번호를 입력하세요"></v-text-field>
             <v-btn color="primary" depressed block large @click="login({email,password})">로그인</v-btn>
-            <v-btn color="primary" depressed block large @click="test()">임시테스트용로그인</v-btn>
           </div>
         </v-card>
       </v-flex>
@@ -23,8 +23,6 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import axios from "axios";
-
 export default {
   data() {
     return {
@@ -36,24 +34,7 @@ export default {
     ...mapState(["isLogin", "isLoginError"])
   },
   methods: {
-    ...mapActions(["login"]),
-
-    test() {
-      axios
-        .post("http://127.0.0.1:8000/rest-auth/login/", {
-          username: "admin",
-          password: "admin"
-        })
-        .then(res => {
-          console.log(res);
-        })
-        .catch(err => {
-          console.log(err);
-        })
-        .then(() => {
-          console.log("테스트끝");
-        });
-    }
+    ...mapActions(["login"])
   }
 };
 </script>

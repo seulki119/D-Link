@@ -1,29 +1,28 @@
+/* eslint-disable */
 import Vue from "vue";
 import VueRouter from "vue-router";
 import store from "./store";
 
 Vue.use(VueRouter);
 
-const rejuectAuthUser = (to, from, next) => {
+const rejectAuthUser = (to, from, next) => {
   //이미 로그인 된 유저는 몇몇 페이지 차단
   if (store.state.isLogin === true) {
-    alert("이미 로그인을 하였습니다.")
-    next("/")
+    alert("이미 로그인을 하였습니다.");
+    next("/");
+  } else {
+    next();
   }
-  else {
-    next()
-  }
-}
+};
 const onlyAuthUser = (to, from, next) => {
   //로그인 된 유저만 접속 가능
-  if (store.state.isLogin === false) {
-    alert("로그인을 해야합니다.")
-    next("/")
+  if (store.state.isLogin === true || localStorage.getItem("token") !== null) {
+    next();
+  } else {
+    alert("로그인을 해야합니다.");
+    next("/");
   }
-  else {
-    next()
-  }
-}
+};
 const routes = [
   {
     path: "/",
@@ -33,15 +32,23 @@ const routes = [
   {
     path: "/login",
     name: "login",
-    beforeEnter: rejuectAuthUser,
-    component: () => import(/* webpackChunkName: "login" */ "./views/Login.vue"),
+    beforeEnter: rejectAuthUser,
+    component: () =>
+      import(/* webpackChunkName: "login" */ "./views/Login.vue"),
   },
   {
     path: "/signup",
     name: "signup",
-    beforeEnter: rejuectAuthUser,
+    beforeEnter: rejectAuthUser,
     component: () =>
       import(/* webpackChunkName: "signup" */ "./views/Signup.vue"),
+  },
+  {
+    path: "/taste",
+    name: "taste",
+    beforeEnter: rejectAuthUser,
+    component: () =>
+      import(/* webpackChunkName: "taste" */ "./views/Taste.vue"),
   },
   {
     path: "/mypage",

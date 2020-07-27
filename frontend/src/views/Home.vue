@@ -1,3 +1,4 @@
+<!-- eslint-disable -->
 <template>
   <v-app id="inspire">
     <v-main v-if="!isLogin">
@@ -10,11 +11,11 @@
               </v-toolbar>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn icon router :to="{name:'login'}">
+                <v-btn icon router :to="{ name:'login' }">
                   <span>로그인</span>
                 </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn icon router :to="{name:'signup'}">
+                <v-btn icon router :to="{ name:'signup' }">
                   <span>회원가입</span>
                 </v-btn>
                 <v-spacer></v-spacer>

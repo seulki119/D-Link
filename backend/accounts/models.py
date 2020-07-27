@@ -9,7 +9,6 @@ class User(AbstractUser):
     Intro = models.TextField()
     taste1 = models.CharField(max_length=30, null=True)
     taste2 = models.CharField(max_length=30, null=True)
-    taste3 = models.CharField(max_length=30, null=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']

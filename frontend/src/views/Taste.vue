@@ -6,13 +6,22 @@
         <v-card>
           <v-container fluid>
             <v-row>
-              <v-col v-for="(n, index) in items" :key="n" class="d-flex child-flex" cols="4">
+              <v-col
+                v-for="(n, index) in items"
+                :key="n"
+                class="d-flex child-flex"
+                cols="4"
+              >
                 <v-card flat tile>
                   <v-img
                     outlined
                     color="indigo"
-                    :src="`https://picsum.photos/500/300?image=${index * 5 + 10}`"
-                    :lazy-src="`https://picsum.photos/10/6?image=${index * 5 + 10}`"
+                    :src="
+                      `https://picsum.photos/500/300?image=${index * 5 + 10}`
+                    "
+                    :lazy-src="
+                      `https://picsum.photos/10/6?image=${index * 5 + 10}`
+                    "
                     aspect-ratio="1"
                     class="grey lighten-2 rounded-circle"
                     @click="selectAction(n)"
@@ -26,7 +35,12 @@
         </v-card>
         <v-container fluid>
           <v-row align="center" justify="center">
-            <v-btn color="primary" :disabled="selected.length!=2" @click="submit">가입하기</v-btn>
+            <v-btn
+              color="primary"
+              :disabled="selected.length != 2"
+              @click="submit"
+              >가입하기</v-btn
+            >
           </v-row>
         </v-container>
       </v-col>
@@ -47,9 +61,9 @@ export default {
       "와인",
       "양주",
       "고량주",
-      "칵테일"
+      "칵테일",
     ],
-    selected: []
+    selected: [],
   }),
   methods: {
     selectAction(n) {
@@ -68,8 +82,8 @@ export default {
       // 회원가입처리
       // 백앤드 통신 추가.
       // 성공시 메인화면으로 이동.(피드리스트)
-      // this.$router.push("");
-    }
-  }
+      this.$router.push("articlelist");
+    },
+  },
 };
 </script>

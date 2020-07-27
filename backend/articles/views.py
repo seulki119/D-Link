@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Article
-from .serializers import ArticleSerializer, ArticleListSerializer, ArticleCreateSerializer
+from .serializers import ArticleSerializer, ArticleListSerializer, ArticleCreateSerializer, ArticleScrapSerializer
 
 # Create your views here.
 
@@ -44,3 +44,15 @@ def update_delete(request, article_pk):
             return Response({'message': '성공적으로 삭제되었습니다'})
     else:
         return Response({'message': '글쓴이가 아닙니다'})
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def scrap(request, article_pk):
+    article = get_object_or_404(Article, pk=article_pk)
+    if article.scrap.filter(pk=request.user.pk).exists():
+        article.scrap.remove(request.user)
+    else:
+        article.scrap.add(request.user)
+    serializer = ArticleScrapSerializer(article)
+    return Response(serializer.data)
+    

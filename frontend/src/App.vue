@@ -22,8 +22,8 @@
       <router-view></router-view>
     </v-main>
     <v-bottom-navigation v-if="isLogin" grow color="teal">
-      <v-btn>
-        <span>Recents</span>
+      <v-btn icon router :to="{name:'createArticle'}">
+        <span>파일 업로드</span>
         <v-icon>mdi-history</v-icon>
       </v-btn>
 

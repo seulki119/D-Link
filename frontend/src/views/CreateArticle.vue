@@ -4,6 +4,9 @@
       <v-app id="inspire">
         <v-card class="mx-auto" max-width="400" v-if="file">
           <v-img :src="preview" class="img-fluid" />
+          <v-card-text class="text--primary">
+            <v-textarea v-model="content" label="내용" counter maxlength="120" full-width single-line></v-textarea>
+          </v-card-text>
         </v-card>
         <v-spacer></v-spacer>
         <v-file-input

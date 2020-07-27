@@ -8,7 +8,7 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'userImage', 'userIntro')
+        fields = ('id', 'username', 'Image', 'Intro')
 
 class ChangePasswordSerializer(serializers.Serializer):
     model = User
@@ -18,3 +18,8 @@ class ChangePasswordSerializer(serializers.Serializer):
     """
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
+
+class UserTasteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'taste1', 'taste2')

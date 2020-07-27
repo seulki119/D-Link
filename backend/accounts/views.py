@@ -1,11 +1,12 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .serializers import UserSerializer
+from .serializers import UserSerializer, UserTasteSerializer
 from rest_framework import status
 from rest_framework import generics
 from django.contrib.auth.models import User
-from .serializers import ChangePasswordSerializer  
+from .serializers import ChangePasswordSerializer
+from django.shortcuts import get_object_or_404  
 
 # Create your views here.
 
@@ -47,3 +48,12 @@ class ChangePasswordView(generics.UpdateAPIView):
             return Response(response)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def taste(request):
+    serializer = UserTasteSerializer(data=request.data, instance=request.user)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save()
+        return Response({'message': '성공적으로 등록되었습니다.'})
+    else:
+        return Response({'message': '유효하지 않은 입력입니다.'})

@@ -84,9 +84,9 @@ export default new Vuex.Store({
           //taste로 가게 한다.!!
           commit("loginSuccess", userInfo);
         })
-        .catch(() => {
-          alert("이메일과 비밀번호를 확인하세요.");
-        });
+      // .catch(() => {
+      //   alert("이메일과 비밀번호를 확인하세요.");
+      // });
     },
   },
 });

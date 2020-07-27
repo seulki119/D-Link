@@ -7,6 +7,9 @@ from .models import Article, Comment, Recomment
 # from .serializers import UserSerializer
 # Register your models here.
 
-admin.site.register(Article)
 admin.site.register(Comment)
 admin.site.register(Recomment)
+
+@admin.register(Article)
+class ArticleAdmin(admin.ModelAdmin):
+    exclude = ['scrap']

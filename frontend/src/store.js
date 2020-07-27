@@ -12,6 +12,7 @@ export default new Vuex.Store({
     isLogin: false,
     isLoginError: false,
   },
+  //차후 Taste는 로그인이 되어있을때만 갈 수 있게;
   mutations: {
     // 로그인 성공
     loginSuccess(state, payload) {
@@ -79,11 +80,13 @@ export default new Vuex.Store({
             first_name: response.data.first_name,
             last_name: response.data.last_name,
           };
+          //여기서 나중에 userinfo에서 취향 여부를 확인하고 취향을 선택 안 했을경우,
+          //taste로 가게 한다.!!
           commit("loginSuccess", userInfo);
         })
-        .catch(() => {
-          alert("이메일과 비밀번호를 확인하세요.");
-        });
+      // .catch(() => {
+      //   alert("이메일과 비밀번호를 확인하세요.");
+      // });
     },
   },
 });

@@ -39,14 +39,14 @@ const routes = [
   {
     path: "/signup",
     name: "signup",
-    beforeEnter: rejuectAuthUser,
+    beforeEnter: rejectAuthUser,
     component: () =>
       import(/* webpackChunkName: "signup" */ "./views/Signup.vue"),
   },
   {
     path: "/taste",
     name: "taste",
-    beforeEnter: rejuectAuthUser,
+    beforeEnter: rejectAuthUser,
     component: () =>
       import(/* webpackChunkName: "taste" */ "./views/Taste.vue"),
   },

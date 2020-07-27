@@ -2,7 +2,7 @@
   <v-container class="fill-height" fluid>
     <v-row align="center" justify="center">
       <v-col cols="12" sm="6" offset-sm="3">
-        <h4>최애술 3개 선택</h4>
+        <h4>최애술 2개를 선택하여 가입을 완료해보세요</h4>
         <v-card>
           <v-container fluid>
             <v-row>
@@ -26,7 +26,7 @@
         </v-card>
         <v-container fluid>
           <v-row align="center" justify="center">
-            <v-btn color="primary" :disabled="selected.length!=3" @click="submit">가입하기</v-btn>
+            <v-btn color="primary" :disabled="selected.length!=2" @click="submit">가입하기</v-btn>
           </v-row>
         </v-container>
       </v-col>
@@ -64,7 +64,12 @@ export default {
       }
       console.log(this.selected);
     },
-    submit() {}
+    submit() {
+      // 회원가입처리
+      // 백앤드 통신 추가.
+      // 성공시 메인화면으로 이동.(피드리스트)
+      // this.$router.push("");
+    }
   }
 };
 </script>

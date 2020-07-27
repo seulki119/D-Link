@@ -23,8 +23,12 @@
           댓글
         </v-btn>
         <v-spacer></v-spacer>
-        <img style="right:100%" src="@/assets/turned_in_not-24px.svg" alt="" />
-        {{ scrap[0] }}
+        <img
+          style="right:100%;cursor: pointer;"
+          src="@/assets/turned_in_not-24px.svg"
+          alt=""
+        />
+        {{ scrap.length }}
       </v-card-actions>
     </v-card>
   </div>

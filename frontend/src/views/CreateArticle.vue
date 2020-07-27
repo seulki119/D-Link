@@ -8,7 +8,7 @@
             <v-textarea v-model="content" label="내용" counter maxlength="120" full-width single-line></v-textarea>
           </v-card-text>
         </v-card>
-        <v-spacer></v-spacer>
+        <v-divider></v-divider>
         <v-file-input
           small-chips
           color="deep-purple accent-4"

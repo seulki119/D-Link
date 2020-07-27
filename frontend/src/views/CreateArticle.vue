@@ -4,6 +4,24 @@
       <v-app id="inspire">
         <v-card class="mx-auto" max-width="400" v-if="file">
           <v-img :src="preview" class="img-fluid" />
+          <v-divider></v-divider>
+          <v-combobox
+            v-model="select"
+            :items="items"
+            :color="red"
+            label="I use a scoped slot"
+            multiple
+            chips
+            dense
+          >
+            <template v-slot:no-data>
+              <v-list-item>
+                <span class="subheading">Create</span>
+                <v-chip :color="red" label small>{{ search }}</v-chip>
+              </v-list-item>
+            </template>
+          </v-combobox>
+          <v-divider></v-divider>
           <v-card-text class="text--primary">
             <v-textarea v-model="content" label="내용" counter maxlength="120" full-width single-line></v-textarea>
           </v-card-text>
@@ -29,34 +47,14 @@
 
 <script>
 export default {
-  //   data: () => ({
-  //     file: [],
-  //     reader: []
-  //   }),
-
-  //   methods: {
-  //     add() {
-  //       console.log("file", this.file);
-  //       this.file.forEach((fi, f) => {
-  //         this.reader[f] = new FileReader();
-  //         this.reader[f].onloadend = e => {
-  //           let fileData = this.reader[f].result;
-  //           let imgRef = this.$refs.fi[f];
-  //           imgRef.src = fileData;
-  //           console.log(fileData);
-  //           console.log(e);
-  //           // send to server here...
-  //         };
-
-  //         this.reader[f].readAsDataURL(this.file[f]);
-  //       });
-  //     }
-  //   }
   data() {
     return {
       file: null,
       reader: null,
-      preview: null
+      preview: null,
+      select: [],
+      items: ["맥주", "소주"],
+      content: null
     };
   },
   methods: {

@@ -23,8 +23,8 @@ class ArticleListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Article
-        fields = ('id', 'user', 'image')
-        read_only_fields = ('id', 'user')
+        fields = ('id', 'user', 'image', 'scrap')
+        read_only_fields = ('id', 'user', 'scrap')
 
 class ArticleScrapSerializer(serializers.ModelSerializer):
 

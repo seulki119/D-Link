@@ -11,6 +11,15 @@ export default new Vuex.Store({
     userInfo: null,
     isLogin: false,
     isLoginError: false,
+    items: [],
+  },
+  getters: {
+    userId(state) {
+      return state.userInfo.pk;
+    },
+    items(state) {
+      return state.items;
+    },
   },
   //차후 Taste는 로그인이 되어있을때만 갈 수 있게;
   mutations: {
@@ -31,6 +40,9 @@ export default new Vuex.Store({
       state.isLoginError = false;
       state.userInfo = null;
       localStorage.removeItem("token");
+    },
+    setItems(state, payload) {
+      state.items = payload;
     },
   },
   actions: {
@@ -70,23 +82,32 @@ export default new Vuex.Store({
       };
       // 헤더 with 토큰 -> 유저 정보를 반환
       // 새로고침 하더라도 토큰만으로 계속 유저 정보를 요청하게 한다!
-      http
-        .get("/rest-auth/user/", config)
-        .then((response) => {
-          let userInfo = {
-            pk: response.data.pk,
-            username: response.data.username,
-            email: response.data.email,
-            first_name: response.data.first_name,
-            last_name: response.data.last_name,
-          };
-          //여기서 나중에 userinfo에서 취향 여부를 확인하고 취향을 선택 안 했을경우,
-          //taste로 가게 한다.!!
-          commit("loginSuccess", userInfo);
-        })
+      http.get("/rest-auth/user/", config).then((response) => {
+        let userInfo = {
+          pk: response.data.pk,
+          username: response.data.username,
+          email: response.data.email,
+          first_name: response.data.first_name,
+          last_name: response.data.last_name,
+        };
+        //여기서 나중에 userinfo에서 취향 여부를 확인하고 취향을 선택 안 했을경우,
+        //taste로 가게 한다.!!
+        commit("loginSuccess", userInfo);
+      });
       // .catch(() => {
       //   alert("이메일과 비밀번호를 확인하세요.");
       // });
+    },
+    getArticles(context, payload) {
+      http
+        .get(payload)
+        .then((response) => {
+          // console.log(response);
+          context.commit("setItems", response.data);
+        })
+        .catch(() => {
+          alert("에러가 발생했습니다.");
+        });
     },
   },
 });

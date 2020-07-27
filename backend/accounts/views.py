@@ -5,6 +5,7 @@ from .serializers import UserSerializer, UserTasteSerializer
 from rest_framework import status
 from rest_framework import generics
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from .serializers import ChangePasswordSerializer
 from django.shortcuts import get_object_or_404  
 
@@ -52,8 +53,27 @@ class ChangePasswordView(generics.UpdateAPIView):
 @api_view(['POST'])
 def taste(request):
     serializer = UserTasteSerializer(data=request.data, instance=request.user)
+    print(request.data.get('taste2'))
     if serializer.is_valid(raise_exception=True):
         serializer.save()
         return Response({'message': '성공적으로 등록되었습니다.'})
     else:
         return Response({'message': '유효하지 않은 입력입니다.'})
+
+@api_view(['POST'])
+def email_duplicated(request):
+    User = get_user_model()
+    try:
+        user = User.objects.get(email=request.data.get('email'))
+        return Response({'message': '이미 존재하는 이메일입니다.'})
+    except:
+        return Response({'message': '사용가능한 이메일입니다.'})
+
+@api_view(['POST'])
+def username_duplicated(request):
+    User = get_user_model()
+    try:
+        user = User.objects.get(username=request.data.get('username'))
+        return Response({'message': '이미 존재하는 닉네임입니다.'})
+    except:
+        return Response({'message': '사용가능한 닉네임입니다.'})

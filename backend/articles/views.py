@@ -49,6 +49,9 @@ def update_delete(request, article_pk):
 @permission_classes([IsAuthenticated])
 def scrap(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
+    if request.user == article.user:
+        return Response({'message': '본인의 글은 스크랩할 수 없습니다.'})
+        
     if article.scrap.filter(pk=request.user.pk).exists():
         article.scrap.remove(request.user)
     else:

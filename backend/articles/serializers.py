@@ -1,6 +1,11 @@
 from rest_framework import serializers
-from accounts.serializers import UserSerializer
 from .models import Article, Comment
+from  accounts.models import User
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'Image', 'Intro', 'scrapSet', 'article_set')
 
 class ArticleSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False)
@@ -23,8 +28,8 @@ class ArticleListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Article
-        fields = ('id', 'user', 'image')
-        read_only_fields = ('id', 'user')
+        fields = ('id', 'user', 'image', 'scrap')
+        read_only_fields = ('id', 'user', 'scrap')
 
 class ArticleScrapSerializer(serializers.ModelSerializer):
 

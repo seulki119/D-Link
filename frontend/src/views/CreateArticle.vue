@@ -1,3 +1,9 @@
+<!-- 1. HashTag DB에서 hashTag 목록 불러오기 Axios 활용해서 해결하기
+    (차후 erd를 1:N 식으로 바꿀수도 있다)
+    2. 차후 tag Chip 색상 설정 or 대문자 추가하기
+    3. 이미지 필터링 기능 추가하기
+-->
+
 <template>
   <v-container class="fill-height" style="max-width:450px">
     <div id="app">
@@ -97,7 +103,7 @@ export default {
         .post("/articles/create/", fd, config)
         .then(res => {
           console.log(res);
-          // this.$router.push("home");
+          this.$router.push("home");
         })
         .catch(err => {
           console.log(err.response);

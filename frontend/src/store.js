@@ -83,6 +83,7 @@ export default new Vuex.Store({
           //여기서 나중에 userinfo에서 취향 여부를 확인하고 취향을 선택 안 했을경우,
           //taste로 가게 한다.!!
           commit("loginSuccess", userInfo);
+          router.push("home")
         })
       // .catch(() => {
       //   alert("이메일과 비밀번호를 확인하세요.");

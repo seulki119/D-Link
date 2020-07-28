@@ -4,19 +4,21 @@
       <!-- you component like this -->
       <div class="stack-item" v-for="(item, index) in items" :key="index">
         <!-- some thing have fixed height-->
-        <img
-          :src="`https://picsum.photos/500/300?image=${index * 5 + 10}`"
-          alt=""
-          @click="showDetail(item.id)"
-          style="cursor: pointer;"
-        />
-        <img
-          @click="scrapAction(item.id)"
-          style="right:100%;cursor: pointer;"
-          src="@/assets/turned_in_not-24px.svg"
-          alt=""
-        />
-        <!-- {{ item.scrap.length }} -->
+        <div class="stack-item stack-item-6">
+          <img
+            :src="`https://picsum.photos/500/300?image=${index * 5 + 10}`"
+            alt
+            @click="showDetail(item.id)"
+            style="cursor: pointer;width:200px;"
+          />
+          <img
+            @click="scrapAction(item.id)"
+            style="right:100%;float:right;cursor: pointer;"
+            src="@/assets/turned_in_not-24px.svg"
+            alt
+          />
+          <!-- {{ item.scrap.length }} -->
+        </div>
       </div>
     </StackGrid>
   </div>
@@ -28,13 +30,13 @@ import { mapGetters } from "vuex";
 
 export default {
   components: {
-    StackGrid,
+    StackGrid
   },
   data() {
     return {};
   },
   computed: {
-    ...mapGetters(["items"]),
+    ...mapGetters(["items"])
   },
   created() {
     this.$store.dispatch("getArticles", "/articles");
@@ -49,12 +51,12 @@ export default {
       if (id != this.$store.getters.userId) {
         http
           .get(`articles/${id}/scrap`, [this.$store.getters.userId])
-          .then((response) => {
+          .then(response => {
             //스크랩처리가 정상적으로 되었을 경우, img src 변경
             this.scrap = response.data.scrap;
           });
       }
-    },
-  },
+    }
+  }
 };
 </script>

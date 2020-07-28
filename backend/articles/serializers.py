@@ -1,11 +1,14 @@
 from rest_framework import serializers
 from .models import Article, Comment
-from  accounts.models import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = User
-        fields = ('id', 'username', 'Image', 'Intro', 'scrapSet', 'article_set')
+        fields = ('id', 'username', 'image')
 
 class ArticleSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False)

@@ -2,16 +2,14 @@
   <v-container class="fill-height" style="max-width:450px">
     <div id="app">
       <v-app id="inspire">
-        <v-card class="px-5" max-width="400">
+        <v-card class="pa-5" max-width="400" min-width="300">
           <v-img :src="preview" class="img-fluid ma-5" />
           <v-file-input
             small-chips
             color="deep-purple accent-4"
-            placeholder="업로드할 파일을 골라주세요"
             accept="image/*"
-            label="사진 업로드"
-            prepend-icon="mdi-camera"
-            outlined
+            label="Uplode a Image"
+            prepend-icon="mdi-plus"
             dense
             :show-size="1000"
             v-model="file"
@@ -19,20 +17,25 @@
             class="pt-6 mx-6"
           ></v-file-input>
           <v-divider></v-divider>
-          <v-combobox v-model="tag" :items="items" label="태그 입력하세요" multiple chips dense>
-            <!-- <template v-slot:no-data>
-              <v-list-item>
-                <span class="subheading">Create</span>
-                <v-chip :color="red" label small>{{ search }}</v-chip>
-              </v-list-item>
-            </template>-->
-          </v-combobox>
+          <v-combobox
+            class="pt-6"
+            v-model="tag"
+            :items="items"
+            label="태그 입력하세요"
+            multiple
+            chips
+            dense
+          ></v-combobox>
           <v-divider></v-divider>
           <v-card-text class="text--primary">
             <v-textarea v-model="content" label="내용" counter maxlength="120" full-width single-line></v-textarea>
           </v-card-text>
 
           <v-divider></v-divider>
+          <v-btn block color="blue-grey" class="ma-2 white--text" @click="upload" v-if="fill">
+            Upload
+            <v-icon right dark>mdi-cloud-upload</v-icon>
+          </v-btn>
         </v-card>
       </v-app>
     </div>
@@ -40,6 +43,7 @@
 </template>
 
 <script>
+import http from "@/util/http-common";
 export default {
   data() {
     return {
@@ -47,8 +51,10 @@ export default {
       reader: null,
       preview: null,
       tag: [],
+      tags: "",
       items: ["맥주", "소주"],
-      content: null
+      content: null,
+      fill: false
     };
   },
   methods: {
@@ -59,15 +65,58 @@ export default {
         this.preview = fileData;
         // send to server here...
       };
-      this.reader.readAsDataURL(this.file);
+      if (this.file) {
+        this.reader.readAsDataURL(this.file);
+      }
+    },
+    check() {
+      if (this.tag.length > 0 && this.file && this.content) {
+        this.fill = true;
+      } else {
+        this.fill = false;
+      }
+    },
+    upload() {
+      // 나중에 create 제거 해야함
+      let token = localStorage.getItem("token");
+      let config = {
+        headers: {
+          Authorization: `Token ${token}`
+        }
+      };
+      for (var t in this.tag) {
+        this.tags += "#";
+        this.tags += this.tag[t];
+      }
+
+      const fd = new FormData();
+      fd.append("image", this.file);
+      fd.append("content", this.content);
+      fd.append("hashTag", this.tags);
+      http
+        .post("/articles/create/", fd, config)
+        .then(res => {
+          console.log(res);
+          // this.$router.push("home");
+        })
+        .catch(err => {
+          console.log(err.response);
+        });
     }
   },
   watch: {
-    tag: function() {
-      console.log(this.tag);
+    reader() {
+      if (!this.file) {
+        this.preview = null;
+        this.reader = null;
+      }
+      this.check();
     },
-    content: function() {
-      console.log(this.content);
+    tag() {
+      this.check();
+    },
+    content() {
+      this.check();
     }
   }
 };

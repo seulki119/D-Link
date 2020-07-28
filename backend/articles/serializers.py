@@ -17,6 +17,7 @@ class RecommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recomment
         fields = ('id', 'user', 'content', 'createdAt', 'updatedAt')
+        read_only_fields = ('id', 'user', 'comment', 'createdAt', 'updatedAt', 'like')
 
 class CommentSerializer(serializers.ModelSerializer):
     recommentSet = RecommentSerializer(many=True, read_only=True, source='recomment_set')
@@ -25,6 +26,7 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = '__all__'
+        read_only_fields = ('id', 'user', 'article', 'createdAt', 'updatedAt', 'like')
 
 class ArticleSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False)

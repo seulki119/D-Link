@@ -30,13 +30,13 @@ import { mapGetters } from "vuex";
 
 export default {
   components: {
-    StackGrid
+    StackGrid,
   },
   data() {
     return {};
   },
   computed: {
-    ...mapGetters(["items"])
+    ...mapGetters(["items"]),
   },
   created() {
     this.$store.dispatch("getArticles", "/articles");
@@ -51,12 +51,12 @@ export default {
       if (id != this.$store.getters.userId) {
         http
           .get(`articles/${id}/scrap`, [this.$store.getters.userId])
-          .then(response => {
+          .then((response) => {
             //스크랩처리가 정상적으로 되었을 경우, img src 변경
             this.scrap = response.data.scrap;
           });
       }
-    }
-  }
+    },
+  },
 };
 </script>

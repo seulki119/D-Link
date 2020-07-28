@@ -5,8 +5,8 @@ from django.utils.translation import ugettext_lazy as _
 
 class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
-    Image = models.ImageField(upload_to='photos')
-    Intro = models.TextField()
+    image = models.ImageField(upload_to='photos')
+    intro = models.TextField()
     taste1 = models.CharField(max_length=30, null=True)
     taste2 = models.CharField(max_length=30, null=True)
 

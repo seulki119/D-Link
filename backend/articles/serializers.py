@@ -1,6 +1,11 @@
 from rest_framework import serializers
-from accounts.serializers import UserSerializer
 from .models import Article, Comment
+from  accounts.models import User
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'Image', 'Intro', 'scrapSet', 'article_set')
 
 class ArticleSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False)

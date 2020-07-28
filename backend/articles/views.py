@@ -10,29 +10,25 @@ from .serializers import CommentSerializer
 
 # Create your views here.
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def index(request):
-    articles = Article.objects.all()
-    serializer = ArticleListSerializer(articles, many=True)
-    return Response(serializer.data)
+    if request.method == 'GET':
+        articles = Article.objects.all()
+        serializer = ArticleListSerializer(articles, many=True)
+        return Response(serializer.data)
+    else:
+        serializer = ArticleCreateSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(user=request.user)
+            return Response(serializer.data)
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def create(request):
-    serializer = ArticleCreateSerializer(data=request.data)
-    if serializer.is_valid(raise_exception=True):
-        serializer.save(user=request.user)
+@api_view(['GET', 'PUT', 'DELETE'])
+def detail(request, article_pk):
+    if request.method == 'GET':
+        article = get_object_or_404(Article, pk=article_pk)
+        serializer = ArticleSerializer(article)
         return Response(serializer.data)
 
-@api_view(['GET'])
-def detail(request, article_pk):
-    article = get_object_or_404(Article, pk=article_pk)
-    serializer = ArticleSerializer(article)
-    return Response(serializer.data)
-
-@api_view(['PUT', 'DELETE'])
-@permission_classes([IsAuthenticated])
-def update_delete(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
     if request.user == article.user:
         if request.method == "PUT":

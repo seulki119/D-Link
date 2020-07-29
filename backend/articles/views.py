@@ -4,9 +4,9 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Article
+from .models import Article, Hashtag
 from .serializers import ArticleSerializer, ArticleListSerializer, ArticleCreateSerializer, ArticleScrapSerializer
-from .serializers import CommentSerializer
+from .serializers import CommentSerializer, HashtagSerializser
 
 # Create your views here.
 
@@ -19,7 +19,17 @@ def index(request):
     else:
         serializer = ArticleCreateSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(user=request.user)
+            article = serializer.save(user=request.user)
+            hashtags = request.data.get('hashtag')
+            for hashtag in hashtags.split('#'):
+                if hashtag:
+                    try:
+                        exist_tag = Hashtag.objects.get(tag=hashtag)
+                        article.hashtag.add(exist_tag)
+                    except:
+                        new_tag = Hashtag(tag=hashtag)
+                        new_tag.save()
+                        article.hashtag.add(new_tag)
             return Response(serializer.data)
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -80,3 +90,9 @@ def comment_ud(request, article_pk, comment_pk):
             return Response({'message': "성공적으로 삭제되었습니다"})
     else:
         return Response({'message': '글쓴이가 아닙니다'})
+
+@api_view(['POST'])
+def hashtag(request):
+    hashtag = Hashtag.objects.all()
+    serializer = HashtagSerializser(hashtag, many=True)
+    return Response(serializer.data)

@@ -6,13 +6,10 @@ from rest_framework.permissions import IsAuthenticated
 
 from .models import Article
 from .serializers import ArticleSerializer, ArticleListSerializer, ArticleCreateSerializer, ArticleScrapSerializer
-<<<<<<< HEAD
 import os
 from django.conf import settings
-=======
 from .serializers import CommentSerializer
 
->>>>>>> 14104f2da05d3e1e2c7018079dadc0ea7f7b496c
 # Create your views here.
 
 @api_view(['GET'])

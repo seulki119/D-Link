@@ -36,11 +36,8 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class ArticleSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False)
-<<<<<<< HEAD
     image = serializers.ImageField(use_url=True)
-=======
     commentSet = CommentSerializer(many=True, read_only=True, source='comment_set')
->>>>>>> 14104f2da05d3e1e2c7018079dadc0ea7f7b496c
 
     class Meta:
         model = Article

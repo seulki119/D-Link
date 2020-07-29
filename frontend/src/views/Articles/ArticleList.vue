@@ -6,7 +6,7 @@
         <!-- some thing have fixed height-->
         <div class="stack-item stack-item-6">
           <img
-            :src="`https://picsum.photos/500/300?image=${index * 5 + 10}`"
+            :src="`//127.0.0.1:8000/${item.image}`"
             alt
             @click="showDetail(item.id)"
             style="cursor: pointer;width:200px;"
@@ -29,15 +29,15 @@ import { mapGetters } from "vuex";
 
 export default {
   components: {
-    StackGrid,
+    StackGrid
   },
   data() {
     return {
-      scrapSrc: "https://img.icons8.com/carbon-copy/24/000000/wine-glass.png",
+      scrapSrc: "https://img.icons8.com/carbon-copy/24/000000/wine-glass.png"
     };
   },
   computed: {
-    ...mapGetters(["items"]),
+    ...mapGetters(["items"])
   },
   created() {
     this.$store.dispatch("getArticles", "/articles");
@@ -57,7 +57,7 @@ export default {
       // scrap 동작시 아이콘src 토글
       this.scrapSrc =
         "https://img.icons8.com/plasticine/24/000000/wine-glass.png";
-    },
-  },
+    }
+  }
 };
 </script>

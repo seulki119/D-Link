@@ -4,9 +4,11 @@
       <v-list-item>
         <v-list-item-avatar color="grey"></v-list-item-avatar>
         <v-list-item-content>
-          <v-list-item-title class="headline">{{
+          <v-list-item-title class="headline">
+            {{
             item.user.username
-          }}</v-list-item-title>
+            }}
+          </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
       <v-img :src="`//127.0.0.1:8000/${item.image}`" height="194"></v-img>
@@ -18,8 +20,8 @@
         </div>
       </v-card-text>
       <!-- content는 60자까지만 보여주고, 더보기 클릭시 전체 보여줌 -->
-      <v-card-text
-        >{{ item.content }}
+      <v-card-text>
+        {{ item.content }}
         <p>더보기</p>
       </v-card-text>
       <v-card-text>{{ item.hashTag }}</v-card-text>
@@ -42,17 +44,29 @@ import { mapGetters } from "vuex";
 
 export default {
   computed: {
-    ...mapGetters(["item"]),
+    ...mapGetters(["item"])
   },
   data: function() {
     return {
-      scrapSrc: "https://img.icons8.com/carbon-copy/24/000000/wine-glass.png",
+      scrapSrc: "https://img.icons8.com/carbon-copy/24/000000/wine-glass.png"
     };
   },
   created() {
-<<<<<<< HEAD
     // article id로 게시물정보 가져오기.
     this.$store.dispatch("getArticle", `/articles/${this.$route.query.id}`);
+
+    // http.get(`articles/${this.$route.query.id}`).then((response) => {
+    //   console.log(response);
+    //   this.id = response.data.id;
+    //   this.user.id = response.data.user.id;
+    //   this.user.username = response.data.user.username;
+    //   this.user.image = response.data.user.image;
+    //   this.image = response.data.image;
+    //   this.hashTag = response.data.hashTag;
+    //   this.content = response.data.content;
+    //   this.scrap = response.data.scrap;
+    //   console.log(this.image);
+    // });
   },
   methods: {
     scrapAct() {
@@ -67,24 +81,7 @@ export default {
       this.scrapSrc =
         "https://img.icons8.com/plasticine/24/000000/wine-glass.png";
       // }
-    },
-=======
-    // this.id = this.$route.query.id;
-    // console.log(this.id);
-    // 백엔드에서 해당id로 게시물정보 가져오기.
-    http.get(`articles/${this.$route.query.id}`).then((response) => {
-      console.log(response);
-      this.id = response.data.id;
-      this.user.id = response.data.user.id;
-      this.user.username = response.data.user.username;
-      this.user.image = response.data.user.image;
-      this.image = response.data.image;
-      this.hashTag = response.data.hashTag;
-      this.content = response.data.content;
-      this.scrap = response.data.scrap;
-      console.log(this.image);
-    });
->>>>>>> a64bde035dc00c6d98c7c1a82178c99002a0d975
-  },
+    }
+  }
 };
 </script>

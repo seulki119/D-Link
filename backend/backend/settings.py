@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     # local apps
     'articles',
     'accounts',
+    'versus',
 
     # 3rd party
     'corsheaders',

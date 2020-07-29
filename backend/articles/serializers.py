@@ -1,15 +1,20 @@
 from rest_framework import serializers
-from .models import Article, Comment
 from  accounts.models import User
 import uuid
 import base64
 
 from drf_extra_fields.fields import Base64ImageField
-from .models import Article, Comment, Recomment
+from .models import Article, Comment, Recomment, Hashtag
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+class HashtagSerializser(serializers.ModelSerializer):
+
+    class Meta:
+        model = Hashtag
+        fields = ('id', 'tag')
+        read_only_fields = ('id', 'tag')
 
 class UserSerializer(serializers.ModelSerializer):
 
@@ -38,6 +43,7 @@ class ArticleSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False)
     image = serializers.ImageField(use_url=True)
     commentSet = CommentSerializer(many=True, read_only=True, source='comment_set')
+    hashtag = HashtagSerializser(many=True, read_only=True)
 
     class Meta:
         model = Article
@@ -53,7 +59,7 @@ class ArticleCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Article
-        exclude = ['scrap']
+        exclude = ['scrap', 'hashtag']
         read_only_fields = ('id', 'user', 'created_at', 'updated_at')
         
 class ArticleListSerializer(serializers.ModelSerializer):

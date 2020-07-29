@@ -73,6 +73,13 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "article" */ "./views/Articles/Article.vue"),
   },
+  {
+    path: "/createArticle",
+    name: "createArticle",
+    beforeEnter: onlyAuthUser,
+    component: () =>
+      import(/* webpackChunkName: "mypage" */ "./views/CreateArticle.vue"),
+  },
 ];
 
 const router = new VueRouter({

@@ -21,16 +21,18 @@ from django.utils import timezone
 #   ])
 
 
+class Hashtag(models.Model):
+    tag = models.CharField(max_length=20)
+
 # Create your models here.
 class Article(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     image = models.ImageField()
-    hashTag = models.CharField(max_length=100)
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
     content = models.TextField()
     scrap = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='scrapSet')
-
+    hashtag = models.ManyToManyField(Hashtag, related_name='hashtagSet')
 
 
 class Comment(models.Model):

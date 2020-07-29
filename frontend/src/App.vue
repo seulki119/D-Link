@@ -2,7 +2,7 @@
 <template>
   <v-app id="inspire">
     <v-app-bar v-if="isLogin" app grow color="indigo" dark>
-      <v-btn icon router :to="{name:'home'}">
+      <v-btn icon router :to="{ name: 'home' }">
         <v-icon>mdi-history</v-icon>
         <span>홈</span>
       </v-btn>
@@ -12,7 +12,7 @@
         <span>로그아웃</span>
       </v-btn>
       <v-spacer></v-spacer>
-      <v-btn icon router :to="{name:'mypage'}">
+      <v-btn icon router :to="{ name: 'mypage' }">
         <v-icon>mdi-map-marker</v-icon>
         <span>마이페이지</span>
       </v-btn>
@@ -22,14 +22,14 @@
       <router-view></router-view>
     </v-main>
     <v-bottom-navigation v-if="isLogin" grow color="teal">
-      <v-btn icon router :to="{name:'createArticle'}">
-        <span>파일 업로드</span>
-        <v-icon>mdi-history</v-icon>
+      <v-btn icon router :to="{ name: 'articlelist' }">
+        <span>Home</span>
+        <v-icon>mdi-home</v-icon>
       </v-btn>
 
-      <v-btn>
-        <span>Favorites</span>
-        <v-icon>mdi-heardt</v-icon>
+      <v-btn icon router :to="{ name: 'createArticle' }">
+        <span>파일 업로드</span>
+        <v-icon>mdi-history</v-icon>
       </v-btn>
 
       <v-btn>
@@ -44,13 +44,13 @@
 import { mapState } from "vuex";
 export default {
   props: {
-    source: String
+    source: String,
   },
   data: () => ({
-    drawer: null
+    drawer: null,
   }),
   computed: {
-    ...mapState(["isLogin"])
-  }
+    ...mapState(["isLogin"]),
+  },
 };
 </script>

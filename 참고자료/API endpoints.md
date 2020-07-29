@@ -13,6 +13,9 @@
 | GET    | 피드 디테일                  | http://127.0.0.1:8000/articles/{article.id}/            | O    |
 | PUT    | 피드 업데이트                | http://127.0.0.1:8000/articles/{article.id}/ud/         | O    |
 | DELETE | 피드 삭제                    | http://127.0.0.1:8000/articles/{article.id}/ud/         | O    |
+| POST   | 취향 서베이 적용             | http://127.0.0.1:8000/accounts/taste/                   | O    |
+| POST   | 이메일 중복체크              | http://localhost:8000/accounts/duplicated/email/        | O    |
+| POST   | 닉네임 중복체크              | http://localhost:8000/accounts/duplicated/username/     | O    |
 | POST   | 비밀번호리셋(이메일로요청)   | http://127.0.0.1:8000/rest-auth/password/reset/         | X    |
 | POST   | 비밀번호리셋(새로운비번등록) | http://127.0.0.1:8000/rest-auth/password/reset/confirm/ | X    |
 

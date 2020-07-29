@@ -1,17 +1,18 @@
+from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .serializers import UserSerializer, UserTasteSerializer
 from rest_framework import status
-from rest_framework import generics
-from django.contrib.auth.models import User
-from django.contrib.auth import get_user_model
+from rest_framework import generics  
 from .serializers import ChangePasswordSerializer
-from django.shortcuts import get_object_or_404  
+from .serializers import UserSerializer, UserTasteSerializer
 
 # Create your views here.
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def mypage(request, username): 
     serializer = UserSerializer(request.user)
     return Response(serializer.data)

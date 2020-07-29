@@ -1,14 +1,16 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
-from rest_framework.decorators import api_view, permission_classes
+from django.shortcuts import get_object_or_404, redirect
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 from rest_framework import generics  
+from rest_framework.authtoken.models import Token
 from .serializers import ChangePasswordSerializer
 from .serializers import UserSerializer, UserTasteSerializer
-
+from pprint import pprint
+import requests
 # Create your views here.
 
 @api_view(['POST'])
@@ -78,3 +80,54 @@ def username_duplicated(request):
         return Response({'message': '이미 존재하는 닉네임입니다.'})
     except:
         return Response({'message': '사용가능한 닉네임입니다.'})
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def google_login(request):
+    client_id = '122178100323-91dhrvqu6bm14umnnovogcud8upb4c71.apps.googleusercontent.com'
+    client_secret = 'JtzU7cxkgQBZoQcecf_DOeH9'
+    code = request.data.get('code')
+    scope = 'https://www.googleapis.com/auth/spreadsheets'
+    # access_token 발급
+    token_request = requests.post(
+        "https://oauth2.googleapis.com/token?code={}&redirect_uri=postmessage&client_id={}&client_secret={}&scope={}&grant_type=authorization_code".format(code, client_id, client_secret, scope)
+    )
+    # pprint(token_request)
+    token_response_json = token_request.json()
+    # error = token_response_json.get("error", None)
+    # pprint(token_response_json)
+    access_token = token_response_json.get('access_token')
+    # 프로필 가져오기
+    profile_request = requests.get(
+        "https://www.googleapis.com/userinfo/v2/me?access_token={}".format(access_token),
+    )
+    # pprint(profile_request)
+    profile_response_json = profile_request.json()
+    # pprint(profile_response_json)
+
+    email = profile_response_json.get('email')
+    username = profile_response_json.get('name')
+    profile_img = profile_response_json.get('picture')
+    last_name = profile_response_json.get('family_name')
+    first_name = profile_response_json.get('given_name')
+    User = get_user_model()
+    # username 유니크화
+    if User.objects.filter(username=username).exists():
+        username = email.split('@')[0]
+
+    try:
+        user_in_db = User.objects.get(email=email)
+        token = Token.objects.get(user_id=user_in_db.pk)
+        # 소셜유저인지 이메일유저인지 확인하는 절차 추가해야함
+    except User.DoesNotExist:
+        new_user_to_db = User.objects.create(
+            email=email,
+            username=username,
+            image=profile_img,
+            last_name=last_name,
+            first_name=first_name,
+        )
+        new_user_to_db.set_unusable_password()
+        new_user_to_db.save()
+        token = Token.objects.create(user=new_user_to_db)         
+    return Response({"key": "{}".format(token.key)})

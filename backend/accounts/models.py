@@ -18,6 +18,12 @@ class User(AbstractUser):
     spouse_name = models.CharField(blank=True, max_length=100)
     date_of_birth = models.DateField(blank=True, null=True)
     
+    # REGISTER_LOGIN_EMAIL = "email"
+    # REGISTER_LOGIN_GOOGLE = "google"
 
+    # REGISTER_LOGIN_METHOD = (
+    #     (REGISTER_LOGIN_EMAIL, "Email"),
+    #     (REGISTER_LOGIN_GOOGLE, "google"),
+    # )
     def __str__(self):
         return self.email

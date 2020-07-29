@@ -28,6 +28,8 @@
             v-model="tag"
             :items="items"
             label="태그 입력하세요"
+            :maxlength="max"
+            @keypress="isNotSpecail"
             multiple
             chips
             dense
@@ -60,7 +62,8 @@ export default {
       tags: "",
       items: ["맥주", "소주"],
       content: null,
-      fill: false
+      fill: false,
+      max: 20
     };
   },
   methods: {
@@ -98,9 +101,9 @@ export default {
       const fd = new FormData();
       fd.append("image", this.file);
       fd.append("content", this.content);
-      fd.append("hashTag", this.tags);
+      fd.append("hashtag", this.tags);
       http
-        .post("/articles/create/", fd, config)
+        .post("/articles/", fd, config)
         .then(res => {
           console.log(res);
           this.$router.push("home");
@@ -108,6 +111,17 @@ export default {
         .catch(err => {
           console.log(err.response);
         });
+    },
+    isNotSpecail($event) {
+      let keyCode = $event.keyCode ? $event.keyCode : $event.which;
+      if (
+        (keyCode >= 123 && keyCode <= 130) ||
+        (keyCode >= 32 && keyCode <= 47) ||
+        (keyCode >= 58 && keyCode <= 64) ||
+        (keyCode >= 91 && keyCode <= 96)
+      ) {
+        $event.preventDefault();
+      }
     }
   },
   watch: {

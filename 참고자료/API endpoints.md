@@ -9,10 +9,10 @@
 | POST   | 마이페이지                   | http://127.0.0.1:8000/accounts/{username}/              | O    |
 | PUT    | 비밀번호변경                 | http://127.0.0.1:8000/accounts/password/                | O    |
 | GET    | 피드 리스트                  | http://127.0.0.1:8000/articles/                         | O    |
-| POST   | 피드 생성                    | http://127.0.0.1:8000/articles/create/                  | O    |
+| POST   | 피드 생성                    | http://127.0.0.1:8000/articles/                         | O    |
 | GET    | 피드 디테일                  | http://127.0.0.1:8000/articles/{article.id}/            | O    |
-| PUT    | 피드 업데이트                | http://127.0.0.1:8000/articles/{article.id}/ud/         | O    |
-| DELETE | 피드 삭제                    | http://127.0.0.1:8000/articles/{article.id}/ud/         | O    |
+| PUT    | 피드 업데이트                | http://127.0.0.1:8000/articles/{article.id}/            | O    |
+| DELETE | 피드 삭제                    | http://127.0.0.1:8000/articles/{article.id}/            | O    |
 | POST   | 취향 서베이 적용             | http://127.0.0.1:8000/accounts/taste/                   | O    |
 | POST   | 이메일 중복체크              | http://localhost:8000/accounts/duplicated/email/        | O    |
 | POST   | 닉네임 중복체크              | http://localhost:8000/accounts/duplicated/username/     | O    |

@@ -2,7 +2,11 @@
   <div class="container">
     <StackGrid :columnWidth="200" :gutterX="20" :gutterY="20">
       <!-- you component like this -->
-      <div class="stack-item" v-for="(item, index) in items" :key="index">
+      <div
+        class="stack-item"
+        v-for="(item, index) in items.slice().reverse()"
+        :key="index"
+      >
         <!-- some thing have fixed height-->
         <div v-if="item.user.id != userId" class="stack-item stack-item-6">
           <img

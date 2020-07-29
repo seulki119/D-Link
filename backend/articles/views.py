@@ -6,8 +6,13 @@ from rest_framework.permissions import IsAuthenticated
 
 from .models import Article
 from .serializers import ArticleSerializer, ArticleListSerializer, ArticleCreateSerializer, ArticleScrapSerializer
+<<<<<<< HEAD
+import os
+from django.conf import settings
+=======
 from .serializers import CommentSerializer
 
+>>>>>>> 14104f2da05d3e1e2c7018079dadc0ea7f7b496c
 # Create your views here.
 
 @api_view(['GET'])
@@ -27,8 +32,15 @@ def create(request):
 @api_view(['GET'])
 def detail(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
+
+    IMG_ROOT = os.path.join(settings.BASE_DIR,'movies','media')
+    
     serializer = ArticleSerializer(article)
     return Response(serializer.data)
+
+
+
+
 
 @api_view(['PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])

@@ -1,4 +1,10 @@
 from rest_framework import serializers
+from .models import Article, Comment
+from  accounts.models import User
+import uuid
+import base64
+
+from drf_extra_fields.fields import Base64ImageField
 from .models import Article, Comment, Recomment
 from django.contrib.auth import get_user_model
 
@@ -30,12 +36,20 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class ArticleSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False)
+<<<<<<< HEAD
+    image = serializers.ImageField(use_url=True)
+=======
     commentSet = CommentSerializer(many=True, read_only=True, source='comment_set')
+>>>>>>> 14104f2da05d3e1e2c7018079dadc0ea7f7b496c
 
     class Meta:
         model = Article
         fields = '__all__'
         read_only_fields = ('id', 'user', 'createdAt', 'updatedAt')
+
+
+
+    
 
 class ArticleCreateSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False)

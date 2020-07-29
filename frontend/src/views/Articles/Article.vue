@@ -50,6 +50,7 @@ export default {
     };
   },
   created() {
+<<<<<<< HEAD
     // article id로 게시물정보 가져오기.
     this.$store.dispatch("getArticle", `/articles/${this.$route.query.id}`);
   },
@@ -67,6 +68,23 @@ export default {
         "https://img.icons8.com/plasticine/24/000000/wine-glass.png";
       // }
     },
+=======
+    // this.id = this.$route.query.id;
+    // console.log(this.id);
+    // 백엔드에서 해당id로 게시물정보 가져오기.
+    http.get(`articles/${this.$route.query.id}`).then((response) => {
+      console.log(response);
+      this.id = response.data.id;
+      this.user.id = response.data.user.id;
+      this.user.username = response.data.user.username;
+      this.user.image = response.data.user.image;
+      this.image = response.data.image;
+      this.hashTag = response.data.hashTag;
+      this.content = response.data.content;
+      this.scrap = response.data.scrap;
+      console.log(this.image);
+    });
+>>>>>>> a64bde035dc00c6d98c7c1a82178c99002a0d975
   },
 };
 </script>

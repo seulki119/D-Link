@@ -60,11 +60,20 @@ export default {
       preview: null,
       tag: [],
       tags: "",
-      items: ["맥주", "소주"],
+      items: [],
       content: null,
       fill: false,
       max: 20
     };
+  },
+  created() {
+    http.post("/articles/hashtag/").then(res => {
+      let tmp = [];
+      for (let t in res.data) {
+        tmp.push(res.data[t].tag);
+      }
+      this.items = tmp;
+    });
   },
   methods: {
     add() {

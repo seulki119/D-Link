@@ -7,4 +7,5 @@ urlpatterns = [
     path('<int:article_pk>/scrap/', views.scrap, name='scrap'),
     path('<int:article_pk>/comment/', views.comment_create),
     path('<int:article_pk>/comment/<int:comment_pk>/', views.comment_ud),
+    path('hashtag/', views.hashtag),
 ]

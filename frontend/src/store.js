@@ -18,6 +18,9 @@ export default new Vuex.Store({
     userId(state) {
       return state.userInfo.pk;
     },
+    userName(state) {
+      return state.userInfo.username;
+    },
     items(state) {
       return state.items;
     },

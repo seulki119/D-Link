@@ -2,14 +2,16 @@
   <div>
     <v-card max-width="344" class="mx-auto">
       <v-list-item>
-        <v-list-item-avatar color="grey"></v-list-item-avatar>
+        <v-list-item-avatar color="grey">
+          <!-- <v-img :src="item.user.image"></v-img> -->
+        </v-list-item-avatar>
         <v-list-item-content>
-          <v-list-item-title class="headline">
+          <v-list-item-title>
             {{ item.user.username }}
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-      <v-img :src="`//127.0.0.1:8000/${item.image}`" height="194"></v-img>
+      <v-img :src="`//127.0.0.1:8000/${item.image}`" height="300"></v-img>
 
       <v-card-text>
         <div class="scrapInfo">
@@ -28,49 +30,133 @@
           />
         </div>
       </v-card-text>
-      <!-- content는 60자까지만 보여주고, 더보기 클릭시 전체 보여줌 -->
-      <v-card-text>
-        {{ item.content }}
-        <p>더보기</p>
+      <!-- content는 45자까지만 보여주고, 더보기 클릭시 전체 보여줌 -->
+      <v-card-text style="color:black">
+        <span v-if="!readMoreActivated">{{ item.content.slice(0, 45) }}</span>
+        <a
+          style="color:gray;"
+          class=""
+          v-if="!readMoreActivated"
+          @click="activateReadMore"
+        >
+          ...더보기
+        </a>
+        <span v-if="readMoreActivated" v-html="item.content"></span>
       </v-card-text>
       <v-card-text>{{ item.hashTag }}</v-card-text>
 
       <v-card-actions>
-        <!-- v-if 댓글.length > 0 -->
-        <v-btn text color="deep-purple accent-4">댓글 모두보기</v-btn>
+        <v-btn text color="deep-purple accent-4" @click.native="show = !show">
+          {{
+            show ? "댓글 접기" : `댓글 ${item.commentSet.length}개 모두 보기`
+          }}
+        </v-btn>
         <v-spacer></v-spacer>
-        <!-- 본인댓글이나 최신댓글 1개 보여주기 -->
-        <v-card-text>{{ item.comment }}</v-card-text>
+      </v-card-actions>
+      <!-- 본인댓글이나 최신댓글 1개 보여주기 -->
+      <v-slide-y-transition>
+        <v-card-text v-show="!show">
+          <v-list-item>
+            <v-list-item-avatar color="grey"> </v-list-item-avatar>
+
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ showComment.username }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                {{ showComment.content }}
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-card-text>
+      </v-slide-y-transition>
+      <!-- 댓글 모두보기 -->
+      <v-slide-y-transition>
+        <v-card-text v-show="show">
+          <!--  -->
+          <v-list-item v-for="(comment, index) in item.commentSet" :key="index">
+            <v-list-item-avatar color="grey">
+              <!-- <v-img :src="comment.user.image"></v-img> -->
+            </v-list-item-avatar>
+
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ comment.user.username }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                {{ comment.content }}
+              </v-list-item-subtitle>
+            </v-list-item-content>
+            <v-btn
+              v-show="comment.user.id == userId"
+              text
+              color="deep-purple accent-4"
+              @click="updateComment(comment.id)"
+              >수정
+            </v-btn>
+          </v-list-item>
+        </v-card-text>
+      </v-slide-y-transition>
+      <!-- 댓글 등록하기 -->
+      <v-card-actions>
+        <v-avatar color="grey" size="30px"> </v-avatar>
+        <v-spacer></v-spacer>
+        <v-textarea
+          v-model="myComment"
+          auto-grow
+          outlined
+          filled
+          rows="1"
+          row-height="15"
+          :placeholder="`${userName} 님의 댓글`"
+          style="width: 270px"
+          append-icon="mdi-comment"
+          @keydown.enter="createComment()"
+        >
+        </v-textarea>
       </v-card-actions>
     </v-card>
   </div>
 </template>
 
 <script>
-// import http from "@/util/http-common";
 import { mapGetters } from "vuex";
-// import http from "@/util/http-common";
+import http from "@/util/http-common";
 
 export default {
   computed: {
     ...mapGetters(["item"]),
     ...mapGetters(["userId"]),
+    ...mapGetters(["userName"]),
   },
   data: function() {
     return {
       scrapSrc: "",
       scrapNo: "https://img.icons8.com/carbon-copy/24/000000/wine-glass.png",
       scrapYes: "https://img.icons8.com/plasticine/24/000000/wine-glass.png",
+      readMoreActivated: false,
+      show: false,
+      showComment: { username: "", content: "" },
+      myComment: "",
     };
   },
   created() {
     // article id로 게시물정보 가져오기.
     this.$store.dispatch("getArticle", `/articles/${this.$route.query.id}`);
-    // if (this.item.scrap.includes(this.userId)) {
-    //   this.scrapSrc = this.scrapYes;
-    // } else {
-    //   this.scrapSrc = this.scrapNo;
-    // }
+
+    let array = this.item.commentSet;
+
+    for (let index = 0; index < array.length; index++) {
+      if (array[index].user.id == this.userId) {
+        this.showComment.username = array[index].user.username;
+        this.showComment.content = array[index].content;
+        break;
+      } else if (index == array.length - 1) {
+        this.showComment.username = array[index].user.username;
+        this.showComment.content = array[index].content;
+      }
+    }
+    console.log(this.showComment);
   },
   methods: {
     scrapAct(id) {
@@ -79,6 +165,63 @@ export default {
         page: "article",
         id: `${id}`,
       });
+    },
+    activateReadMore() {
+      this.readMoreActivated = true;
+    },
+    // 댓글 등록
+    createComment() {
+      // alert(this.myComment);
+      let token = localStorage.getItem("token");
+      let config = {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      };
+
+      const fd = new FormData();
+      fd.append("user", this.userId);
+      fd.append("content", this.myComment);
+
+      http
+        .post(`/articles/${this.item.id}/comment/`, fd, config)
+        .then((response) => {
+          console.log(response);
+          this.$store.dispatch(
+            "getArticle",
+            `/articles/${this.$route.query.id}`
+          );
+          this.myComment = "";
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    //댓글수정
+    updateComment(commId) {
+      let token = localStorage.getItem("token");
+      let config = {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      };
+
+      const fd = new FormData();
+      // fd.append("user", this.userId);
+      fd.append("content", "수정");
+
+      http
+        .put(`/articles/${this.item.id}/comment/${commId}/`, fd, config)
+        .then((response) => {
+          console.log(response);
+          this.$store.dispatch(
+            "getArticle",
+            `/articles/${this.$route.query.id}`
+          );
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
     },
   },
 };

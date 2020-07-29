@@ -12,9 +12,9 @@
             style="cursor: pointer;width:200px;"
           />
           <img
-            @click="scrapAction(item.id)"
+            @click="scrapAct(item.id)"
             style="right:100%;float:right;cursor: pointer;"
-            src="@/assets/turned_in_not-24px.svg"
+            :src="scrapSrc"
             alt
           />
           <!-- {{ item.scrap.length }} -->
@@ -25,7 +25,6 @@
 </template>
 <script>
 import StackGrid from "vue-stack-grid-component";
-import http from "@/util/http-common";
 import { mapGetters } from "vuex";
 
 export default {
@@ -33,29 +32,31 @@ export default {
     StackGrid,
   },
   data() {
-    return {};
+    return {
+      scrapSrc: "https://img.icons8.com/carbon-copy/24/000000/wine-glass.png",
+    };
   },
   computed: {
     ...mapGetters(["items"]),
   },
   created() {
     this.$store.dispatch("getArticles", "/articles");
-    console.log("로그인된 user pk는 " + this.$store.getters.userId);
+    // console.log("로그인된 user pk는 " + this.$store.getters.userId);
+
+    // 각 item의 scrap 배열에 로그인된 id가 있다면 색깔있는 아이콘,
+    // 없다면 컬러가 없는 아이콘.
+
+    // if(this.items.scrap.includes())
   },
   methods: {
     showDetail(id) {
       this.$router.push(`article?id=${id}`);
     },
-    scrapAction(id) {
-      // 스크랩 처리 - 본인 게시물이 아닐 경우에만 가능.
-      if (id != this.$store.getters.userId) {
-        http
-          .get(`articles/${id}/scrap`, [this.$store.getters.userId])
-          .then((response) => {
-            //스크랩처리가 정상적으로 되었을 경우, img src 변경
-            this.scrap = response.data.scrap;
-          });
-      }
+    scrapAct(id) {
+      this.$store.dispatch("createComment", `/articles/${id}/scrap`);
+      // scrap 동작시 아이콘src 토글
+      this.scrapSrc =
+        "https://img.icons8.com/plasticine/24/000000/wine-glass.png";
     },
   },
 };

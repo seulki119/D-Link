@@ -12,6 +12,7 @@ export default new Vuex.Store({
     isLogin: false,
     isLoginError: false,
     items: [],
+    item: {},
   },
   getters: {
     userId(state) {
@@ -19,6 +20,9 @@ export default new Vuex.Store({
     },
     items(state) {
       return state.items;
+    },
+    item(state) {
+      return state.item;
     },
   },
   //차후 Taste는 로그인이 되어있을때만 갈 수 있게;
@@ -41,8 +45,13 @@ export default new Vuex.Store({
       state.userInfo = null;
       localStorage.removeItem("token");
     },
+    // item list
     setItems(state, payload) {
       state.items = payload;
+    },
+    // item 한개
+    setItem(state, payload) {
+      state.item = payload;
     },
   },
   actions: {
@@ -106,6 +115,36 @@ export default new Vuex.Store({
           context.commit("setItems", response.data);
         })
         .catch(() => {
+          alert("에러가 발생했습니다.");
+        });
+    },
+    getArticle(context, payload) {
+      http
+        .get(payload)
+        .then((response) => {
+          console.log(response);
+          context.commit("setItem", response.data);
+        })
+        .catch(() => {
+          alert("에러가 발생했습니다.");
+        });
+    },
+    createComment(context, payload) {
+      // 로컬 스토리지에 저장된 토큰 불러오기
+      let token = localStorage.getItem("token");
+
+      let config = {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      };
+      http
+        .get(payload, config)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((response) => {
+          console.log(response);
           alert("에러가 발생했습니다.");
         });
     },

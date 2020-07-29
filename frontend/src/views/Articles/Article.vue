@@ -5,18 +5,27 @@
         <v-list-item-avatar color="grey"></v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title class="headline">
-            {{
-            item.user.username
-            }}
+            {{ item.user.username }}
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
       <v-img :src="`//127.0.0.1:8000/${item.image}`" height="194"></v-img>
 
       <v-card-text>
-        <div style="float:right;">
+        <div class="scrapInfo">
           {{ item.scrap.length }}
-          <img style="cursor: pointer;" :src="scrapSrc" @click="scrapAct()" />
+          <img
+            v-if="!item.scrap.includes(userId)"
+            class="scrapInfo"
+            @click="scrapAct(item.id)"
+            :src="(scrapSrc = scrapNo)"
+          />
+          <img
+            v-else
+            class="scrapInfo"
+            @click="scrapAct(item.id)"
+            :src="(scrapSrc = scrapYes)"
+          />
         </div>
       </v-card-text>
       <!-- content는 60자까지만 보여주고, 더보기 클릭시 전체 보여줌 -->
@@ -44,44 +53,33 @@ import { mapGetters } from "vuex";
 
 export default {
   computed: {
-    ...mapGetters(["item"])
+    ...mapGetters(["item"]),
+    ...mapGetters(["userId"]),
   },
   data: function() {
     return {
-      scrapSrc: "https://img.icons8.com/carbon-copy/24/000000/wine-glass.png"
+      scrapSrc: "",
+      scrapNo: "https://img.icons8.com/carbon-copy/24/000000/wine-glass.png",
+      scrapYes: "https://img.icons8.com/plasticine/24/000000/wine-glass.png",
     };
   },
   created() {
     // article id로 게시물정보 가져오기.
     this.$store.dispatch("getArticle", `/articles/${this.$route.query.id}`);
-
-    // http.get(`articles/${this.$route.query.id}`).then((response) => {
-    //   console.log(response);
-    //   this.id = response.data.id;
-    //   this.user.id = response.data.user.id;
-    //   this.user.username = response.data.user.username;
-    //   this.user.image = response.data.user.image;
-    //   this.image = response.data.image;
-    //   this.hashTag = response.data.hashTag;
-    //   this.content = response.data.content;
-    //   this.scrap = response.data.scrap;
-    //   console.log(this.image);
-    // });
+    // if (this.item.scrap.includes(this.userId)) {
+    //   this.scrapSrc = this.scrapYes;
+    // } else {
+    //   this.scrapSrc = this.scrapNo;
+    // }
   },
   methods: {
-    scrapAct() {
-      this.$store.dispatch(
-        "createComment",
-        `/articles/${this.$route.query.id}/scrap`
-      );
-
-      // scrap배열안에 state.userinfo.userid or getters[userid]가 있는지 확인하고
-      // 아이콘 src 정해주기.
-      // if (this.item.scrap.include()) {
-      this.scrapSrc =
-        "https://img.icons8.com/plasticine/24/000000/wine-glass.png";
-      // }
-    }
-  }
+    scrapAct(id) {
+      this.$store.dispatch("doScrap", {
+        url: `/articles/${id}/scrap`,
+        page: "article",
+        id: `${id}`,
+      });
+    },
+  },
 };
 </script>

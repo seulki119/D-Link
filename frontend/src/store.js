@@ -130,7 +130,7 @@ export default new Vuex.Store({
           alert("에러가 발생했습니다.");
         });
     },
-    createComment(context, payload) {
+    doScrap(context, payload) {
       // 로컬 스토리지에 저장된 토큰 불러오기
       let token = localStorage.getItem("token");
 
@@ -140,9 +140,16 @@ export default new Vuex.Store({
         },
       };
       http
-        .get(payload, config)
+        .get(payload.url, config)
         .then((response) => {
           console.log(response);
+          // scrap처리 후 카운트 변경을 위해 데이터를 다시 받아온다.
+          console.log(payload.url);
+          if (payload.page == "articlelist") {
+            this.dispatch("getArticles", "/articles");
+          } else if (payload.page == "article") {
+            this.dispatch("getArticle", `/articles/${payload.id}`);
+          }
         })
         .catch((response) => {
           console.log(response);

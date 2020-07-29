@@ -62,7 +62,7 @@ export default {
     // this.id = this.$route.query.id;
     // console.log(this.id);
     // 백엔드에서 해당id로 게시물정보 가져오기.
-    http.get(`/articles/${this.$route.query.id}`).then((response) => {
+    http.get(`articles/${this.$route.query.id}`).then((response) => {
       console.log(response);
       this.id = response.data.id;
       this.user.id = response.data.user.id;

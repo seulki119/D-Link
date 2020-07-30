@@ -8,6 +8,23 @@
         <v-list-item-content>
           <v-list-item-title>{{ item.user.username }}</v-list-item-title>
         </v-list-item-content>
+
+        <!-- <v-list-item-content align="right">
+          <v-btn v-show="item.user.id == userId" text color="deep-purple accent-4">삭제/수정</v-btn>
+        </v-list-item-content>-->
+        <v-menu bottom left v-if="item.user.id == userId">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon v-bind="attrs" v-on="on">
+              <v-icon>mdi-dots-vertical</v-icon>
+            </v-btn>
+          </template>
+
+          <v-list>
+            <v-list-item v-for="(menu, index) in articleMenu" :key="index" @click="clickMenu(menu)">
+              <v-list-item-title>{{ menu }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </v-list-item>
       <v-img :src="`//127.0.0.1:8000/${item.image}`" height="300"></v-img>
 
@@ -29,8 +46,13 @@
         <a style="color:gray;" class v-if="!readMoreActivated" @click="activateReadMore">...더보기</a>
         <span v-if="readMoreActivated" v-html="item.content"></span>
       </v-card-text>
-      <v-card-text>{{ item.hashTag }}</v-card-text>
 
+      <!-- 해쉬태그 출력 -->
+      <v-card-text>
+        <v-combobox class="pt-6" v-model="hashtags" multiple chips></v-combobox>
+      </v-card-text>
+
+      <!-- 댓글 접기/펼치기 버튼 -->
       <v-card-actions>
         <v-btn
           text
@@ -75,9 +97,12 @@
             <v-btn
               v-show="comment.user.id == userId"
               text
+              icon
               color="deep-purple accent-2"
               @click="snackbar = true"
-            >:</v-btn>
+            >
+              <v-icon>mdi-dots-vertical</v-icon>
+            </v-btn>
 
             <v-snackbar v-model="snackbar" :timeout="timeout">
               {{ text }}
@@ -158,7 +183,9 @@ export default {
       snackbar: false,
       snackbar2: false,
       timeout: 1500,
-      text: "댓글 기능 텍스트"
+      text: "댓글 기능 텍스트",
+      hashtags: [],
+      articleMenu: ["수정", "삭제"]
     };
   },
   created() {
@@ -167,7 +194,6 @@ export default {
 
     let array = this.item.commentSet;
 
-    console.log(array);
     if (array !== undefined) {
       for (let index = 0; index < array.length; index++) {
         if (array[index].user.id === this.userId) {
@@ -180,6 +206,14 @@ export default {
         }
       }
     }
+
+    let tagArray = this.item.hashtag;
+    let tmp = [];
+    for (let index = 0; index < tagArray.length; index++) {
+      tmp.push(tagArray[index].tag);
+    }
+    this.hashtags = tmp;
+    console.log(this.hashtags);
   },
   methods: {
     scrapAct(id) {
@@ -242,6 +276,19 @@ export default {
         .catch(err => {
           console.log(err.response);
         });
+    },
+    clickMenu(menu) {
+      if (menu != "수정") {
+        //삭제
+        http
+          .delete(`/articles/${this.item.id}`)
+          .then(response => {
+            alert(response.data.message);
+          })
+          .catch(response => {
+            alert(response.data.message);
+          });
+      }
     }
   }
 };

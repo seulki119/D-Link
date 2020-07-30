@@ -49,7 +49,7 @@
 </template>
 
 <script>
-// import axios from "axios";
+import http from "@/util/http-common";
 
 export default {
   data: () => ({
@@ -65,11 +65,15 @@ export default {
     ],
     selected: [],
   }),
+  // created() {
+  // //Signup에서 데이터 제대로 받아오는지 테스트
+  //   console.log(this.$route.params);
+  // },
   methods: {
     selectAction(n) {
       if (!this.selected.includes(n)) {
         // 선택하지 않은 옵션을 클릭했을 경우 - add
-        if (this.selected.length < 3) {
+        if (this.selected.length < 2) {
           this.selected.push(n);
         }
       } else {
@@ -80,9 +84,32 @@ export default {
     },
     submit() {
       // 회원가입처리
-      // 백앤드 통신 추가.
-      // 성공시 메인화면으로 이동.(피드리스트)
-      this.$router.push("articlelist");
+      http
+        .post("/rest-auth/signup/", this.$route.params)
+        .then((response) => {
+          console.log(response);
+          // 회원가입처리 성공시 취향 처리
+          http
+            .post("/accounts/taste/", {
+              username: this.$route.params.username,
+              taste1: this.selected[0],
+              taste2: this.selected[1],
+            })
+            .then((response) => {
+              // 취향선택 성공시 피드리스트로 이동.
+              console.log(response.data.message);
+              console.log(response);
+              this.$router.push("articlelist");
+            })
+            .catch((response) => {
+              console.log(response);
+            });
+        })
+        .catch((response) => {
+          // 회원가입 실패시 다시 가입페이지로 이동.
+          console.dir(response.data);
+          this.$router.push("signup");
+        });
     },
   },
 };

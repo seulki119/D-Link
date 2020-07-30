@@ -3,11 +3,24 @@
     <v-row align="center" justify="center">
       <ValidationObserver ref="observer">
         <v-form v-model="valid">
-          <ValidationProvider v-slot="{ errors }" name="email" rules="required|email">
-            <v-text-field v-model="email" :error-messages="errors" label="이메일" required></v-text-field>
+          <ValidationProvider
+            v-slot="{ errors }"
+            name="email"
+            rules="required|email"
+          >
+            <v-text-field
+              v-model="email"
+              :error-messages="errors"
+              label="이메일"
+              required
+            ></v-text-field>
           </ValidationProvider>
 
-          <ValidationProvider name="password" rules="required|min:8|max:16" v-slot="{ errors }">
+          <ValidationProvider
+            name="password"
+            rules="required|min:8|max:16"
+            v-slot="{ errors }"
+          >
             <v-text-field
               v-model="password"
               :counter="16"
@@ -33,7 +46,11 @@
             ></v-text-field>
           </ValidationProvider>
 
-          <ValidationProvider v-slot="{ errors }" name="Name" rules="required|max:10">
+          <ValidationProvider
+            v-slot="{ errors }"
+            name="Name"
+            rules="required|max:10"
+          >
             <v-text-field
               v-model="name"
               :counter="10"
@@ -54,7 +71,9 @@
             ></v-checkbox>
           </ValidationProvider>
 
-          <v-btn color="primary" :disabled="!valid" class="mr-4" @click="submit">다음</v-btn>
+          <v-btn color="primary" :disabled="!valid" class="mr-4" @click="submit"
+            >다음</v-btn
+          >
         </v-form>
       </ValidationObserver>
     </v-row>
@@ -67,30 +86,29 @@ import {
   extend,
   ValidationObserver,
   ValidationProvider,
-  setInteractionMode
+  setInteractionMode,
 } from "vee-validate";
-import axios from "axios";
 
 setInteractionMode("eager");
 
 extend("required", {
   ...required,
-  message: "필수 입력칸입니다."
+  message: "필수 입력칸입니다.",
 });
 
 extend("min", {
   ...min,
-  message: "{length} 자 이상이어야 합니다"
+  message: "{length} 자 이상이어야 합니다",
 });
 
 extend("max", {
   ...max,
-  message: "{length} 자 까지만 가능합니다"
+  message: "{length} 자 까지만 가능합니다",
 });
 
 extend("email", {
   ...email,
-  message: "이메일 형식이 아닙니다"
+  message: "이메일 형식이 아닙니다",
 });
 
 extend("passswordConfirm", {
@@ -98,17 +116,17 @@ extend("passswordConfirm", {
   validate(value, { target }) {
     return value === target;
   },
-  message: "비밀번호가 일치하지 않습니다"
+  message: "비밀번호가 일치하지 않습니다",
 });
 extend("agree", {
   ...required,
-  message: "약관을 동의해주세요"
+  message: "약관을 동의해주세요",
 });
 
 export default {
   components: {
     ValidationProvider,
-    ValidationObserver
+    ValidationObserver,
   },
   data: () => ({
     name: "",
@@ -116,29 +134,24 @@ export default {
     password: "",
     confirmation: "",
     checkbox: null,
-    valid: false
+    valid: false,
   }),
 
   methods: {
     async submit() {
       const isValid = await this.$refs.observer.validate();
       if (isValid) {
-        axios
-          .post("http://127.0.0.1:8000/rest-auth/signup/", {
-            email: this.email,
-            username: this.name,
-            password1: this.password,
-            password2: this.confirmation
-          })
-          .then(response => {
-            console.log(response);
-            this.$router.push("taste");
-          })
-          .catch(error => {
-            console.dir(error.data);
-          });
+        // data를 가지고 taste페이지로 이동.
+        // taste선택 후 한번에 submit
+        let array = {
+          email: this.email,
+          username: this.name,
+          password1: this.password,
+          password2: this.confirmation,
+        };
+        this.$router.push({ name: "taste", params: array });
       }
-    }
+    },
     // clear() {
     //   this.name = "";
     //   this.email = "";
@@ -147,6 +160,6 @@ export default {
     //   this.checkbox = null;
     //   this.$refs.observer.reset();
     // }
-  }
+  },
 };
 </script>

@@ -280,10 +280,17 @@ export default {
     clickMenu(menu) {
       if (menu != "수정") {
         //삭제
+        let token = localStorage.getItem("token");
+        let config = {
+          headers: {
+            Authorization: `Token ${token}`
+          }
+        };
         http
-          .delete(`/articles/${this.item.id}`)
+          .delete(`/articles/${this.item.id}`, config)
           .then(response => {
             alert(response.data.message);
+            this.$router.push("mypage")
           })
           .catch(response => {
             alert(response.data.message);

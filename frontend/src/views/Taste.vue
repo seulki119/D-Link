@@ -88,7 +88,7 @@ export default {
         .post("/rest-auth/signup/", this.$route.params)
         .then((response) => {
           let token = response.data.key
-
+          localStorage.setItem("token", token);
           let config = {
             headers: {
               Authorization: `Token ${token}`,

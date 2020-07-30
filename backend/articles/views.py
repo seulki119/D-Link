@@ -77,17 +77,18 @@ def comment_create(request, article_pk):
         serializer.save(user=request.user, article_id=article_pk)
         return Response(serializer.data)
 
-@api_view(['PUT'])
+@api_view(['PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])    
 def comment_ud(request, article_pk, comment_pk):
     article = get_object_or_404(Article, pk=article_pk)
     comments = article.comment_set.all()
     comment = comments.get(pk=comment_pk)
     if request.user == comment.user:
-        serializer = CommentSerializer(data=request.data, instance=comment)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data)
+        if request.method == 'PUT':
+                serializer = CommentSerializer(data=request.data, instance=comment)
+                if serializer.is_valid(raise_exception=True):
+                    serializer.save()
+                    return Response(serializer.data)
         else:
             comment.delete()
             return Response({'message': "성공적으로 삭제되었습니다"})

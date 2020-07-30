@@ -8,7 +8,7 @@
         <v-list-item-content>
           <v-list-item-title>{{ item.user.username }}</v-list-item-title>
         </v-list-item-content>
-      </v-list-item>s
+      </v-list-item>
       <v-img :src="`//127.0.0.1:8000/${item.image}`" height="300"></v-img>
 
       <v-card-text>
@@ -70,25 +70,46 @@
               <v-list-item-title>{{ comment.user.username }}</v-list-item-title>
               <v-list-item-subtitle>{{ comment.content }}</v-list-item-subtitle>
             </v-list-item-content>
-            <!-- <v-btn
+
+            <!-- 본인댓글 : 삭제 가능 -->
+            <v-btn
               v-show="comment.user.id == userId"
               text
-              color="deep-purple accent-4"
-              @click="updateComment(comment.id)"
-            >수정</v-btn>-->
+              color="deep-purple accent-2"
+              @click="snackbar = true"
+            >:</v-btn>
 
-            <!-- snackbar : 대댓글달기, 댓글 삭제 -->
-            <v-btn text color="deep-purple accent-2" @click="snackbar = true">:</v-btn>
-            <v-snackbar v-model="snackbar" :vertical="!vertical">
+            <v-snackbar v-model="snackbar" :timeout="timeout">
               {{ text }}
               <template v-slot:action="{ attrs }">
                 <v-btn
+                  v-show="comment.user.id == userId"
                   color="deep-purple accent-2"
                   v-bind="attrs"
                   @click="deleteComment(comment.id)"
                 >삭제</v-btn>
 
                 <v-btn text color="deep-purple accent-2" v-bind="attrs" @click="snackbar = false">X</v-btn>
+              </template>
+            </v-snackbar>
+            <!-- 일반 댓글 : 대댓글 달기 -->
+            <v-btn
+              v-show="comment.user.id != userId"
+              text
+              color="deep-purple accent-2"
+              @click="snackbar2 = true"
+            >:</v-btn>
+
+            <v-snackbar v-model="snackbar2" :timeout="timeout">
+              {{ text }}
+              <template v-slot:action="{ attrs }">
+                <v-btn
+                  v-show="comment.user.id == userId"
+                  color="deep-purple accent-2"
+                  v-bind="attrs"
+                >댓글달기</v-btn>
+
+                <v-btn text color="deep-purple accent-2" v-bind="attrs" @click="snackbar2 = false">X</v-btn>
               </template>
             </v-snackbar>
           </v-list-item>
@@ -135,8 +156,9 @@ export default {
       showComment: { username: "", content: "" },
       myComment: "",
       snackbar: false,
-      text: "Lorem ipsum dolor sit amet",
-      vertical: true
+      snackbar2: false,
+      timeout: 1500,
+      text: "댓글 기능 텍스트"
     };
   },
   created() {
@@ -207,14 +229,11 @@ export default {
         }
       };
 
-      // const fd = new FormData();
-      // // fd.append("user", this.userId);
-      // fd.append("content", "수정");
-
       http
         .delete(`/articles/${this.item.id}/comment/${commId}/`, config)
         .then(response => {
           console.log(response);
+          this.snackbar = false;
           this.$store.dispatch(
             "getArticle",
             `/articles/${this.$route.query.id}`

@@ -12,7 +12,7 @@
           </v-toolbar>
           <div class="pa-3">
             <v-text-field v-model="email" label="이메일을 입력하세요"></v-text-field>
-            <v-text-field v-model="password" type="password" label="비밀번호를 입력하세요"></v-text-field>
+            <v-text-field v-model="password" type="password" @keypress.enter="login({email,password})" label="비밀번호를 입력하세요"></v-text-field>
             <v-btn color="primary" depressed block large @click="login({email,password})">로그인</v-btn>
             <v-btn color="primary" depressed block large @click="getAuth()">구글로그인</v-btn>
           </div>

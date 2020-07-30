@@ -6,7 +6,7 @@
 
 <template>
   <v-container class="mx-auto" max-width="600" min-width="300">
-    <v-card class="pa-5" max-width="590" min-width="290">
+    <v-card class="mx-auto pa-5" max-width="590" min-width="290">
       <v-img :src="preview" class="img-fluid ma-5" />
       <v-file-input
         small-chips
@@ -63,7 +63,14 @@ export default {
     };
   },
   created() {
-    http.post("/articles/hashtag/").then(res => {
+    let token = localStorage.getItem("token");
+
+    let config = {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    };
+    http.post("/articles/hashtag/", "", config).then(res => {
       let tmp = [];
       for (let t in res.data) {
         tmp.push(res.data[t].tag);

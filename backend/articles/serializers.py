@@ -50,10 +50,6 @@ class ArticleSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('id', 'user', 'createdAt', 'updatedAt')
 
-
-
-    
-
 class ArticleCreateSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False)
 

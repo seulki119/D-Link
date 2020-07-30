@@ -1,20 +1,27 @@
 <!-- eslint-disable -->
 <template>
   <v-app id="inspire">
-    <v-app-bar v-if="isLogin" app grow color="indigo" dark>
-      <v-btn icon router :to="{ name: 'home' }">
-        <v-icon>mdi-history</v-icon>
-        <span>홈</span>
+    <v-app-bar
+      v-if="isLogin"
+      app
+      grow
+      color="indigo"
+      dark
+      max-width="600"
+      min-width="300"
+      class="mx-auto"
+    >
+      <!--    im so crazy -->
+      <v-btn v-if="canBack" icon router @click="router.go(-1)">
+        <v-icon left>mdi-history</v-icon>뒤로가기
       </v-btn>
       <v-spacer></v-spacer>
       <v-btn icon @click="$store.dispatch('logout')">
-        <v-icon>mdi-heart</v-icon>
-        <span>로그아웃</span>
+        <v-icon left>mdi-heart</v-icon>로그아웃
       </v-btn>
       <v-spacer></v-spacer>
       <v-btn icon router :to="{ name: 'mypage' }">
-        <v-icon>mdi-map-marker</v-icon>
-        <span>마이페이지</span>
+        <v-icon left>mdi-map-marker</v-icon>마이페이지
       </v-btn>
     </v-app-bar>
 
@@ -23,18 +30,18 @@
     </v-main>
     <v-bottom-navigation v-if="isLogin" grow color="teal">
       <v-btn icon router :to="{ name: 'articlelist' }">
-        <span>Home</span>
+        Home
         <v-icon>mdi-home</v-icon>
       </v-btn>
 
       <v-btn icon router :to="{ name: 'createArticle' }">
-        <span>파일 업로드</span>
+        파일 업로드
         <v-icon>mdi-history</v-icon>
       </v-btn>
 
       <v-btn>
-        <span>Nearby</span>
-        <v-icon>mdi-map-marker</v-icon>
+        마이페이지
+        <v-icon>mdi-account</v-icon>
       </v-btn>
     </v-bottom-navigation>
   </v-app>
@@ -44,13 +51,19 @@
 import { mapState } from "vuex";
 export default {
   props: {
-    source: String,
+    source: String
   },
   data: () => ({
     drawer: null,
+    canBack: false
   }),
   computed: {
-    ...mapState(["isLogin"]),
+    ...mapState(["isLogin"])
   },
+  methods: {
+    back() {
+      console.log(this.$router.options.routes);
+    }
+  }
 };
 </script>

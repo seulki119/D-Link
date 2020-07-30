@@ -65,6 +65,10 @@ export default {
     ],
     selected: [],
   }),
+  // created() {
+  // //Signup에서 데이터 제대로 받아오는지 테스트
+  //   console.log(this.$route.params);
+  // },
   methods: {
     selectAction(n) {
       if (!this.selected.includes(n)) {
@@ -80,19 +84,31 @@ export default {
     },
     submit() {
       // 회원가입처리
-      // 백앤드 통신 추가.
-      // 성공시 메인화면으로 이동.(피드리스트)
       http
-        .post("/accounts/taste/", this.selected)
+        .post("/rest-auth/signup/", this.$route.params)
         .then((response) => {
-          console.log(response.data.message);
           console.log(response);
-          this.$router.push("articlelist");
+          // 회원가입처리 성공시 취향 처리
+          http
+            .post("/accounts/taste/", {
+              username: this.$route.params.username,
+              taste1: this.selected[0],
+              taste2: this.selected[1],
+            })
+            .then((response) => {
+              // 취향선택 성공시 피드리스트로 이동.
+              console.log(response.data.message);
+              console.log(response);
+              this.$router.push("articlelist");
+            })
+            .catch((response) => {
+              console.log(response);
+            });
         })
         .catch((response) => {
-          console.log(response);
-
-          console.log(response.data.message);
+          // 회원가입 실패시 다시 가입페이지로 이동.
+          console.dir(response.data);
+          this.$router.push("signup");
         });
     },
   },

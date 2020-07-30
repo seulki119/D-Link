@@ -49,7 +49,7 @@
 </template>
 
 <script>
-// import axios from "axios";
+import http from "@/util/http-common";
 
 export default {
   data: () => ({
@@ -69,7 +69,7 @@ export default {
     selectAction(n) {
       if (!this.selected.includes(n)) {
         // 선택하지 않은 옵션을 클릭했을 경우 - add
-        if (this.selected.length < 3) {
+        if (this.selected.length < 2) {
           this.selected.push(n);
         }
       } else {
@@ -82,7 +82,18 @@ export default {
       // 회원가입처리
       // 백앤드 통신 추가.
       // 성공시 메인화면으로 이동.(피드리스트)
-      this.$router.push("articlelist");
+      http
+        .post("/accounts/taste/", this.selected)
+        .then((response) => {
+          console.log(response.data.message);
+          console.log(response);
+          this.$router.push("articlelist");
+        })
+        .catch((response) => {
+          console.log(response);
+
+          console.log(response.data.message);
+        });
     },
   },
 };

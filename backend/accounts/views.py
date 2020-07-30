@@ -7,14 +7,22 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework import generics  
 from .serializers import ChangePasswordSerializer
-from .serializers import UserSerializer, UserTasteSerializer
+from .serializers import UserSerializer, UserTasteSerializer, UserUpdateSerializer
 
 # Create your views here.
 
-@api_view(['POST'])
+@api_view(['POST', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
-def mypage(request, username): 
-    serializer = UserSerializer(request.user)
+def mypage(request, username):
+    if request.method == 'POST':
+        serializer = UserSerializer(request.user)
+    elif request.method == 'PUT':
+        serializer = UserUpdateSerializer(data=request.data, instance=request.user)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+    else:
+        request.user.delete()
+        return Response({'message': '성공적으로 삭제되었습니다.'})
     return Response(serializer.data)
     
 class ChangePasswordView(generics.UpdateAPIView):

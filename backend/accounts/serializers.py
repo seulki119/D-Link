@@ -20,6 +20,12 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'image', 'intro', 'scrapSet', 'articleSet')
 
+class UserUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('username', 'image', 'intro', 'taste1', 'taste2')
+
 class ChangePasswordSerializer(serializers.Serializer):
     model = User
 

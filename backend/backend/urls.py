@@ -24,4 +24,5 @@ urlpatterns = [
     path('rest-auth/signup/', include('rest_auth.registration.urls')),
     path('accounts/', include('accounts.urls')),
     path('articles/', include('articles.urls')),
+    path('authaccounts/', include('allauth.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

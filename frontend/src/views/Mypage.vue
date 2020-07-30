@@ -47,27 +47,19 @@
               </v-row>
             </v-container>
           </v-tab-item>
-          <!-- <v-tab-item>
+          <v-tab-item>
             <v-container fluid>
               <v-row>
-                <v-col
-                  v-for="n in scrapSet"
-                  :key="n.image"
-                  class="d-flex child-flex"
-                  cols="12"
-                  md="4"
-                >
-                  <v-card flat tile class="d-flex">
-                    <v-img
-                      :src="`//127.0.0.1:8000/${n.image}`"
-                      class="grey lighten-2 pa-1"
-                      aspect-ratio="1"
-                    ></v-img>
-                  </v-card>
+                <v-col v-for="n in scrapSet" :key="n.image" cols="4">
+                  <v-img
+                    :src="`//127.0.0.1:8000/${n.image}`"
+                    class="grey lighten-2 pa-1"
+                    aspect-ratio="1"
+                  ></v-img>
                 </v-col>
               </v-row>
             </v-container>
-          </v-tab-item>-->
+          </v-tab-item>
         </v-tabs>
       </v-card>
     </v-card>

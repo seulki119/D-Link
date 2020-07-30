@@ -54,10 +54,9 @@
           파일 업로드
           <v-icon>mdi-plus</v-icon>
         </v-btn>
-
-        <v-btn icon router :to="{ name: 'mypage' }">
-          마이페이지
-          <v-icon>mdi-account</v-icon>
+        <v-btn icon>
+          컨텐츠
+          <v-icon>mdi-dialpad</v-icon>
         </v-btn>
       </v-bottom-navigation>
     </v-footer>

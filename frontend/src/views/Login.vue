@@ -14,6 +14,7 @@
             <v-text-field v-model="email" label="이메일을 입력하세요"></v-text-field>
             <v-text-field v-model="password" type="password" label="비밀번호를 입력하세요"></v-text-field>
             <v-btn color="primary" depressed block large @click="login({email,password})">로그인</v-btn>
+            <v-btn color="primary" depressed block large @click="getAuth()">구글로그인</v-btn>
           </div>
         </v-card>
       </v-flex>
@@ -34,7 +35,19 @@ export default {
     ...mapState(["isLogin", "isLoginError"])
   },
   methods: {
-    ...mapActions(["login"])
+    ...mapActions(["login"]),
+    getAuth() {
+      this.$gAuth.getAuthCode()
+      .then(authCode => {
+        this.$store.dispatch('googleLogin', authCode)
+      })
+      .then(response => {
+        console.log(response)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    }
   }
 };
 </script>

@@ -159,5 +159,20 @@ export default new Vuex.Store({
           alert("에러가 발생했습니다.");
         });
     },
+    googleLogin(context, authCode) {
+      http
+      .post("/accounts/google/", { code: authCode, redirect_uri: 'postmessage' })
+      .then((res) => {
+        console.log(res)
+        let token = res.data.key;
+
+        // 토큰을 로컬스토리지에 저장
+        localStorage.setItem("token", token);
+        this.dispatch("getUserInfo");
+      })
+      .catch(error => {
+        console.log(error)
+      }) 
+    }
   },
 });

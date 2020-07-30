@@ -51,7 +51,7 @@
             <v-list-item-avatar color="grey"></v-list-item-avatar>
 
             <v-list-item-content>
-              <!-- <v-list-item-title>{{ showComment.username }}</v-list-item-title> -->
+              <v-list-item-title>{{ showComment.username }}</v-list-item-title>
               <v-list-item-subtitle>{{ showComment.content }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -67,15 +67,30 @@
             </v-list-item-avatar>
 
             <v-list-item-content>
-              <!-- <v-list-item-title>{{ comment.user.username }}</v-list-item-title> -->
+              <v-list-item-title>{{ comment.user.username }}</v-list-item-title>
               <v-list-item-subtitle>{{ comment.content }}</v-list-item-subtitle>
             </v-list-item-content>
-            <v-btn
+            <!-- <v-btn
               v-show="comment.user.id == userId"
               text
               color="deep-purple accent-4"
               @click="updateComment(comment.id)"
-            >수정</v-btn>
+            >수정</v-btn>-->
+
+            <!-- snackbar : 대댓글달기, 댓글 삭제 -->
+            <v-btn text color="deep-purple accent-2" @click="snackbar = true">:</v-btn>
+            <v-snackbar v-model="snackbar" :vertical="!vertical">
+              {{ text }}
+              <template v-slot:action="{ attrs }">
+                <v-btn
+                  color="deep-purple accent-2"
+                  v-bind="attrs"
+                  @click="deleteComment(comment.id)"
+                >삭제</v-btn>
+
+                <v-btn text color="deep-purple accent-2" v-bind="attrs" @click="snackbar = false">X</v-btn>
+              </template>
+            </v-snackbar>
           </v-list-item>
         </v-card-text>
       </v-slide-y-transition>
@@ -118,7 +133,10 @@ export default {
       readMoreActivated: false,
       show: false,
       showComment: { username: "", content: "" },
-      myComment: ""
+      myComment: "",
+      snackbar: false,
+      text: "Lorem ipsum dolor sit amet",
+      vertical: true
     };
   },
   created() {
@@ -180,8 +198,8 @@ export default {
           console.log(err);
         });
     },
-    //댓글수정
-    updateComment(commId) {
+    //댓글삭제
+    deleteComment(commId) {
       let token = localStorage.getItem("token");
       let config = {
         headers: {
@@ -189,12 +207,12 @@ export default {
         }
       };
 
-      const fd = new FormData();
-      // fd.append("user", this.userId);
-      fd.append("content", "수정");
+      // const fd = new FormData();
+      // // fd.append("user", this.userId);
+      // fd.append("content", "수정");
 
       http
-        .put(`/articles/${this.item.id}/comment/${commId}/`, fd, config)
+        .delete(`/articles/${this.item.id}/comment/${commId}/`, config)
         .then(response => {
           console.log(response);
           this.$store.dispatch(

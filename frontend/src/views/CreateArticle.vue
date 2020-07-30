@@ -5,48 +5,44 @@
 -->
 
 <template>
-  <v-container class="fill-height" style="max-width:450px">
-    <div id="app">
-      <v-app id="inspire">
-        <v-card class="pa-5" max-width="400" min-width="300">
-          <v-img :src="preview" class="img-fluid ma-5" />
-          <v-file-input
-            small-chips
-            color="deep-purple accent-4"
-            accept="image/*"
-            label="Uplode a Image"
-            prepend-icon="mdi-plus"
-            dense
-            :show-size="1000"
-            v-model="file"
-            @change="add"
-            class="pt-6 mx-6"
-          ></v-file-input>
-          <v-divider></v-divider>
-          <v-combobox
-            class="pt-6"
-            v-model="tag"
-            :items="items"
-            label="태그 입력하세요"
-            :maxlength="max"
-            @keypress="isNotSpecail"
-            multiple
-            chips
-            dense
-          ></v-combobox>
-          <v-divider></v-divider>
-          <v-card-text class="text--primary">
-            <v-textarea v-model="content" label="내용" counter maxlength="120" full-width single-line></v-textarea>
-          </v-card-text>
+  <v-container class="mx-auto" max-width="600" min-width="300">
+    <v-card class="pa-5" max-width="590" min-width="290">
+      <v-img :src="preview" class="img-fluid ma-5" />
+      <v-file-input
+        small-chips
+        color="deep-purple accent-4"
+        accept="image/*"
+        label="Uplode a Image"
+        prepend-icon="mdi-plus"
+        dense
+        :show-size="1000"
+        v-model="file"
+        @change="add"
+        class="pt-6 mx-6"
+      ></v-file-input>
+      <v-divider></v-divider>
+      <v-combobox
+        class="pt-6"
+        v-model="tag"
+        :items="items"
+        label="태그 입력하세요"
+        :maxlength="max"
+        @keypress="isNotSpecail"
+        multiple
+        chips
+        dense
+      ></v-combobox>
+      <v-divider></v-divider>
+      <v-card-text class="text--primary">
+        <v-textarea v-model="content" label="내용" counter maxlength="120" full-width single-line></v-textarea>
+      </v-card-text>
 
-          <v-divider></v-divider>
-          <v-btn block color="blue-grey" class="ma-2 white--text" @click="upload" v-if="fill">
-            Upload
-            <v-icon right dark>mdi-cloud-upload</v-icon>
-          </v-btn>
-        </v-card>
-      </v-app>
-    </div>
+      <v-divider></v-divider>
+      <v-btn block color="blue-grey" class="ma-2 white--text" @click="upload" v-if="fill">
+        Upload
+        <v-icon right dark>mdi-cloud-upload</v-icon>
+      </v-btn>
+    </v-card>
   </v-container>
 </template>
 

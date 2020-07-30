@@ -13,5 +13,6 @@ urlpatterns = [
     path('<int:article_pk>/scrap/', views.scrap, name='scrap'),
     path('<int:article_pk>/comment/', views.comment_create),
     path('<int:article_pk>/comment/<int:comment_pk>/', views.comment_ud),
+    path('search/', views.search),
     path('hashtag/', views.hashtag),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

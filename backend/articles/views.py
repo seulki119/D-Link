@@ -100,3 +100,23 @@ def hashtag(request):
     hashtag = Hashtag.objects.all()
     serializer = HashtagSerializser(hashtag, many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def search(request):
+    hashtags = request.data.get('hashtags')
+    is_first = False
+    for hashtag in hashtags.split('#'):
+        if hashtag:
+            hashtag_id = Hashtag.objects.get(tag=hashtag)
+            print(hashtag_id)
+            if is_first == False:
+                articles = Article.objects.filter(hashtag=hashtag_id).distinct()
+            else:
+                searched_articles = Article.objects.filter(hashtag=hashtag_id).distinct()
+                print(searched_articles)
+                articles = (articles | searched_articles).distinct()
+                print(articles)
+            is_first = True
+    serializer = ArticleListSerializer(articles, many=True)
+    return Response(serializer.data)

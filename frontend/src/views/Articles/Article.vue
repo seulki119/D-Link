@@ -20,7 +20,11 @@
           </template>
 
           <v-list>
-            <v-list-item v-for="(menu, index) in articleMenu" :key="index" @click="clickMenu(menu)">
+            <v-list-item
+              v-for="(menu, index) in articleMenu"
+              :key="index"
+              @click="clickMenu(menu)"
+            >
               <v-list-item-title>{{ menu }}</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -37,13 +41,24 @@
             @click="scrapAct(item.id)"
             :src="(scrapSrc = scrapNo)"
           />
-          <img v-else class="scrapInfo" @click="scrapAct(item.id)" :src="(scrapSrc = scrapYes)" />
+          <img
+            v-else
+            class="scrapInfo"
+            @click="scrapAct(item.id)"
+            :src="(scrapSrc = scrapYes)"
+          />
         </div>
       </v-card-text>
       <!-- content는 45자까지만 보여주고, 더보기 클릭시 전체 보여줌 -->
       <v-card-text style="color:black">
         <span v-if="!readMoreActivated">{{ item.content.slice(0, 45) }}</span>
-        <a style="color:gray;" class v-if="!readMoreActivated" @click="activateReadMore">...더보기</a>
+        <a
+          style="color:gray;"
+          class
+          v-if="!readMoreActivated"
+          @click="activateReadMore"
+          >...더보기</a
+        >
         <span v-if="readMoreActivated" v-html="item.content"></span>
       </v-card-text>
 
@@ -61,26 +76,32 @@
           v-if="item.commentSet.length > 0"
         >
           {{
-          show ? "댓글 접기" : `댓글 ${item.commentSet.length}개 모두 보기`
+            show ? "댓글 접기" : `댓글 ${item.commentSet.length}개 모두 보기`
           }}
         </v-btn>
         <v-spacer></v-spacer>
       </v-card-actions>
       <!-- 본인댓글이나 최신댓글 1개 보여주기 -->
-      <v-slide-y-transition v-if="item.commentSet.length > 0 && showComment.content != ''">
+      <v-slide-y-transition
+        v-if="item.commentSet.length > 0 && showComment.content != ''"
+      >
         <v-card-text v-show="!show">
           <v-list-item>
             <v-list-item-avatar color="grey"></v-list-item-avatar>
 
             <v-list-item-content>
               <v-list-item-title>{{ showComment.username }}</v-list-item-title>
-              <v-list-item-subtitle>{{ showComment.content }}</v-list-item-subtitle>
+              <v-list-item-subtitle>{{
+                showComment.content
+              }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-card-text>
       </v-slide-y-transition>
       <!-- 댓글 모두보기 -->
-      <v-slide-y-transition v-if="item.commentSet !== undefined && item.commentSet.length > 0">
+      <v-slide-y-transition
+        v-if="item.commentSet !== undefined && item.commentSet.length > 0"
+      >
         <v-card-text v-show="show">
           <!--  -->
           <v-list-item v-for="(comment, index) in item.commentSet" :key="index">
@@ -112,9 +133,16 @@
                   color="deep-purple accent-2"
                   v-bind="attrs"
                   @click="deleteComment(comment.id)"
-                >삭제</v-btn>
+                  >삭제</v-btn
+                >
 
-                <v-btn text color="deep-purple accent-2" v-bind="attrs" @click="snackbar = false">X</v-btn>
+                <v-btn
+                  text
+                  color="deep-purple accent-2"
+                  v-bind="attrs"
+                  @click="snackbar = false"
+                  >X</v-btn
+                >
               </template>
             </v-snackbar>
             <!-- 일반 댓글 : 대댓글 달기 -->
@@ -123,7 +151,8 @@
               text
               color="deep-purple accent-2"
               @click="snackbar2 = true"
-            >:</v-btn>
+              >:</v-btn
+            >
 
             <v-snackbar v-model="snackbar2" :timeout="timeout">
               {{ text }}
@@ -132,9 +161,16 @@
                   v-show="comment.user.id == userId"
                   color="deep-purple accent-2"
                   v-bind="attrs"
-                >댓글달기</v-btn>
+                  >댓글달기</v-btn
+                >
 
-                <v-btn text color="deep-purple accent-2" v-bind="attrs" @click="snackbar2 = false">X</v-btn>
+                <v-btn
+                  text
+                  color="deep-purple accent-2"
+                  v-bind="attrs"
+                  @click="snackbar2 = false"
+                  >X</v-btn
+                >
               </template>
             </v-snackbar>
           </v-list-item>
@@ -169,7 +205,7 @@ export default {
   computed: {
     ...mapGetters(["item"]),
     ...mapGetters(["userId"]),
-    ...mapGetters(["userName"])
+    ...mapGetters(["userName"]),
   },
   data: function() {
     return {
@@ -185,7 +221,7 @@ export default {
       timeout: 1500,
       text: "댓글 기능 텍스트",
       hashtags: [],
-      articleMenu: ["수정", "삭제"]
+      articleMenu: ["수정", "삭제"],
     };
   },
   created() {
@@ -220,7 +256,7 @@ export default {
       this.$store.dispatch("doScrap", {
         url: `/articles/${id}/scrap`,
         page: "article",
-        id: `${id}`
+        id: `${id}`,
       });
     },
     activateReadMore() {
@@ -232,8 +268,8 @@ export default {
       let token = localStorage.getItem("token");
       let config = {
         headers: {
-          Authorization: `Token ${token}`
-        }
+          Authorization: `Token ${token}`,
+        },
       };
 
       const fd = new FormData();
@@ -242,7 +278,7 @@ export default {
 
       http
         .post(`/articles/${this.item.id}/comment/`, fd, config)
-        .then(response => {
+        .then((response) => {
           console.log(response);
           this.$store.dispatch(
             "getArticle",
@@ -250,7 +286,7 @@ export default {
           );
           this.myComment = "";
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
@@ -259,13 +295,13 @@ export default {
       let token = localStorage.getItem("token");
       let config = {
         headers: {
-          Authorization: `Token ${token}`
-        }
+          Authorization: `Token ${token}`,
+        },
       };
 
       http
         .delete(`/articles/${this.item.id}/comment/${commId}/`, config)
-        .then(response => {
+        .then((response) => {
           console.log(response);
           this.snackbar = false;
           this.$store.dispatch(
@@ -273,23 +309,32 @@ export default {
             `/articles/${this.$route.query.id}`
           );
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err.response);
         });
     },
     clickMenu(menu) {
       if (menu != "수정") {
         //삭제
+        let token = localStorage.getItem("token");
+        let config = {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        };
+
         http
-          .delete(`/articles/${this.item.id}`)
-          .then(response => {
+          .delete(`/articles/${this.item.id}`, config)
+          .then((response) => {
             alert(response.data.message);
+            //삭제완료시 뒤로가기.
+            this.$router.go(-1);
           })
-          .catch(response => {
+          .catch((response) => {
             alert(response.data.message);
           });
       }
-    }
-  }
+    },
+  },
 };
 </script>

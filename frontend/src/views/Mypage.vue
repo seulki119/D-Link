@@ -27,6 +27,9 @@
           </v-list-item>
         </v-col>
       </v-row>
+      <v-btn block color="black" class="ma-2 white--text" @click="update">
+        <v-icon left dark>mdi-account</v-icon>프로필 수정
+      </v-btn>
       <v-divider></v-divider>
 
       <!-- <v-col cols="12"> -->
@@ -42,6 +45,7 @@
                     :src="`//127.0.0.1:8000/${n.image}`"
                     class="grey lighten-2 pa-1"
                     aspect-ratio="1"
+                    @click="showDetail(n.id)"
                   ></v-img>
                 </v-col>
               </v-row>
@@ -55,6 +59,7 @@
                     :src="`//127.0.0.1:8000/${n.image}`"
                     class="grey lighten-2 pa-1"
                     aspect-ratio="1"
+                    @click="showDetail(n.id)"
                   ></v-img>
                 </v-col>
               </v-row>
@@ -104,7 +109,10 @@ export default {
     ...mapState(["userInfo"])
   },
   methods: {
-    print() {}
+    showDetail(id) {
+      this.$router.push(`article?id=${id}`);
+    },
+    update() {}
   }
 };
 </script>

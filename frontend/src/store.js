@@ -112,8 +112,15 @@ export default new Vuex.Store({
       // });
     },
     getArticles(context, payload) {
+      let token = localStorage.getItem("token");
+
+      let config = {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      }
       http
-        .get(payload)
+        .get(payload, config)
         .then((response) => {
           // console.log(response);
           context.commit("setItems", response.data);
@@ -123,8 +130,15 @@ export default new Vuex.Store({
         });
     },
     getArticle(context, payload) {
+      let token = localStorage.getItem("token");
+
+      let config = {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      }
       http
-        .get(payload)
+        .get(payload, config)
         .then((response) => {
           console.log(response);
           context.commit("setItem", response.data);

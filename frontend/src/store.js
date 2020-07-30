@@ -11,6 +11,22 @@ export default new Vuex.Store({
     userInfo: null,
     isLogin: false,
     isLoginError: false,
+    items: [],
+    item: {},
+  },
+  getters: {
+    userId(state) {
+      return state.userInfo.pk;
+    },
+    userName(state) {
+      return state.userInfo.username;
+    },
+    items(state) {
+      return state.items;
+    },
+    item(state) {
+      return state.item;
+    },
   },
   //차후 Taste는 로그인이 되어있을때만 갈 수 있게;
   mutations: {
@@ -31,6 +47,14 @@ export default new Vuex.Store({
       state.isLoginError = false;
       state.userInfo = null;
       localStorage.removeItem("token");
+    },
+    // item list
+    setItems(state, payload) {
+      state.items = payload;
+    },
+    // item 한개
+    setItem(state, payload) {
+      state.item = payload;
     },
   },
   actions: {
@@ -70,24 +94,70 @@ export default new Vuex.Store({
       };
       // 헤더 with 토큰 -> 유저 정보를 반환
       // 새로고침 하더라도 토큰만으로 계속 유저 정보를 요청하게 한다!
-      http
-        .get("/rest-auth/user/", config)
-        .then((response) => {
-          let userInfo = {
-            pk: response.data.pk,
-            username: response.data.username,
-            email: response.data.email,
-            first_name: response.data.first_name,
-            last_name: response.data.last_name,
-          };
-          //여기서 나중에 userinfo에서 취향 여부를 확인하고 취향을 선택 안 했을경우,
-          //taste로 가게 한다.!!
-          commit("loginSuccess", userInfo);
-          router.push("home")
-        })
+      http.get("/rest-auth/user/", config).then((response) => {
+        let userInfo = {
+          pk: response.data.pk,
+          username: response.data.username,
+          email: response.data.email,
+          first_name: response.data.first_name,
+          last_name: response.data.last_name,
+        };
+        //여기서 나중에 userinfo에서 취향 여부를 확인하고 취향을 선택 안 했을경우,
+        //taste로 가게 한다.!!
+        commit("loginSuccess", userInfo);
+        router.push("home");
+      });
       // .catch(() => {
       //   alert("이메일과 비밀번호를 확인하세요.");
       // });
+    },
+    getArticles(context, payload) {
+      http
+        .get(payload)
+        .then((response) => {
+          // console.log(response);
+          context.commit("setItems", response.data);
+        })
+        .catch(() => {
+          alert("에러가 발생했습니다.");
+        });
+    },
+    getArticle(context, payload) {
+      http
+        .get(payload)
+        .then((response) => {
+          console.log(response);
+          context.commit("setItem", response.data);
+        })
+        .catch(() => {
+          alert("에러가 발생했습니다.");
+        });
+    },
+    doScrap(context, payload) {
+      // 로컬 스토리지에 저장된 토큰 불러오기
+      let token = localStorage.getItem("token");
+
+      let config = {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      };
+      http
+        .get(payload.url, config)
+        .then((response) => {
+          console.log(response);
+          // scrap처리 후 카운트 변경을 위해 데이터를 다시 받아온다.
+          console.log(payload.url);
+          if (payload.page == "articlelist") {
+            this.dispatch("getArticles", "/articles");
+          } else if (payload.page == "article") {
+            this.dispatch("getArticle", `/articles/${payload.id}`);
+          }
+        })
+        .catch((response) => {
+          console.log(response);
+          alert("에러가 발생했습니다.");
+        });
     },
   },
 });

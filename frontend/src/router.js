@@ -58,6 +58,22 @@ const routes = [
       import(/* webpackChunkName: "mypage" */ "./views/Mypage.vue"),
   },
   {
+    path: "/articlelist",
+    name: "articlelist",
+    beforeEnter: onlyAuthUser,
+    component: () =>
+      import(
+        /* webpackChunkName: "articlelist" */ "./views/Articles/ArticleList.vue"
+      ),
+  },
+  {
+    path: "/article",
+    name: "article",
+    beforeEnter: onlyAuthUser,
+    component: () =>
+      import(/* webpackChunkName: "article" */ "./views/Articles/Article.vue"),
+  },
+  {
     path: "/createArticle",
     name: "createArticle",
     beforeEnter: onlyAuthUser,

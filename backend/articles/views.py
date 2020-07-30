@@ -5,8 +5,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Article, Hashtag
-from .serializers import ArticleSerializer, ArticleListSerializer, ArticleCreateSerializer, ArticleScrapSerializer
-from .serializers import CommentSerializer, HashtagSerializser
+from .serializers import ArticleSerializer, ArticleListSerializer, ArticleCreateSerializer, ArticleScrapSerializer, CommentSerializer, HashtagSerializser
+import os
+from django.conf import settings
 
 # Create your views here.
 
@@ -34,6 +35,8 @@ def index(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def detail(request, article_pk):
+    IMG_ROOT = os.path.join(settings.BASE_DIR,'movies','media')
+
     if request.method == 'GET':
         article = get_object_or_404(Article, pk=article_pk)
         serializer = ArticleSerializer(article)

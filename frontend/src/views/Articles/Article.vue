@@ -64,7 +64,13 @@
 
       <!-- 해쉬태그 출력 -->
       <v-card-text>
-        <v-combobox class="pt-6" v-model="hashtags" multiple chips></v-combobox>
+        <v-combobox
+          class="pt-6"
+          v-model="hashtags"
+          multiple
+          chips
+          readonly
+        ></v-combobox>
       </v-card-text>
 
       <!-- 댓글 접기/펼치기 버튼 -->

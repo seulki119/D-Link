@@ -105,8 +105,8 @@ export default {
             .then((response) => {
               // 취향선택 성공시 피드리스트로 이동.
               console.log(response.data.message);
-              console.log(response);
-              this.$router.push("articlelist");
+              // console.log(response);
+              this.$store.dispatch("getUserInfo");
             })
             .catch((response) => {
               console.log(response);

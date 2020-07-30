@@ -87,6 +87,13 @@ export default {
       http
         .post("/rest-auth/signup/", this.$route.params)
         .then((response) => {
+          let token = response.data.key
+
+          let config = {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
           console.log(response);
           // 회원가입처리 성공시 취향 처리
           http
@@ -94,7 +101,7 @@ export default {
               username: this.$route.params.username,
               taste1: this.selected[0],
               taste2: this.selected[1],
-            })
+            }, config)
             .then((response) => {
               // 취향선택 성공시 피드리스트로 이동.
               console.log(response.data.message);

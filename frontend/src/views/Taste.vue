@@ -69,7 +69,9 @@ export default {
         }
       } else {
         // 이미 선택된 옵션 클릭시 - remove
-        this.selected.pop(n.name);
+        // this.selected.pop(n.name);
+        let i = this.selected.indexOf(n.name);
+        this.selected.splice(i, 1);
         n.isIn = "";
       }
       console.log(this.selected);

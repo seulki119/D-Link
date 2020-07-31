@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!loading">
     <v-card max-width="344" class="mx-auto">
       <v-list-item>
         <v-list-item-avatar color="grey">
@@ -159,6 +159,7 @@
       </v-card-actions>
     </v-card>
   </div>
+  <div class="overlay" v-else>로딩중</div>
 </template>
 
 <script>
@@ -173,6 +174,7 @@ export default {
   },
   data: function() {
     return {
+      loading: false,
       scrapSrc: "",
       scrapNo: "https://img.icons8.com/carbon-copy/24/000000/wine-glass.png",
       scrapYes: "https://img.icons8.com/plasticine/24/000000/wine-glass.png",
@@ -190,30 +192,35 @@ export default {
   },
   created() {
     // article id로 게시물정보 가져오기.
-    this.$store.dispatch("getArticle", `/articles/${this.$route.query.id}`);
+    this.loading = true;
 
-    let array = this.item.commentSet;
-
-    if (array !== undefined) {
-      for (let index = 0; index < array.length; index++) {
-        if (array[index].user.id === this.userId) {
-          this.showComment.username = array[index].user.username;
-          this.showComment.content = array[index].content;
-          break;
-        } else if (index == array.length - 1) {
-          this.showComment.username = array[index].user.username;
-          this.showComment.content = array[index].content;
-        }
-      }
-    }
-
-    let tagArray = this.item.hashtag;
-    let tmp = [];
-    for (let index = 0; index < tagArray.length; index++) {
-      tmp.push(tagArray[index].tag);
-    }
-    this.hashtags = tmp;
-    console.log(this.hashtags);
+    this.$store
+      .dispatch("getArticle", `/articles/${this.$route.query.id}`)
+      .finally(() => {
+        setTimeout(() => {
+          let array = this.item.commentSet;
+          if (array !== undefined) {
+            for (let index = 0; index < array.length; index++) {
+              if (array[index].user.id === this.userId) {
+                this.showComment.username = array[index].user.username;
+                this.showComment.content = array[index].content;
+                break;
+              } else if (index == array.length - 1) {
+                this.showComment.username = array[index].user.username;
+                this.showComment.content = array[index].content;
+              }
+            }
+          }
+          let tagArray = this.item.hashtag;
+          let tmp = [];
+          for (let index = 0; index < tagArray.length; index++) {
+            tmp.push(tagArray[index].tag);
+          }
+          this.hashtags = tmp;
+          this.loading = false;
+        }, 400);
+      });
+    // console.log(this.hashtags);
   },
   methods: {
     scrapAct(id) {
@@ -280,10 +287,17 @@ export default {
     clickMenu(menu) {
       if (menu != "수정") {
         //삭제
+        let token = localStorage.getItem("token");
+        let config = {
+          headers: {
+            Authorization: `Token ${token}`
+          }
+        };
         http
-          .delete(`/articles/${this.item.id}`)
+          .delete(`/articles/${this.item.id}`, config)
           .then(response => {
             alert(response.data.message);
+            this.$router.push("mypage");
           })
           .catch(response => {
             alert(response.data.message);
@@ -293,3 +307,12 @@ export default {
   }
 };
 </script>
+<style scoped>
+.overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  color: #ffffff;
+}
+</style>

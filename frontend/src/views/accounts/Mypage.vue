@@ -30,6 +30,9 @@
       <v-btn block color="black" class="ma-2 white--text" @click="update">
         <v-icon left dark>mdi-account</v-icon>프로필 수정
       </v-btn>
+      <v-btn block color="black" class="ma-2 white--text" @click="logout()">
+        <v-icon left dark>mdi-logout</v-icon>로그아웃
+      </v-btn>
       <v-divider></v-divider>
 
       <!-- <v-col cols="12"> -->
@@ -72,7 +75,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import http from "@/util/http-common";
 export default {
   data() {
@@ -109,6 +112,7 @@ export default {
     ...mapState(["userInfo"])
   },
   methods: {
+    ...mapActions(["logout"]),
     showDetail(id) {
       this.$router.push(`article?id=${id}`);
     },

@@ -105,7 +105,7 @@ export default new Vuex.Store({
         //여기서 나중에 userinfo에서 취향 여부를 확인하고 취향을 선택 안 했을경우,
         //taste로 가게 한다.!!
         commit("loginSuccess", userInfo);
-        router.push("home");
+        router.push("articlelist");
       });
       // .catch(() => {
       //   alert("이메일과 비밀번호를 확인하세요.");
@@ -118,7 +118,7 @@ export default new Vuex.Store({
         headers: {
           Authorization: `Token ${token}`,
         },
-      }
+      };
       http
         .get(payload, config)
         .then((response) => {
@@ -136,7 +136,7 @@ export default new Vuex.Store({
         headers: {
           Authorization: `Token ${token}`,
         },
-      }
+      };
       http
         .get(payload, config)
         .then((response) => {
@@ -175,18 +175,21 @@ export default new Vuex.Store({
     },
     googleLogin(context, authCode) {
       http
-      .post("/accounts/google/", { code: authCode, redirect_uri: 'postmessage' })
-      .then((res) => {
-        console.log(res)
-        let token = res.data.key;
+        .post("/accounts/google/", {
+          code: authCode,
+          redirect_uri: "postmessage",
+        })
+        .then((res) => {
+          console.log(res);
+          let token = res.data.key;
 
-        // 토큰을 로컬스토리지에 저장
-        localStorage.setItem("token", token);
-        this.dispatch("getUserInfo");
-      })
-      .catch(error => {
-        console.log(error)
-      }) 
-    }
+          // 토큰을 로컬스토리지에 저장
+          localStorage.setItem("token", token);
+          this.dispatch("getUserInfo");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
 });

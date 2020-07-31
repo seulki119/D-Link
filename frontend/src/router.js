@@ -34,28 +34,28 @@ const routes = [
     name: "login",
     beforeEnter: rejectAuthUser,
     component: () =>
-      import(/* webpackChunkName: "login" */ "./views/Login.vue"),
+      import(/* webpackChunkName: "login" */ "./views/accounts/Login.vue"),
   },
   {
     path: "/signup",
     name: "signup",
     beforeEnter: rejectAuthUser,
     component: () =>
-      import(/* webpackChunkName: "signup" */ "./views/Signup.vue"),
+      import(/* webpackChunkName: "signup" */ "./views/accounts/Signup.vue"),
   },
   {
     path: "/taste",
     name: "taste",
     beforeEnter: rejectAuthUser,
     component: () =>
-      import(/* webpackChunkName: "taste" */ "./views/Taste.vue"),
+      import(/* webpackChunkName: "taste" */ "./views/accounts/Taste.vue"),
   },
   {
     path: "/mypage",
     name: "mypage",
     beforeEnter: onlyAuthUser,
     component: () =>
-      import(/* webpackChunkName: "mypage" */ "./views/Mypage.vue"),
+      import(/* webpackChunkName: "mypage" */ "./views/accounts/Mypage.vue"),
   },
   {
     path: "/articlelist",
@@ -78,7 +78,9 @@ const routes = [
     name: "createArticle",
     beforeEnter: onlyAuthUser,
     component: () =>
-      import(/* webpackChunkName: "mypage" */ "./views/CreateArticle.vue"),
+      import(
+        /* webpackChunkName: "mypage" */ "./views/Articles/CreateArticle.vue"
+      ),
   },
 ];
 

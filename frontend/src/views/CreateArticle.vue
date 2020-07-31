@@ -118,7 +118,7 @@ export default {
         .post("/articles/", fd, config)
         .then(res => {
           console.log(res);
-          this.$router.push("home");
+          this.$router.push("articlelist");
         })
         .catch(err => {
           console.log(err.response);

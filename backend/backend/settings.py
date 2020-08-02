@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'rest_auth.registration',
     'social_core',
     'social_django',
+     'django_rest_passwordreset',
 
     # local apps
     'articles',
@@ -80,7 +81,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS':[BASE_DIR + '/templates/',],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -98,13 +99,18 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {'charset': 'utf8mb4'},
+        'NAME':'d_link',
+        'USER':'root',
+        'PASSWORD':'7845',
     }
 }
+
 
 
 # Password validation
@@ -132,7 +138,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
+    
 }
+
+
 
 
 MEDIA_URL = 'media/'
@@ -160,6 +169,8 @@ STATIC_URL = '/static/'
 
 SITE_ID = 1
 
+
+
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
@@ -182,3 +193,4 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend', 
     'social_core.backends.google.GoogleOAuth2'
 )
+

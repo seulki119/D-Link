@@ -19,12 +19,19 @@
           </v-avatar>
         </v-col>
         <v-col align="center">
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title>{{username}}</v-list-item-title>
-              <v-list-item-subtitle>{{email}}</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
+          <v-row>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>{{username}}</v-list-item-title>
+                <v-list-item-subtitle>{{email}}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-content>
+                <span>{{intro}}</span>
+              </v-list-item-content>
+            </v-list-item>
+          </v-row>
         </v-col>
       </v-row>
       <v-btn block color="black" class="ma-2 white--text" @click="update">

@@ -12,13 +12,13 @@
 <template>
   <v-container max-width="600" min-width="300">
     <v-card class="mx-auto pa-5" max-width="600">
-      <v-row class="pa-5" no-gutters align="end" dense>
-        <v-col class="pa-0">
+      <v-row class="pa-5" no-gutters>
+        <v-col>
           <v-avatar class="profileImage" color="grey" size="80" round>
             <v-img src="image"></v-img>
           </v-avatar>
         </v-col>
-        <v-col align="center">
+        <v-col>
           <v-row>
             <v-list-item>
               <v-list-item-content>

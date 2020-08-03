@@ -34,7 +34,7 @@
           </v-row>
         </v-col>
       </v-row>
-      <v-btn block color="black" class="ma-2 white--text" @click="update">
+      <v-btn block color="black" class="ma-2 white--text" @click="update()">
         <v-icon left dark>mdi-account</v-icon>프로필 수정
       </v-btn>
       <v-btn block color="black" class="ma-2 white--text" @click="logout()">
@@ -42,7 +42,6 @@
       </v-btn>
       <v-divider></v-divider>
 
-      <!-- <v-col cols="12"> -->
       <v-card>
         <v-tabs centered icons-and-text background-color="white" color="deep-purple accent-4">
           <v-tab>업로드한 게시물</v-tab>
@@ -123,7 +122,9 @@ export default {
     showDetail(id) {
       this.$router.push(`article?id=${id}`);
     },
-    update() {}
+    update() {
+      this.$router.push("updateuser");
+    }
   }
 };
 </script>

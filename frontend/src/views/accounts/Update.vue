@@ -1,17 +1,59 @@
 <!-- 
-탭으로 기본 정보 수정 페이지 / 비밀번호 수정 페이지로 구분할 예정
-1. 기본정보 수정페이지
- -> 게시물 업로드 게시판과 비슷하게 구성
-  -> 이미지 미리보기 + 업로드 / 삭제도 구현
-  -> O형태로 미리 보기 할 예정
-  -> 바로 아래에 textarea로 Intro 작성 가능하게 만들예정
+Row로 나눈다
+1. 아바타 
+ -> 클릭시 이미지 변경 / 삭제 가능
 
-2. 비밀번호 수정 페이지
-  -> 기존 비밀번호 입력
-  -> 새 비밀번호 + 확인 과정
-  -> 버튼 클릭시 수정
+2. 개인정보
+  -> 닉네임
+  -> Intro
+  수정 가능하게 하고 저장 버튼 구현 / 저장과 동시에 서버에 업데이트
+  + 수정 후 저장 안했을경우 뒤로가기시 팝업 띄우기!
+
+3. 추가 기능 이런식으로 숨기기??
+  비밀번호 변경 (기존 + 새 비번 + 비번 확인)
+  탈퇴 기능(최소 2번이상 묻기)
 -->
-<template></template>
+<template>
+  <!-- <v-container class="mx-auto" max-width="600" min-width="300">
+    <v-card class="mx-auto pa-5" max-width="590" min-width="290">
+      <v-img :src="preview" class="img-fluid ma-5" />
+      <v-file-input
+        small-chips
+        color="deep-purple accent-4"
+        accept="image/*"
+        label="Uplode a Image"
+        prepend-icon="mdi-plus"
+        dense
+        :show-size="1000"
+        v-model="file"
+        @change="add"
+        class="pt-6 mx-6"
+      ></v-file-input>
+      <v-divider></v-divider>
+      <v-combobox
+        class="pt-6"
+        v-model="tag"
+        :items="items"
+        label="태그 입력하세요"
+        :maxlength="max"
+        @keypress="isNotSpecail"
+        multiple
+        chips
+        dense
+      ></v-combobox>
+      <v-divider></v-divider>
+      <v-card-text class="text--primary">
+        <v-textarea v-model="content" label="내용" counter maxlength="120" full-width single-line></v-textarea>
+      </v-card-text>
+
+      <v-divider></v-divider>
+      <v-btn block color="blue-grey" class="ma-2 white--text" @click="upload" v-if="fill">
+        Upload
+        <v-icon right dark>mdi-cloud-upload</v-icon>
+      </v-btn>
+    </v-card>
+  </v-container>-->
+</template>
 
 <script>
 import { mapState, mapActions } from "vuex";
@@ -68,7 +110,7 @@ export default {
       const fd = new FormData();
       fd.append("image", this.file);
       http
-        .post("/articles/", fd, config)
+        .post("자기 아바타 이미지 올리는 링크", fd, config)
         .then(res => {
           console.log(res);
           this.$router.push("mypage");

@@ -58,6 +58,13 @@ const routes = [
       import(/* webpackChunkName: "mypage" */ "./views/accounts/Mypage.vue"),
   },
   {
+    path: "/updateuser",
+    name: "updateuser",
+    beforeEnter: onlyAuthUser,
+    component: () =>
+      import(/* webpackChunkName: "mypage" */ "./views/accounts/Update.vue"),
+  },
+  {
     path: "/articlelist",
     name: "articlelist",
     beforeEnter: onlyAuthUser,

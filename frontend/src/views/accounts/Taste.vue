@@ -92,42 +92,43 @@ export default {
     },
     submit() {
       // 회원가입처리
+      // http
+      //   .post("/rest-auth/signup/", this.$route.params)
+      //   .then((response) => {
+      //     let token = response.data.key;
+      //     localStorage.setItem("token", token);
+      //     let config = {
+      //       headers: {
+      //         Authorization: `Token ${token}`,
+      //       },
+      //     };
+      //     console.log(response);
+      // 회원가입처리 성공시 취향 처리
+
+      let config = {
+        headers: {
+          Authorization: `Token ${localStorage.getItem("token")}`,
+        },
+      };
+
       http
-        .post("/rest-auth/signup/", this.$route.params)
+        .post(
+          "/accounts/taste/",
+          {
+            username: this.$route.params.username,
+            taste1: this.selected[0],
+            taste2: this.selected[1],
+          },
+          config
+        )
         .then((response) => {
-          let token = response.data.key;
-          localStorage.setItem("token", token);
-          let config = {
-            headers: {
-              Authorization: `Token ${token}`,
-            },
-          };
-          console.log(response);
-          // 회원가입처리 성공시 취향 처리
-          http
-            .post(
-              "/accounts/taste/",
-              {
-                username: this.$route.params.username,
-                taste1: this.selected[0],
-                taste2: this.selected[1],
-              },
-              config
-            )
-            .then((response) => {
-              // 취향선택 성공시 피드리스트로 이동.
-              console.log(response.data.message);
-              // console.log(response);
-              this.$store.dispatch("getUserInfo");
-            })
-            .catch((response) => {
-              console.log(response);
-            });
+          // 취향선택 성공시 피드리스트로 이동.
+          console.log(response.data.message);
+          // console.log(response);
+          this.$store.dispatch("getUserInfo");
         })
         .catch((response) => {
-          // 회원가입 실패시 다시 가입페이지로 이동.
-          console.dir(response.data);
-          this.$router.push("signup");
+          console.log(response);
         });
     },
   },

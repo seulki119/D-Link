@@ -191,5 +191,23 @@ export default new Vuex.Store({
           console.log(error);
         });
     },
+    kakaoLogin(context, accessToken) {
+      http
+        .post("/accounts/kakao/", {
+          token: accessToken,
+          redirect_uri: "http://127.0.0.1:8000/accounts/kakao/callback/",
+        })
+        .then((res) => {
+          console.log(res);
+          // let token = res.data.key;
+
+          // // 토큰을 로컬스토리지에 저장
+          // localStorage.setItem("token", token);
+          // this.dispatch("getUserInfo");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   },
 });

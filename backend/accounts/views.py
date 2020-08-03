@@ -140,3 +140,27 @@ def google_login(request):
         new_user_to_db.save()
         token = Token.objects.create(user=new_user_to_db)         
     return Response({"key": "{}".format(token.key)})
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def kakao_login(request):
+    print(request.data)
+    token = request.data.get('token')
+    client_id = '9cfba8540e8773ea57ed53176934209d'
+    redirect_uri = request.data.get('redirect_uri')
+
+    params='property_keys=["kakao_account.email", "kakao_account.profile"]'
+    headers={
+        "Authorization": "Bearer "+token,
+        "Content-type" : "application/x-www-form-urlencoded;charset=utf-8"
+    }
+
+    profile_request = requests.post("https://kapi.kakao.com/v2/user/me", headers=headers, data=params)
+    profile_response_json = profile_request.json()
+    print(profile_response_json)
+
+    return Response(request.data)
+
+def kakao_callback(request):
+    print(request.data)
+    return Response(request.data)

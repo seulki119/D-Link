@@ -157,9 +157,9 @@ def kakao_login(request):
 
     profile_request = requests.post("https://kapi.kakao.com/v2/user/me", headers=headers, data=params)
     profile_response_json = profile_request.json()
-    print(profile_response_json)
+    # print(profile_response_json)
 
-    return Response(request.data)
+    return Response({"id": "{}".format(profile_response_json.get('id'))})
 
 def kakao_callback(request):
     print(request.data)

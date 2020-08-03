@@ -44,7 +44,7 @@ export default {
       this.email = this.userInfo.email;
     });
   },
-  methods(){
+  methods: {
     add() {
       this.reader = new FileReader();
       this.reader.onloadend = () => {
@@ -76,7 +76,7 @@ export default {
         .catch(err => {
           console.log(err.response);
         });
-    },
+    }
   }
 };
 </script>

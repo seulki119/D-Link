@@ -8,6 +8,7 @@
 | GET    | 유저정보                     | http://127.0.0.1:8000/rest-auth/user/                   | O    |
 | POST   | 마이페이지                   | http://127.0.0.1:8000/accounts/{username}/              | O    |
 | PUT    | 프로필 수정                  | http://127.0.0.1:8000/accounts/{username}/              | O    |
+| PUT    | 프로필 이미지 수정           | http://127.0.0.1:8000/accounts/{username}/image/        | O    |
 | DEL    | 회원 탈퇴                    | http://127.0.0.1:8000/accounts/{username}/              | O    |
 | PUT    | 비밀번호변경                 | http://127.0.0.1:8000/accounts/password/                | O    |
 | GET    | 피드 리스트                  | http://127.0.0.1:8000/articles/                         | O    |

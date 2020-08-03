@@ -55,10 +55,12 @@ INSTALLED_APPS = [
     'articles',
     'accounts',
     'versus',
+    'alarms',
 
     # 3rd party
     'corsheaders',
     'django_extensions',
+    'channels',
 
     # provider
     'allauth.socialaccount.providers.google',
@@ -80,7 +82,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -183,3 +185,16 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',
     'social_core.backends.kakao.KakaoOAuth2',
 )
+
+# channels 세팅
+
+ASGI_APPLICATION = 'routing.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}

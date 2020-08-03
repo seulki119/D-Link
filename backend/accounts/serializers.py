@@ -24,7 +24,13 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'image', 'intro', 'taste1', 'taste2')
+        fields = ('username', 'intro', 'taste1', 'taste2')
+
+class UserImageUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['image']
 
 class ChangePasswordSerializer(serializers.Serializer):
     model = User

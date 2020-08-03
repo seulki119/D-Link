@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework import generics  
 from rest_framework.authtoken.models import Token
 from .serializers import ChangePasswordSerializer
-from .serializers import UserSerializer, UserTasteSerializer, UserUpdateSerializer
+from .serializers import UserSerializer, UserTasteSerializer, UserUpdateSerializer, UserImageUpdateSerializer
 from pprint import pprint
 import requests
 
@@ -164,3 +164,12 @@ def kakao_login(request):
 def kakao_callback(request):
     print(request.data)
     return Response(request.data)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def image_update(request, username):
+    serializer = UserImageUpdateSerializer(data=request.data, instance=request.user)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save()
+
+    return Response(serializer.data)

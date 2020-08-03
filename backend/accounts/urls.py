@@ -10,6 +10,7 @@ urlpatterns = [
     path('kakao/',views.kakao_login, name='kakao_login'),
     path('kakao/callback/', views.kakao_callback),
     path('taste/', views.taste),
+    path('user/', views.user_info),
     path('<str:username>/', views.mypage),
     path('<str:username>/image/', views.image_update),
     path('duplicated/email/', views.email_duplicated),

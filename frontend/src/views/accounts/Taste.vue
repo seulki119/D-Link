@@ -91,20 +91,6 @@ export default {
       console.log(this.selected);
     },
     submit() {
-      // 회원가입처리
-      // http
-      //   .post("/rest-auth/signup/", this.$route.params)
-      //   .then((response) => {
-      //     let token = response.data.key;
-      //     localStorage.setItem("token", token);
-      //     let config = {
-      //       headers: {
-      //         Authorization: `Token ${token}`,
-      //       },
-      //     };
-      //     console.log(response);
-      // 회원가입처리 성공시 취향 처리
-
       let config = {
         headers: {
           Authorization: `Token ${localStorage.getItem("token")}`,
@@ -124,7 +110,7 @@ export default {
         .then((response) => {
           // 취향선택 성공시 피드리스트로 이동.
           console.log(response.data.message);
-          // console.log(response);
+          alert("회원가입이 완료되었습니다.\nWelcome to d-link!");
           this.$store.dispatch("getUserInfo");
         })
         .catch((response) => {

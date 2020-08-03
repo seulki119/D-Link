@@ -103,13 +103,14 @@ export default new Vuex.Store({
           email: response.data.email,
           first_name: response.data.first_name,
           last_name: response.data.last_name,
+          taste1: response.data.taste1,
+          taste2: response.data.taste2,
         };
         //여기서 나중에 userinfo에서 취향 여부를 확인하고 취향을 선택 안 했을경우,
         //taste로 가게 한다.!!
         commit("loginSuccess", userInfo);
 
-        let userTaste1 = response.data.taste1;
-        if (userTaste1 === "") {
+        if (userInfo.taste1 === null || userInfo.taste2 === null) {
           alert("주류 취향을 선택하고 d-link를 이용해주세요!");
           router.push("taste");
         } else {

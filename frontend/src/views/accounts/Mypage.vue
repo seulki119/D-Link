@@ -11,7 +11,7 @@
 -->
 <template>
   <v-container max-width="600" min-width="300">
-    <v-card class="pa-5" max-width="600">
+    <v-card class="mx-auto pa-5" max-width="600">
       <v-row class="pa-5" no-gutters align="end" dense>
         <v-col class="pa-0">
           <v-avatar class="profileImage" color="grey" size="80" round>
@@ -29,6 +29,9 @@
       </v-row>
       <v-btn block color="black" class="ma-2 white--text" @click="update">
         <v-icon left dark>mdi-account</v-icon>프로필 수정
+      </v-btn>
+      <v-btn block color="black" class="ma-2 white--text" @click="logout()">
+        <v-icon left dark>mdi-logout</v-icon>로그아웃
       </v-btn>
       <v-divider></v-divider>
 
@@ -72,7 +75,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import http from "@/util/http-common";
 export default {
   data() {
@@ -109,6 +112,7 @@ export default {
     ...mapState(["userInfo"])
   },
   methods: {
+    ...mapActions(["logout"]),
     showDetail(id) {
       this.$router.push(`article?id=${id}`);
     },

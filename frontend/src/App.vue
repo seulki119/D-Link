@@ -11,14 +11,17 @@
       elevate-on-scroll
       class="mx-auto"
     >
-      <v-btn class="mx-auto" v-if="canBack" icon @click="$router.go(-1)">
+      <v-btn icon class="mx-auto" v-if="canBack" @click="$router.go(-1)">
         <!-- <div class="d-flex flex-column align-center"> -->
         <v-icon>mdi-history</v-icon>
         <!-- <p>뒤로가기</p> -->
         <!-- </div> -->
       </v-btn>
-      <div class="d-flex flex-column align-center">
-        <v-icon>일단 여기다가 로고나 넣자 !</v-icon>
+      <v-btn icon class="mx-auto" v-else disabled>
+        <v-icon>mdi-history</v-icon>
+      </v-btn>
+      <div icon class="mx-auto">
+        <v-icon>D L I N K</v-icon>
         <!-- <p>로고</p> -->
       </div>
       <v-btn class="mx-auto" icon router :to="{ name: 'mypage' }">

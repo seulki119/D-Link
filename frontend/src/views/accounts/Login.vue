@@ -15,8 +15,13 @@
             <v-text-field v-model="password" type="password" @keypress.enter="login({email,password})" label="비밀번호를 입력하세요"></v-text-field>
             <v-btn color="primary" depressed block large @click="login({email,password})">로그인</v-btn>
             <hr style="border: solid 0.5px grey; margin: 5px;">
-            <button class="social-btn" @click="getAuth()"><img src="@/assets/btn_google_signin_dark_focus_web.png" alt="구글로그인버튼"></button>
-            <button class="social-btn" @click="getAuth()"><img src="@/assets/kakao_login_medium_narrow.png" alt="카카오로그인버튼"></button>
+            <button @click="getAuth()"><img src="@/assets/btn_google_signin_dark_focus_web.png" alt="구글로그인버튼"></button>
+            <KakaoLogin
+              api-key="20b828e1eee0b26f49e9d6200fcae186"
+              image="kakao_login_btn_medium"
+              :on-success=onSuccess
+              :on-failure=onFailure
+              />
           </div>
         </v-card>
       </v-flex>
@@ -26,12 +31,16 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import KakaoLogin from 'vue-kakao-login';
 export default {
   data() {
     return {
       email: null,
       password: null
     };
+  },
+  components: {
+    KakaoLogin
   },
   computed: {
     ...mapState(["isLogin", "isLoginError"])
@@ -49,13 +58,16 @@ export default {
       .catch(error => {
         console.log(error)
       })
+    },
+    onSuccess(data) {
+      console.log(data)
+      console.log("success")
+      this.$store.dispatch('kakaoLogin', data.access_token)
+    },
+    onFailure(data) {
+      console.log(data)
+      console.log("failure")     
     }
   }
 };
 </script>
-
-<style scoped>
-.social-btn {
-  margin: 0px 10px 0px 10px;
-}
-</style>

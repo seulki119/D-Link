@@ -24,15 +24,10 @@ Row로 나눈다
                 <span>Click to add avatar</span>
               </v-avatar>
               <v-avatar size="150px" v-ripple v-else class="mb-3">
-                <img :src="avatar.imageURL" alt="avatar" />
+                <img :src="`//127.0.0.1:8000/${avatar}`" alt="avatar" />
               </v-avatar>
             </div>
           </image-input>
-          <v-slide-x-transition>
-            <div v-if="avatar && saved == false">
-              <v-btn class="primary" @click="uploadImage" :loading="saving">Save Avatar</v-btn>
-            </div>
-          </v-slide-x-transition>
         </v-col>
         <!-- <v-divider></v-divider>
         <v-col>
@@ -62,8 +57,6 @@ export default {
   data() {
     return {
       avatar: null,
-      saving: false,
-      saved: false,
       email: "",
       id: "",
       intro: "",
@@ -85,26 +78,23 @@ export default {
       this.avatar = res.data.image;
       this.intro = res.data.intro;
       this.username = res.data.username;
-      // this.email = this.userInfo.email;
+      this.email = res.data.email;
     });
   },
-  watch: {
-    avatar: {
-      handler: function() {
-        this.saved = false;
-      },
-      deep: true
-    }
-  },
-  methods: {
-    uploadImage() {
-      this.saving = true;
-      setTimeout(() => this.savedAvatar(), 1000);
-    },
-    savedAvatar() {
-      this.saving = false;
-      this.saved = true;
-    }
+  updated() {
+    let token = localStorage.getItem("token");
+    let config = {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    };
+    http.post("/accounts/{temp}/", "", config).then(res => {
+      this.id = res.data.id;
+      this.avatar = res.data.image;
+      this.intro = res.data.intro;
+      this.username = res.data.username;
+      this.email = res.data.email;
+    });
   }
 };
 </script>

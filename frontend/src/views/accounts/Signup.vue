@@ -88,7 +88,7 @@ import {
   ValidationProvider,
   setInteractionMode,
 } from "vee-validate";
-
+import http from "@/util/http-common";
 setInteractionMode("eager");
 
 extend("required", {
@@ -141,25 +141,28 @@ export default {
     async submit() {
       const isValid = await this.$refs.observer.validate();
       if (isValid) {
-        // data를 가지고 taste페이지로 이동.
-        // taste선택 후 한번에 submit
-        let array = {
-          email: this.email,
-          username: this.name,
-          password1: this.password,
-          password2: this.confirmation,
-        };
-        this.$router.push({ name: "taste", params: array });
+        http
+          .post("/rest-auth/signup/", {
+            email: this.email,
+            username: this.name,
+            password1: this.password,
+            password2: this.confirmation,
+          })
+          .then((response) => {
+            console.log(response);
+            let token = response.data.key;
+            localStorage.setItem("token", token);
+
+            this.$router.push({
+              name: "taste",
+              params: { username: this.name },
+            });
+          })
+          .catch((response) => {
+            console.log(response);
+          });
       }
     },
-    // clear() {
-    //   this.name = "";
-    //   this.email = "";
-    //   this.password = "";
-    //   this.confirmation = "";
-    //   this.checkbox = null;
-    //   this.$refs.observer.reset();
-    // }
   },
 };
 </script>

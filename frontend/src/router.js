@@ -46,7 +46,7 @@ const routes = [
   {
     path: "/taste",
     name: "taste",
-    beforeEnter: rejectAuthUser,
+    // beforeEnter: rejectAuthUser,
     component: () =>
       import(/* webpackChunkName: "taste" */ "./views/accounts/Taste.vue"),
   },

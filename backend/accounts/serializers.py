@@ -20,6 +20,12 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'image', 'intro', 'scrapSet', 'articleSet', 'taste1', 'taste2')
 
+class UserSimpleSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'first_name', 'last_name', 'taste1', 'taste2')
+
 class UserUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:

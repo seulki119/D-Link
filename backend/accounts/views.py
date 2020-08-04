@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework import generics  
 from rest_framework.authtoken.models import Token
 from .serializers import ChangePasswordSerializer
-from .serializers import UserSerializer, UserTasteSerializer, UserUpdateSerializer, UserImageUpdateSerializer
+from .serializers import UserSerializer, UserTasteSerializer, UserUpdateSerializer, UserImageUpdateSerializer, UserSimpleSerializer
 from pprint import pprint
 import requests
 
@@ -172,4 +172,9 @@ def image_update(request, username):
     if serializer.is_valid(raise_exception=True):
         serializer.save()
 
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def user_info(request):
+    serializer = UserSimpleSerializer(request.user)
     return Response(serializer.data)

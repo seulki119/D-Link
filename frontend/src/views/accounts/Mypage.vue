@@ -15,7 +15,7 @@
       <v-row class="pa-5" no-gutters>
         <v-col>
           <v-avatar class="profileImage" color="grey" size="80" round>
-            <v-img src="image"></v-img>
+            <v-img :src="`//127.0.0.1:8000/${image}`"></v-img>
           </v-avatar>
         </v-col>
         <v-col>
@@ -110,7 +110,7 @@ export default {
       this.intro = res.data.intro;
       this.username = res.data.username;
       this.email = this.userInfo.email;
-      console.log(this.userInfo);
+      console.log(res);
     });
     // console.log(this.articleSet);
   },

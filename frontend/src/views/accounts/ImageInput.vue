@@ -17,11 +17,10 @@
 <script>
 export default {
   name: "image-input",
-  data: () => ({
-    uploadFieldName: "file"
-  }),
-  props: {
-    value: Object
+  data() {
+    return {
+      uploadFieldName: "file"
+    };
   },
   methods: {
     launchFilePicker() {

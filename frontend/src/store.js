@@ -104,7 +104,7 @@ export default new Vuex.Store({
           console.log(response);
 
           let userInfo = {
-            pk: response.data.pk,
+            pk: response.data.id,
             username: response.data.username,
             email: response.data.email,
             first_name: response.data.first_name,

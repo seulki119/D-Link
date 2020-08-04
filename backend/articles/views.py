@@ -90,11 +90,11 @@ def comment_ud(request, article_pk, comment_pk):
                 if serializer.is_valid(raise_exception=True):
                     serializer.save()
                     return Response(serializer.data)
-        else:
-            comment.delete()
-            return Response({'message': "성공적으로 삭제되었습니다"})
+    if request.user == comment.user or request.user == article.user:             
+        recomment.delete()
+        return Response({'message': "성공적으로 삭제되었습니다"})
     else:
-        return Response({'message': '글쓴이가 아닙니다'})
+        return Response({'message': '권한이 없습니다.'})
 
 @api_view(['POST'])
 def hashtag(request):
@@ -129,6 +129,7 @@ def recomment_create(request, comment_pk):
 @api_view(['PUT', 'DELETE'])
 def recomment_ud(request, comment_pk, recomment_pk):
     comment = get_object_or_404(Comment, pk=comment_pk)
+    article = Article.objects.get(pk=comment.article_id)
     recomments = comment.recomment_set.all()
     recomment = recomments.get(pk=recomment_pk)
     if request.user == recomment.user:
@@ -137,8 +138,8 @@ def recomment_ud(request, comment_pk, recomment_pk):
                 if serializer.is_valid(raise_exception=True):
                     serializer.save()
                     return Response(serializer.data)
-        else:
-            recomment.delete()
-            return Response({'message': "성공적으로 삭제되었습니다"})
+    if request.user == recomment.user or request.user == article.user:             
+        recomment.delete()
+        return Response({'message': "성공적으로 삭제되었습니다"})
     else:
-        return Response({'message': '글쓴이가 아닙니다'})
+        return Response({'message': '권한이 없습니다.'})

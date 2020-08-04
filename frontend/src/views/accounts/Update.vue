@@ -113,6 +113,22 @@ export default {
       handler: function() {
         this.updated = false;
       }
+    },
+    username: {
+      handler: function() {
+        let token = localStorage.getItem("token");
+        let config = {
+          headers: {
+            Authorization: `Token ${token}`
+          }
+        };
+        const fd = new FormData();
+        fd.append("username", this.username);
+
+        http.post("/accounts/duplicated/username/", fd, config).then(res => {
+          console.log(res);
+        });
+      }
     }
   },
   methods: {
@@ -148,23 +164,14 @@ export default {
     saveInfo() {
       this.saving = false;
       this.updated = true;
-      this.image = this.avatar.formData.get("file");
-      let token = localStorage.getItem("token");
-      let config = {
-        headers: {
-          Authorization: `Token ${token}`
-        }
-      };
-      const fd = new FormData();
-      fd.append("image", this.image);
-
-      http.put("/accounts/min/image/", fd, config).then(res => {
-        this.previous = res.data.image;
-        this.intro = res.data.intro;
-        this.username = res.data.username;
-        this.email = res.data.email;
-        console.log(this.previous);
-      });
+      // let token = localStorage.getItem("token");
+      // let config = {
+      //   headers: {
+      //     Authorization: `Token ${token}`
+      //   }
+      // };
+      //api 연결하고 추가함녀 왈~~
+      // const fd = new FormData();
     }
   }
 };

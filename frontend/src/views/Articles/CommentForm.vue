@@ -1,7 +1,7 @@
 <template>
-  <v-list-item-content>
+  <div>
     <!-- 대댓글 접기/펼치기 버튼 -->
-    <v-card-actions>
+    <!-- <v-card-actions>
       <v-btn
         text
         color="deep-purple accent-4"
@@ -13,11 +13,11 @@
         }}
       </v-btn>
       <v-spacer></v-spacer>
-    </v-card-actions>
+    </v-card-actions>-->
 
     <!-- 댓글 모두보기 -->
     <v-slide-y-transition v-if="comments !== undefined && comments.length > 0">
-      <v-card-text v-show="show">
+      <v-card-text>
         <!--  -->
         <v-list-item v-for="(comment, index) in comments" :key="index">
           <v-list-item-avatar color="grey">
@@ -86,7 +86,7 @@
         </v-list-item>
       </v-card-text>
     </v-slide-y-transition>
-  </v-list-item-content>
+  </div>
 </template>
 
 <script>
@@ -113,7 +113,7 @@ export default {
     };
   },
   created() {
-    console.log(this.comment);
+    console.log(this.comments);
   }
 };
 </script>

@@ -85,17 +85,18 @@
       <!-- 댓글 모두보기 -->
       <v-slide-y-transition v-if="item.commentSet !== undefined && item.commentSet.length > 0">
         <v-card-text v-show="show">
-          <!--  -->
-          <v-list-item v-for="(comment, index) in item.commentSet" :key="index">
-            <v-list-item-avatar color="grey">
-              <!-- <v-img :src="comment.user.image"></v-img> -->
-            </v-list-item-avatar>
+          <!-- 8/4 18:00 v-list-item에서 v-list-group으로 수정. https://vuetifyjs.com/en/components/lists/#lists -->
+          <v-list-group v-for="(comment, index) in item.commentSet" :key="index">
+            <template v-slot:activator>
+              <v-list-item-avatar color="grey">
+                <!-- <v-img :src="comment.user.image"></v-img> -->
+              </v-list-item-avatar>
 
-            <v-list-item-content>
-              <v-list-item-title>{{ comment.user.username }}</v-list-item-title>
-              <v-list-item-subtitle>{{ comment.content }}</v-list-item-subtitle>
-            </v-list-item-content>
-
+              <v-list-item-content>
+                <v-list-item-title>{{ comment.user.username }}</v-list-item-title>
+                <v-list-item-subtitle>{{ comment.content }}</v-list-item-subtitle>
+              </v-list-item-content>
+            </template>
             <!-- 대댓글 Form ////START//// -->
             <div v-if="comment.recommentSet !== undefined">
               <!-- props 전달 -->
@@ -161,7 +162,7 @@
                 <v-btn text color="deep-purple accent-2" v-bind="attrs" @click="snackbar2 = false">X</v-btn>
               </template>
             </v-snackbar>
-          </v-list-item>
+          </v-list-group>
         </v-card-text>
       </v-slide-y-transition>
       <!-- 댓글 등록하기 -->

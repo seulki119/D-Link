@@ -38,19 +38,15 @@ Row로 나눈다
           </v-slide-x-transition>
         </v-col>
         <v-col>
-          <v-row>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title>{{username}}</v-list-item-title>
-                <v-list-item-subtitle>{{email}}</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content>
-                <span>{{intro}}</span>
-              </v-list-item-content>
-            </v-list-item>
+          <v-row v-model="info">
+            <v-text-field v-model="username" label="Username"></v-text-field>
+            <v-text-field v-model="email" label="Email" disabled></v-text-field>
+            <v-textarea v-model="intro" label="Intro"></v-textarea>
           </v-row>
+          <v-btn block color="blue-grey" class="ma-2 white--text" v-if="!updated">
+            Upload
+            <v-icon right dark>mdi-cloud-upload</v-icon>
+          </v-btn>
         </v-col>
       </v-row>
     </v-card>
@@ -58,21 +54,27 @@ Row로 나눈다
 </template>
 
 <script>
+import { mapState } from "vuex";
 import ImageInput from "./ImageInput.vue";
 import http from "@/util/http-common";
 export default {
   name: "app",
   data() {
     return {
+      info: null,
       avatar: null,
       previous: null,
       image: null,
       saving: false,
       saved: false,
+      updated: true,
       intro: "",
       email: "",
       username: ""
     };
+  },
+  computed: {
+    ...mapState(["userInfo"])
   },
   components: {
     ImageInput: ImageInput
@@ -88,8 +90,7 @@ export default {
       this.previous = res.data.image;
       this.intro = res.data.intro;
       this.username = res.data.username;
-      this.email = res.data.email;
-      console.log(res);
+      this.email = this.userInfo.email;
     });
   },
   watch: {
@@ -98,6 +99,11 @@ export default {
         this.saved = false;
       },
       deep: true
+    },
+    info: {
+      handler: function() {
+        this.updated = false;
+      }
     }
   },
   methods: {

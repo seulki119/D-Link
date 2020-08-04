@@ -110,7 +110,7 @@ export default {
       this.intro = res.data.intro;
       this.username = res.data.username;
       this.email = this.userInfo.email;
-      // console.log(this.articleSet[0].image);
+      console.log(this.userInfo);
     });
     // console.log(this.articleSet);
   },

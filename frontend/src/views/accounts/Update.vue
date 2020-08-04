@@ -14,62 +14,64 @@ Row로 나눈다
   탈퇴 기능(최소 2번이상 묻기)
 -->
 <template>
-  <!-- <v-container class="mx-auto" max-width="600" min-width="300">
+  <v-container class="mx-auto" max-width="600" min-width="300">
     <v-card class="mx-auto pa-5" max-width="590" min-width="290">
-      <v-img :src="preview" class="img-fluid ma-5" />
-      <v-file-input
-        small-chips
-        color="deep-purple accent-4"
-        accept="image/*"
-        label="Uplode a Image"
-        prepend-icon="mdi-plus"
-        dense
-        :show-size="1000"
-        v-model="file"
-        @change="add"
-        class="pt-6 mx-6"
-      ></v-file-input>
-      <v-divider></v-divider>
-      <v-combobox
-        class="pt-6"
-        v-model="tag"
-        :items="items"
-        label="태그 입력하세요"
-        :maxlength="max"
-        @keypress="isNotSpecail"
-        multiple
-        chips
-        dense
-      ></v-combobox>
-      <v-divider></v-divider>
-      <v-card-text class="text--primary">
-        <v-textarea v-model="content" label="내용" counter maxlength="120" full-width single-line></v-textarea>
-      </v-card-text>
-
-      <v-divider></v-divider>
-      <v-btn block color="blue-grey" class="ma-2 white--text" @click="upload" v-if="fill">
-        Upload
-        <v-icon right dark>mdi-cloud-upload</v-icon>
-      </v-btn>
+      <v-row class="pa-5" no-gutters>
+        <v-col>
+          <image-input v-model="avatar">
+            <div slot="activator">
+              <v-avatar size="150px" v-ripple v-if="!avatar" class="grey lighten-3 mb-3">
+                <span>Click to add avatar</span>
+              </v-avatar>
+              <v-avatar size="150px" v-ripple v-else class="mb-3">
+                <img :src="avatar.imageURL" alt="avatar" />
+              </v-avatar>
+            </div>
+          </image-input>
+          <v-slide-x-transition>
+            <div v-if="avatar && saved == false">
+              <v-btn class="primary" @click="uploadImage" :loading="saving">Save Avatar</v-btn>
+            </div>
+          </v-slide-x-transition>
+        </v-col>
+        <!-- <v-divider></v-divider>
+        <v-col>
+          <v-row>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>{{username}}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-content>
+                <span>{{intro}}</span>
+              </v-list-item-content>
+            </v-list-item>
+          </v-row>
+        </v-col>-->
+      </v-row>
     </v-card>
-  </v-container>-->
+  </v-container>
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+// import { mapState, mapActions } from "vuex";
 import http from "@/util/http-common";
+import ImageInput from "./ImageInput.vue";
 export default {
   data() {
     return {
-      file: null,
-      reader: null,
-      preview: null,
+      avatar: null,
+      saving: false,
+      saved: false,
       email: "",
       id: "",
-      image: "",
       intro: "",
       username: ""
     };
+  },
+  components: {
+    ImageInput: ImageInput
   },
   created() {
     let token = localStorage.getItem("token");
@@ -80,44 +82,28 @@ export default {
     };
     http.post("/accounts/{temp}/", "", config).then(res => {
       this.id = res.data.id;
-      this.image = res.data.image;
+      this.avatar = res.data.image;
       this.intro = res.data.intro;
       this.username = res.data.username;
-      this.email = this.userInfo.email;
+      // this.email = this.userInfo.email;
     });
   },
+  watch: {
+    avatar: {
+      handler: function() {
+        this.saved = false;
+      },
+      deep: true
+    }
+  },
   methods: {
-    add() {
-      this.reader = new FileReader();
-      this.reader.onloadend = () => {
-        let fileData = this.reader.result;
-        this.preview = fileData;
-        // send to server here...
-      };
-      if (this.file) {
-        this.reader.readAsDataURL(this.file);
-      }
+    uploadImage() {
+      this.saving = true;
+      setTimeout(() => this.savedAvatar(), 1000);
     },
-    upload() {
-      // 나중에 create 제거 해야함
-      let token = localStorage.getItem("token");
-      let config = {
-        headers: {
-          Authorization: `Token ${token}`
-        }
-      };
-
-      const fd = new FormData();
-      fd.append("image", this.file);
-      http
-        .post("자기 아바타 이미지 올리는 링크", fd, config)
-        .then(res => {
-          console.log(res);
-          this.$router.push("mypage");
-        })
-        .catch(err => {
-          console.log(err.response);
-        });
+    savedAvatar() {
+      this.saving = false;
+      this.saved = true;
     }
   }
 };

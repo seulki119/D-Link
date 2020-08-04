@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework import generics  
 from rest_framework.authtoken.models import Token
 from .serializers import ChangePasswordSerializer
-from .serializers import UserSerializer, UserTasteSerializer, UserUpdateSerializer
+from .serializers import UserSerializer, UserTasteSerializer, UserUpdateSerializer, UserImageUpdateSerializer, UserSimpleSerializer
 from pprint import pprint
 import requests
 
@@ -157,10 +157,24 @@ def kakao_login(request):
 
     profile_request = requests.post("https://kapi.kakao.com/v2/user/me", headers=headers, data=params)
     profile_response_json = profile_request.json()
-    print(profile_response_json)
+    # print(profile_response_json)
 
-    return Response(request.data)
+    return Response({"id": "{}".format(profile_response_json.get('id'))})
 
 def kakao_callback(request):
     print(request.data)
     return Response(request.data)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def image_update(request, username):
+    serializer = UserImageUpdateSerializer(data=request.data, instance=request.user)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save()
+
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def user_info(request):
+    serializer = UserSimpleSerializer(request.user)
+    return Response(serializer.data)

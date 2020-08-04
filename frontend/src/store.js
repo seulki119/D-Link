@@ -71,7 +71,8 @@ export default new Vuex.Store({
           localStorage.setItem("token", token);
           this.dispatch("getUserInfo");
         })
-        .catch(() => {
+        .catch((res) => {
+          console.log(res);
           alert("이메일과 비밀번호를 확인하세요.");
         });
     },
@@ -92,24 +93,42 @@ export default new Vuex.Store({
           Authorization: `Token ${token}`,
         },
       };
+
+      let data = "";
+
       // 헤더 with 토큰 -> 유저 정보를 반환
       // 새로고침 하더라도 토큰만으로 계속 유저 정보를 요청하게 한다!
-      http.get("/rest-auth/user/", config).then((response) => {
-        let userInfo = {
-          pk: response.data.pk,
-          username: response.data.username,
-          email: response.data.email,
-          first_name: response.data.first_name,
-          last_name: response.data.last_name,
-        };
-        //여기서 나중에 userinfo에서 취향 여부를 확인하고 취향을 선택 안 했을경우,
-        //taste로 가게 한다.!!
-        commit("loginSuccess", userInfo);
-        router.push("articlelist");
-      });
-      // .catch(() => {
-      //   alert("이메일과 비밀번호를 확인하세요.");
-      // });
+      http
+        .post("/accounts/user/", data, config)
+        .then((response) => {
+          console.log(response);
+
+          let userInfo = {
+            pk: response.data.pk,
+            username: response.data.username,
+            email: response.data.email,
+            first_name: response.data.first_name,
+            last_name: response.data.last_name,
+            taste1: response.data.taste1,
+            taste2: response.data.taste2,
+          };
+          //여기서 나중에 userinfo에서 취향 여부를 확인하고 취향을 선택 안 했을경우,
+          //taste로 가게 한다.!!
+          commit("loginSuccess", userInfo);
+
+          if (userInfo.taste1 === null || userInfo.taste2 === null) {
+            alert("주류 취향을 선택하고 d-link를 이용해주세요!");
+            router.push({
+              name: "taste",
+              params: { username: userInfo.username },
+            });
+          } else {
+            router.push("articlelist");
+          }
+        })
+        .catch((response) => {
+          console.log(response);
+        });
     },
     getArticles(context, payload) {
       let token = localStorage.getItem("token");
@@ -208,6 +227,6 @@ export default new Vuex.Store({
         .catch((error) => {
           console.log(error);
         });
-    }
+    },
   },
 });

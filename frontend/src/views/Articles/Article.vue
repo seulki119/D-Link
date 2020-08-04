@@ -51,7 +51,6 @@
       <v-card-text>
         <v-combobox class="pt-6" v-model="hashtags" multiple chips readonly></v-combobox>
       </v-card-text>
-
       <!-- 댓글 접기/펼치기 버튼 -->
       <v-card-actions>
         <v-btn
@@ -97,6 +96,17 @@
               <v-list-item-subtitle>{{ comment.content }}</v-list-item-subtitle>
             </v-list-item-content>
 
+            <!-- 대댓글 Form ////START//// -->
+            <div v-if="comment.recommentSet !== undefined">
+              <!-- props 전달 -->
+              <comment-form
+                :comments="comment.recommentSet"
+                :itemUserId="item.user.id"
+                :userId="userId"
+              />
+            </div>
+            <!-- 대댓글 Form ////END//// -->
+
             <!-- 댓글 삭제 - 권한 : 1)댓글 작성자 2)글 작성자  -->
             <v-btn
               v-show="item.user.id == userId || comment.user.id == userId"
@@ -121,7 +131,7 @@
                   text
                   color="deep-purple accent-1"
                   v-bind="attrs"
-                  @click="createReComment(comm.id, comm.username)"
+                  @click="createRecomment(comm.id, comm.username)"
                 >댓글달기</v-btn>
 
                 <v-btn text color="deep-purple accent-2" v-bind="attrs" @click="snackbar = false">X</v-btn>
@@ -145,7 +155,7 @@
                   text
                   color="deep-purple accent-1"
                   v-bind="attrs"
-                  @click="createReComment(comm.id, comm.username)"
+                  @click="createRecomment(comm.id, comm.username)"
                 >댓글달기</v-btn>
 
                 <v-btn text color="deep-purple accent-2" v-bind="attrs" @click="snackbar2 = false">X</v-btn>
@@ -168,7 +178,7 @@
           :placeholder="`${userName} 님의 댓글`"
           style="width: 270px"
           append-icon="mdi-comment"
-          @keydown.enter="createComment()"
+          @keydown.enter="modeComment ? createComment() : createRecomment()"
         ></v-textarea>
       </v-card-actions>
     </v-card>
@@ -179,8 +189,12 @@
 <script>
 import { mapGetters } from "vuex";
 import http from "@/util/http-common";
+import CommentForm from "@/views/Articles/CommentForm.vue";
 
 export default {
+  components: {
+    CommentForm
+  },
   computed: {
     ...mapGetters(["item"]),
     ...mapGetters(["userId"]),
@@ -205,7 +219,8 @@ export default {
       comm: {
         id: "",
         username: ""
-      }
+      },
+      modeComment: true
     };
   },
   created() {
@@ -324,10 +339,28 @@ export default {
           });
       }
     },
-    //대댓글달기
-    createReComment(commentId, commentUserName) {
-      this.myComment = `@${commentUserName} `;
-      console.log(commentId + " " + commentUserName);
+    //대댓글 생성
+    createRecomment() {
+      this.myComment = `@${this.comm.id} `;
+      console.log(this.comm.id + " " + this.comm.username);
+      //
+      const fd = new FormData();
+      fd.append("user", this.userId);
+      fd.append("content", this.myComment);
+
+      http
+        .post(`/articles/comment/${this.comm.id}/recomment/`, fd)
+        .then(response => {
+          console.log(response);
+          this.$store.dispatch(
+            "getArticle",
+            `/articles/${this.$route.query.id}`
+          );
+          this.myComment = "";
+        })
+        .catch(response => {
+          console.log(response.data);
+        });
     }
   }
 };

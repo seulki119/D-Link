@@ -104,6 +104,7 @@
                 :comments="comment.recommentSet"
                 :itemUserId="item.user.id"
                 :userId="userId"
+                :commentId="comment.id"
               />
             </div>
             <!-- 대댓글 Form ////END//// -->
@@ -132,7 +133,7 @@
                   text
                   color="deep-purple accent-1"
                   v-bind="attrs"
-                  @click="createRecomment(comm.id, comm.username)"
+                  @click="myComment = `@${comm.username} `; modeComment=false"
                 >댓글달기</v-btn>
 
                 <v-btn text color="deep-purple accent-2" v-bind="attrs" @click="snackbar = false">X</v-btn>
@@ -156,7 +157,7 @@
                   text
                   color="deep-purple accent-1"
                   v-bind="attrs"
-                  @click="createRecomment(comm.id, comm.username)"
+                  @click="myComment = `@${comm.username} `; modeComment=false"
                 >댓글달기</v-btn>
 
                 <v-btn text color="deep-purple accent-2" v-bind="attrs" @click="snackbar2 = false">X</v-btn>
@@ -177,9 +178,10 @@
           rows="1"
           row-height="15"
           :placeholder="`${userName} 님의 댓글`"
+          :modeComment="modeComment"
           style="width: 270px"
           append-icon="mdi-comment"
-          @keydown.enter="modeComment ? createComment() : createRecomment()"
+          @keydown.enter="modeComment ?  createComment() : createRecomment()"
         ></v-textarea>
       </v-card-actions>
     </v-card>
@@ -213,7 +215,7 @@ export default {
       myComment: "",
       snackbar: false,
       snackbar2: false,
-      timeout: 1500,
+      timeout: 2000,
       text: "댓글 기능 텍스트",
       hashtags: [],
       articleMenu: ["수정", "삭제"],
@@ -223,6 +225,13 @@ export default {
       },
       modeComment: true
     };
+  },
+  watch: {
+    myComment() {
+      if (this.myComment == "") {
+        this.modeComment = true;
+      }
+    }
   },
   created() {
     // article id로 게시물정보 가져오기.
@@ -256,6 +265,7 @@ export default {
       });
     // console.log(this.hashtags);
   },
+
   methods: {
     scrapAct(id) {
       this.$store.dispatch("doScrap", {
@@ -342,15 +352,21 @@ export default {
     },
     //대댓글 생성
     createRecomment() {
-      this.myComment = `@${this.comm.id} `;
       console.log(this.comm.id + " " + this.comm.username);
       //
+      let token = localStorage.getItem("token");
+      let config = {
+        headers: {
+          Authorization: `Token ${token}`
+        }
+      };
+
       const fd = new FormData();
       fd.append("user", this.userId);
       fd.append("content", this.myComment);
 
       http
-        .post(`/articles/comment/${this.comm.id}/recomment/`, fd)
+        .post(`/articles/comment/${this.comm.id}/recomment/`, fd, config)
         .then(response => {
           console.log(response);
           this.$store.dispatch(

@@ -14,28 +14,47 @@ Row로 나눈다
   탈퇴 기능(최소 2번이상 묻기)
 -->
 <template>
-  <v-app id="app" class="mt-0">
-    <v-container grid-list-xl>
-      <image-input v-model="avatar">
-        <div slot="activator">
-          <v-avatar size="150px" v-ripple v-if="!previous" class="grey lighten-3 mb-3">
-            <span>Click to add avatar</span>
-          </v-avatar>
-          <v-avatar size="150px" v-ripple v-else-if="!avatar" class="mb-3">
-            <img :src="`//127.0.0.1:8000/${previous}`" alt />
-          </v-avatar>
-          <v-avatar size="150px" v-ripple v-else class="mb-3">
-            <img :src="avatar.imageURL" alt="avatar" />
-          </v-avatar>
-        </div>
-      </image-input>
-      <v-slide-x-transition>
-        <div v-if="avatar && saved == false">
-          <v-btn class="primary" @click="uploadImage" :loading="saving">Save Avatar</v-btn>
-        </div>
-      </v-slide-x-transition>
-    </v-container>
-  </v-app>
+  <v-container max-width="600" min-width="300">
+    <v-card class="mx-auto pa-5" max-width="600">
+      <v-row class="pa-5" no-gutters>
+        <v-col>
+          <image-input v-model="avatar">
+            <div slot="activator">
+              <v-avatar size="136px" v-ripple v-if="!previous" class="grey lighten-3">
+                <span>Click to add avatar</span>
+              </v-avatar>
+              <v-avatar size="136px" v-ripple v-else-if="!avatar">
+                <img :src="`//127.0.0.1:8000/${previous}`" alt />
+              </v-avatar>
+              <v-avatar size="136px" v-ripple v-else>
+                <img :src="avatar.imageURL" alt="avatar" />
+              </v-avatar>
+            </div>
+          </image-input>
+          <v-slide-x-transition>
+            <div v-if="avatar && saved == false">
+              <v-btn class="primary" @click="uploadImage" :loading="saving">Save Avatar</v-btn>
+            </div>
+          </v-slide-x-transition>
+        </v-col>
+        <v-col>
+          <v-row>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>{{username}}</v-list-item-title>
+                <v-list-item-subtitle>{{email}}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-content>
+                <span>{{intro}}</span>
+              </v-list-item-content>
+            </v-list-item>
+          </v-row>
+        </v-col>
+      </v-row>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
@@ -49,7 +68,10 @@ export default {
       previous: null,
       image: null,
       saving: false,
-      saved: false
+      saved: false,
+      intro: "",
+      email: "",
+      username: ""
     };
   },
   components: {
@@ -67,7 +89,7 @@ export default {
       this.intro = res.data.intro;
       this.username = res.data.username;
       this.email = res.data.email;
-      console.log(this.previous);
+      console.log(res);
     });
   },
   watch: {

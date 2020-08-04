@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div @click="launchFilePicker()">
+    <div @click="launchFilePicker()" style="width:0">
       <slot name="activator"></slot>
     </div>
     <input
@@ -10,7 +10,7 @@
       :name="uploadFieldName"
       @change="onFileChange(
           $event.target.name, $event.target.files)"
-      style="display:none"
+      style="display:none;"
     />
   </div>
 </template>

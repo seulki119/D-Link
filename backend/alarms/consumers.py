@@ -20,7 +20,9 @@ def announce_likes(sender, instance, created, **kwargs):
 
 class UserTestConsumer(WebsocketConsumer):
     def connect(self):
-        self.groupname="shares"
+        self.groupname = str(self.scope["user"].pk)
+        print(str(self.scope["user"].pk))
+        # self.groupname="shares"
         self.accept()
 
         async_to_sync(self.channel_layer.group_add)(
@@ -38,18 +40,18 @@ class UserTestConsumer(WebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
 
-        async_to_sync(self.channel_layer.group_send)(
-            self.groupname,
-            {
-                'type': 'share_message',
-                'message': message
-            }
-        )
+        # async_to_sync(self.channel_layer.group_send)(
+        #     self.groupname,
+        #     {
+        #         'type': 'share_message',
+        #         'message': message
+        #     }
+        # )
 
     # Receive message from room group
     def share_message(self, event):
+        print("event={}".format(event))
         message = event['message']
-
         # Send message to WebSocket
         self.send(text_data=json.dumps({
             'message': message

@@ -70,6 +70,24 @@ export default new Vuex.Store({
           // 토큰을 로컬스토리지에 저장
           localStorage.setItem("token", token);
           this.dispatch("getUserInfo");
+
+          // 소켓 연결
+          this.socket = new WebSocket(`ws://127.0.0.1:8000/ws/test/${token}`);
+          // 데이터 수신
+          this.socket.onmessage = function(e) {
+              console.log(e);
+              var data = JSON.parse(e.data);
+              var message = data['message'];
+              console.log(message)
+          };
+      
+          this.socket.onopen = function(e) {
+            console.log(e);
+          };
+      
+          this.socket.onclose = function(e) {
+            console.log(e);
+          };
         })
         .catch(() => {
           alert("이메일과 비밀번호를 확인하세요.");
@@ -208,6 +226,27 @@ export default new Vuex.Store({
         .catch((error) => {
           console.log(error);
         });
+    },
+    sendAlarm(context, payload) {
+      let token = localStorage.getItem("token");
+
+      let config = {
+        headers: {
+          "X-CSRFToken": "token",
+          "Content-Type": "application/json",
+        },
+      };
+      let body = {
+        message: `${this.state.userInfo.username}님이 스크랩을 했어요!`,
+        article_user_id: payload.articleUserId,
+        request_user_id: payload.requestUserId
+      }
+      
+      http
+        .post(payload.url, body, config)
+        .then((res) => {
+          console.log(res);
+        })
     }
   },
 });

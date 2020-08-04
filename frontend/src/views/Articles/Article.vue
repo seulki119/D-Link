@@ -34,7 +34,7 @@
           <img
             v-if="!item.scrap.includes(userId)"
             class="scrapInfo"
-            @click="scrapAct(item.id)"
+            @click="scrapAct(item.id, item.user.id)"
             :src="(scrapSrc = scrapNo)"
           />
           <img v-else class="scrapInfo" @click="scrapAct(item.id)" :src="(scrapSrc = scrapYes)" />
@@ -187,7 +187,8 @@ export default {
       timeout: 1500,
       text: "댓글 기능 텍스트",
       hashtags: [],
-      articleMenu: ["수정", "삭제"]
+      articleMenu: ["수정", "삭제"],
+      socket: null
     };
   },
   created() {
@@ -221,14 +222,38 @@ export default {
         }, 400);
       });
     // console.log(this.hashtags);
+    // let token = localStorage.getItem("token");
+    // this.socket = new WebSocket(`ws://127.0.0.1:8000/ws/test/${token}`);
+    // // 데이터 수신
+    // this.socket.onmessage = function(e) {
+    //     console.log(e);
+    //     var data = JSON.parse(e.data);
+    //     var message = data['message'];
+    //     console.log(message)
+    // };
+
+    // this.socket.onopen = function(e) {
+    //   console.log(e);
+    // };
+
+    // this.socket.onclose = function(e) {
+    //   console.log(e);
+    // };
   },
   methods: {
-    scrapAct(id) {
+    scrapAct(id, articleUserId) {
       this.$store.dispatch("doScrap", {
         url: `/articles/${id}/scrap`,
         page: "article",
         id: `${id}`
       });
+      if (articleUserId) {
+        this.$store.dispatch("sendAlarm", {
+          url: '/alarms/Share/',
+          articleUserId: `${articleUserId}`,
+          requestUserId: `${this.userId}`,
+        })
+      }
     },
     activateReadMore() {
       this.readMoreActivated = true;

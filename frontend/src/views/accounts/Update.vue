@@ -43,10 +43,19 @@ Row로 나눈다
             <v-text-field v-model="email" label="Email" disabled></v-text-field>
             <v-textarea v-model="intro" label="Intro"></v-textarea>
           </v-row>
-          <v-btn block color="blue-grey" class="ma-2 white--text" v-if="!updated">
-            Upload
-            <v-icon right dark>mdi-cloud-upload</v-icon>
-          </v-btn>
+          <v-slide-x-transition>
+            <v-btn
+              block
+              color="blue-grey"
+              class="ma-2 white--text"
+              v-if="!updated"
+              @click="updateInfo"
+              :loading="saving"
+            >
+              Upload
+              <v-icon right dark>mdi-cloud-upload</v-icon>
+            </v-btn>
+          </v-slide-x-transition>
         </v-col>
       </v-row>
     </v-card>
@@ -114,6 +123,31 @@ export default {
     savedAvatar() {
       this.saving = false;
       this.saved = true;
+      this.image = this.avatar.formData.get("file");
+      let token = localStorage.getItem("token");
+      let config = {
+        headers: {
+          Authorization: `Token ${token}`
+        }
+      };
+      const fd = new FormData();
+      fd.append("image", this.image);
+
+      http.put("/accounts/min/image/", fd, config).then(res => {
+        this.previous = res.data.image;
+        this.intro = res.data.intro;
+        this.username = res.data.username;
+        this.email = res.data.email;
+        console.log(this.previous);
+      });
+    },
+    updateInfo() {
+      this.saving = true;
+      setTimeout(() => this.saveInfo(), 1000);
+    },
+    saveInfo() {
+      this.saving = false;
+      this.updated = true;
       this.image = this.avatar.formData.get("file");
       let token = localStorage.getItem("token");
       let config = {

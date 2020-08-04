@@ -4,8 +4,9 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Article, Hashtag
-from .serializers import ArticleSerializer, ArticleListSerializer, ArticleCreateSerializer, ArticleScrapSerializer, CommentSerializer, HashtagSerializser
+from .models import Article, Hashtag, Comment
+from .serializers import ArticleSerializer, ArticleListSerializer, ArticleCreateSerializer, ArticleScrapSerializer
+from .serializers import CommentSerializer, RecommentSerializer, HashtagSerializser
 import os
 from django.conf import settings
 
@@ -117,3 +118,27 @@ def search(request):
             is_first = True
     serializer = ArticleListSerializer(articles, many=True)
     return Response(serializer.data)
+
+@api_view(['POST'])
+def recomment_create(request, comment_pk):
+    serializer = RecommentSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save(user=request.user, comment_id=comment_pk)
+        return Response(serializer.data)
+
+@api_view(['PUT', 'DELETE'])
+def recomment_ud(request, comment_pk, recomment_pk):
+    comment = get_object_or_404(Comment, pk=comment_pk)
+    recomments = comment.recomment_set.all()
+    recomment = recomments.get(pk=recomment_pk)
+    if request.user == recomment.user:
+        if request.method == 'PUT':
+                serializer = RecommentSerializer(data=request.data, instance=recomment)
+                if serializer.is_valid(raise_exception=True):
+                    serializer.save()
+                    return Response(serializer.data)
+        else:
+            recomment.delete()
+            return Response({'message': "성공적으로 삭제되었습니다"})
+    else:
+        return Response({'message': '글쓴이가 아닙니다'})

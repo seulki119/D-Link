@@ -14,59 +14,48 @@ Row로 나눈다
   탈퇴 기능(최소 2번이상 묻기)
 -->
 <template>
-  <v-container class="mx-auto" max-width="600" min-width="300">
-    <v-card class="mx-auto pa-5" max-width="590" min-width="290">
-      <v-row class="pa-5" no-gutters>
-        <v-col>
-          <image-input v-model="avatar">
-            <div slot="activator">
-              <v-avatar size="150px" v-ripple v-if="!avatar" class="grey lighten-3 mb-3">
-                <span>Click to add avatar</span>
-              </v-avatar>
-              <v-avatar size="150px" v-ripple v-else class="mb-3">
-                <img :src="`//127.0.0.1:8000/${avatar}`" alt="avatar" />
-              </v-avatar>
-            </div>
-          </image-input>
-        </v-col>
-        <!-- <v-divider></v-divider>
-        <v-col>
-          <v-row>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title>{{username}}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content>
-                <span>{{intro}}</span>
-              </v-list-item-content>
-            </v-list-item>
-          </v-row>
-        </v-col>-->
-      </v-row>
-    </v-card>
-  </v-container>
+  <v-app id="app" class="mt-0">
+    <v-container grid-list-xl>
+      <image-input v-model="avatar">
+        <div slot="activator">
+          <v-avatar size="150px" v-ripple v-if="!previous" class="grey lighten-3 mb-3">
+            <span>Click to add avatar</span>
+          </v-avatar>
+          <v-avatar size="150px" v-ripple v-else-if="!avatar" class="mb-3">
+            <img :src="`//127.0.0.1:8000/${previous}`" alt />
+          </v-avatar>
+          <v-avatar size="150px" v-ripple v-else class="mb-3">
+            <img :src="avatar.imageURL" alt="avatar" />
+          </v-avatar>
+        </div>
+      </image-input>
+      <v-slide-x-transition>
+        <div v-if="avatar && saved == false">
+          <v-btn class="primary" @click="uploadImage" :loading="saving">Save Avatar</v-btn>
+        </div>
+      </v-slide-x-transition>
+    </v-container>
+  </v-app>
 </template>
 
 <script>
-// import { mapState, mapActions } from "vuex";
-import http from "@/util/http-common";
 import ImageInput from "./ImageInput.vue";
+import http from "@/util/http-common";
 export default {
+  name: "app",
   data() {
     return {
       avatar: null,
-      email: "",
-      id: "",
-      intro: "",
-      username: ""
+      previous: null,
+      image: null,
+      saving: false,
+      saved: false
     };
   },
   components: {
     ImageInput: ImageInput
   },
-  created() {
+  beforeCreate() {
     let token = localStorage.getItem("token");
     let config = {
       headers: {
@@ -74,27 +63,50 @@ export default {
       }
     };
     http.post("/accounts/{temp}/", "", config).then(res => {
-      this.id = res.data.id;
-      this.avatar = res.data.image;
+      this.previous = res.data.image;
       this.intro = res.data.intro;
       this.username = res.data.username;
       this.email = res.data.email;
+      console.log(this.previous);
     });
   },
-  updated() {
-    let token = localStorage.getItem("token");
-    let config = {
-      headers: {
-        Authorization: `Token ${token}`
-      }
-    };
-    http.post("/accounts/{temp}/", "", config).then(res => {
-      this.id = res.data.id;
-      this.avatar = res.data.image;
-      this.intro = res.data.intro;
-      this.username = res.data.username;
-      this.email = res.data.email;
-    });
+  watch: {
+    avatar: {
+      handler: function() {
+        this.saved = false;
+      },
+      deep: true
+    }
+  },
+  methods: {
+    uploadImage() {
+      this.saving = true;
+      setTimeout(() => this.savedAvatar(), 1000);
+    },
+    savedAvatar() {
+      this.saving = false;
+      this.saved = true;
+      this.image = this.avatar.formData.get("file");
+      let token = localStorage.getItem("token");
+      let config = {
+        headers: {
+          Authorization: `Token ${token}`
+        }
+      };
+      const fd = new FormData();
+      fd.append("image", this.image);
+
+      http.put("/accounts/min/image/", fd, config).then(res => {
+        this.previous = res.data.image;
+        this.intro = res.data.intro;
+        this.username = res.data.username;
+        this.email = res.data.email;
+        console.log(this.previous);
+      });
+    }
   }
 };
 </script>
+
+<style>
+</style>

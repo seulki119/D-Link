@@ -25,7 +25,7 @@
         <!-- <p>로고</p> -->
       </div>
 
-      <v-btn icon class="mx-auto" router :to="{ name: '' }">
+      <v-btn icon class="mx-auto" router :to="{ name: 'notifications' }">
         <v-badge color="red" left overlap>
           <span slot="badge">3</span>
           <v-icon>mdi-mail</v-icon>
@@ -88,7 +88,7 @@ export default {
     this.canBack = true;
     let currentUrl = this.$router.history.current.name;
     let baseUrl = this.$router.options.routes;
-    console.log(this.$router.options.routes);
+    // console.log(this.$router.options.routes);
     console.log(this.$router.history.current.name);
     for (let i = 0; i < 6; i++) {
       if (baseUrl[i].name === currentUrl) {

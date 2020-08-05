@@ -49,9 +49,8 @@
 
       <!-- 해쉬태그 출력 -->
       <v-card-text>
-        <v-combobox class="pt-6" v-model="hashtags" multiple chips></v-combobox>
+        <v-combobox class="pt-6" v-model="hashtags" multiple chips readonly></v-combobox>
       </v-card-text>
-
       <!-- 댓글 접기/펼치기 버튼 -->
       <v-card-actions>
         <v-btn
@@ -74,7 +73,11 @@
 
             <v-list-item-content>
               <v-list-item-title>{{ showComment.username }}</v-list-item-title>
-              <v-list-item-subtitle>{{ showComment.content }}</v-list-item-subtitle>
+              <v-list-item-subtitle>
+                {{
+                showComment.content
+                }}
+              </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-card-text>
@@ -82,24 +85,37 @@
       <!-- 댓글 모두보기 -->
       <v-slide-y-transition v-if="item.commentSet !== undefined && item.commentSet.length > 0">
         <v-card-text v-show="show">
-          <!--  -->
-          <v-list-item v-for="(comment, index) in item.commentSet" :key="index">
-            <v-list-item-avatar color="grey">
-              <!-- <v-img :src="comment.user.image"></v-img> -->
-            </v-list-item-avatar>
+          <!-- 8/4 18:00 v-list-item에서 v-list-group으로 수정. https://vuetifyjs.com/en/components/lists/#lists -->
+          <v-list-group v-for="(comment, index) in item.commentSet" :key="index">
+            <template v-slot:activator>
+              <v-list-item-avatar color="grey">
+                <!-- <v-img :src="comment.user.image"></v-img> -->
+              </v-list-item-avatar>
 
-            <v-list-item-content>
-              <v-list-item-title>{{ comment.user.username }}</v-list-item-title>
-              <v-list-item-subtitle>{{ comment.content }}</v-list-item-subtitle>
-            </v-list-item-content>
+              <v-list-item-content>
+                <v-list-item-title>{{ comment.user.username }}</v-list-item-title>
+                <v-list-item-subtitle>{{ comment.content }}</v-list-item-subtitle>
+              </v-list-item-content>
+            </template>
+            <!-- 대댓글 Form ////START//// -->
+            <div v-if="comment.recommentSet !== undefined">
+              <!-- props 전달 -->
+              <comment-form
+                :comments="comment.recommentSet"
+                :itemUserId="item.user.id"
+                :userId="userId"
+                :commentId="comment.id"
+              />
+            </div>
+            <!-- 대댓글 Form ////END//// -->
 
-            <!-- 본인댓글 : 삭제 가능 -->
+            <!-- 댓글 삭제 - 권한 : 1)댓글 작성자 2)글 작성자  -->
             <v-btn
-              v-show="comment.user.id == userId"
+              v-show="item.user.id == userId || comment.user.id == userId"
               text
               icon
               color="deep-purple accent-2"
-              @click="snackbar = true"
+              @click="snackbar = true; comm = {id:comment.id, username:comment.user.username}"
             >
               <v-icon>mdi-dots-vertical</v-icon>
             </v-btn>
@@ -108,36 +124,46 @@
               {{ text }}
               <template v-slot:action="{ attrs }">
                 <v-btn
-                  v-show="comment.user.id == userId"
-                  color="deep-purple accent-2"
+                  text
+                  color="deep-purple accent-1"
                   v-bind="attrs"
-                  @click="deleteComment(comment.id)"
+                  @click="deleteComment(comm.id)"
                 >삭제</v-btn>
+                <v-btn
+                  text
+                  color="deep-purple accent-1"
+                  v-bind="attrs"
+                  @click="myComment = `@${comm.username} `; modeComment=false"
+                >댓글달기</v-btn>
 
                 <v-btn text color="deep-purple accent-2" v-bind="attrs" @click="snackbar = false">X</v-btn>
               </template>
             </v-snackbar>
-            <!-- 일반 댓글 : 대댓글 달기 -->
+            <!-- 나머지 유저 : 대댓글 달기 -->
             <v-btn
-              v-show="comment.user.id != userId"
+              v-show="item.user.id != userId && comment.user.id != userId"
               text
+              icon
               color="deep-purple accent-2"
-              @click="snackbar2 = true"
-            >:</v-btn>
+              @click="snackbar2 = true; comm = {id:comment.id, username:comment.user.username}"
+            >
+              <v-icon>mdi-dots-vertical</v-icon>
+            </v-btn>
 
             <v-snackbar v-model="snackbar2" :timeout="timeout">
               {{ text }}
               <template v-slot:action="{ attrs }">
                 <v-btn
-                  v-show="comment.user.id == userId"
-                  color="deep-purple accent-2"
+                  text
+                  color="deep-purple accent-1"
                   v-bind="attrs"
+                  @click="myComment = `@${comm.username} `; modeComment=false"
                 >댓글달기</v-btn>
 
                 <v-btn text color="deep-purple accent-2" v-bind="attrs" @click="snackbar2 = false">X</v-btn>
               </template>
             </v-snackbar>
-          </v-list-item>
+          </v-list-group>
         </v-card-text>
       </v-slide-y-transition>
       <!-- 댓글 등록하기 -->
@@ -152,9 +178,10 @@
           rows="1"
           row-height="15"
           :placeholder="`${userName} 님의 댓글`"
+          :modeComment="modeComment"
           style="width: 270px"
           append-icon="mdi-comment"
-          @keydown.enter="createComment()"
+          @keydown.enter="modeComment ?  createComment() : createRecomment()"
         ></v-textarea>
       </v-card-actions>
     </v-card>
@@ -165,8 +192,12 @@
 <script>
 import { mapGetters } from "vuex";
 import http from "@/util/http-common";
+import CommentForm from "@/views/Articles/CommentForm.vue";
 
 export default {
+  components: {
+    CommentForm
+  },
   computed: {
     ...mapGetters(["item"]),
     ...mapGetters(["userId"]),
@@ -184,11 +215,23 @@ export default {
       myComment: "",
       snackbar: false,
       snackbar2: false,
-      timeout: 1500,
+      timeout: 2000,
       text: "댓글 기능 텍스트",
       hashtags: [],
-      articleMenu: ["수정", "삭제"]
+      articleMenu: ["수정", "삭제"],
+      comm: {
+        id: "",
+        username: ""
+      },
+      modeComment: true
     };
+  },
+  watch: {
+    myComment() {
+      if (this.myComment == "") {
+        this.modeComment = true;
+      }
+    }
   },
   created() {
     // article id로 게시물정보 가져오기.
@@ -222,6 +265,7 @@ export default {
       });
     // console.log(this.hashtags);
   },
+
   methods: {
     scrapAct(id) {
       this.$store.dispatch("doScrap", {
@@ -263,6 +307,8 @@ export default {
     },
     //댓글삭제
     deleteComment(commId) {
+      console.log(commId);
+
       let token = localStorage.getItem("token");
       let config = {
         headers: {
@@ -303,6 +349,35 @@ export default {
             alert(response.data.message);
           });
       }
+    },
+    //대댓글 생성
+    createRecomment() {
+      console.log(this.comm.id + " " + this.comm.username);
+      //
+      let token = localStorage.getItem("token");
+      let config = {
+        headers: {
+          Authorization: `Token ${token}`
+        }
+      };
+
+      const fd = new FormData();
+      fd.append("user", this.userId);
+      fd.append("content", this.myComment);
+
+      http
+        .post(`/articles/comment/${this.comm.id}/recomment/`, fd, config)
+        .then(response => {
+          console.log(response);
+          this.$store.dispatch(
+            "getArticle",
+            `/articles/${this.$route.query.id}`
+          );
+          this.myComment = "";
+        })
+        .catch(response => {
+          console.log(response.data);
+        });
     }
   }
 };

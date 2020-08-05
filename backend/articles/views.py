@@ -91,7 +91,7 @@ def comment_ud(request, article_pk, comment_pk):
                     serializer.save()
                     return Response(serializer.data)
     if request.user == comment.user or request.user == article.user:             
-        recomment.delete()
+        comment.delete()
         return Response({'message': "성공적으로 삭제되었습니다"})
     else:
         return Response({'message': '권한이 없습니다.'})

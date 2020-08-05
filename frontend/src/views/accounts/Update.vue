@@ -164,7 +164,7 @@ export default {
 
       http.put("/accounts/min/image/", fd, config).then(res => {
         this.previous = res.data.image;
-        console.log(this.previous);
+        // console.log(this.previous);
       });
     },
     updateInfo() {
@@ -185,8 +185,8 @@ export default {
       const fd = new FormData();
       fd.append("username", this.username);
       fd.append("intro", this.intro);
-      http.put("/accounts/{username}/", fd, config).then(res => {
-        console.log(res);
+      http.put("/accounts/{username}/", fd, config).then(() => {
+        // console.log(res);
       });
     }
   }

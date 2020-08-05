@@ -36,7 +36,7 @@
     <v-main>
       <router-view></router-view>
     </v-main>
-    <v-footer class="pa-0">
+    <v-footer class="pa-0" app>
       <v-bottom-navigation
         v-if="isLogin"
         grow

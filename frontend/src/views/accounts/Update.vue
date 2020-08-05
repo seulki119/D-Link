@@ -1,7 +1,7 @@
 <!-- 
 Row로 나눈다
 1. 아바타 
- -> 클릭시 이미지 변경 / 삭제 가능
+  -> 클릭시 이미지 변경 / 삭제 가능
 
 2. 개인정보
   -> 닉네임
@@ -39,7 +39,7 @@ Row로 나눈다
         </v-col>
         <v-col>
           <v-row v-model="info">
-            <v-text-field v-model="username" label="Username"></v-text-field>
+            <v-text-field v-model="username" label="Username" :error-messages="errors"></v-text-field>
             <v-text-field v-model="email" label="Email" disabled></v-text-field>
             <v-textarea v-model="intro" label="Intro"></v-textarea>
           </v-row>
@@ -48,11 +48,11 @@ Row로 나눈다
               block
               color="blue-grey"
               class="ma-2 white--text"
-              v-if="!updated"
+              v-if="!updated&&valid"
               @click="updateInfo"
               :loading="saving"
             >
-              Upload
+              회원정보수정
               <v-icon right dark>mdi-cloud-upload</v-icon>
             </v-btn>
           </v-slide-x-transition>
@@ -77,9 +77,12 @@ export default {
       saving: false,
       saved: false,
       updated: true,
+      valid: true,
       intro: "",
       email: "",
-      username: ""
+      username: "",
+      previousUsername: "",
+      errors: []
     };
   },
   computed: {
@@ -99,6 +102,7 @@ export default {
       this.previous = res.data.image;
       this.intro = res.data.intro;
       this.username = res.data.username;
+      this.previousUsername = res.data.username;
       this.email = this.userInfo.email;
     });
   },
@@ -114,19 +118,28 @@ export default {
         this.updated = false;
       }
     },
-    username: {
-      handler: function() {
-        let token = localStorage.getItem("token");
-        let config = {
-          headers: {
-            Authorization: `Token ${token}`
-          }
-        };
+    username() {
+      if (this.username.length === 0) {
+        this.valid = false;
+        this.errors = this.previousUsernamevalid ? [] : ["required"];
+      } else if (this.username.length > 10) {
+        this.valid = false;
+        this.errors = this.valid ? [] : ["Max 10 characters"];
+      } else {
+        this.valid = true;
         const fd = new FormData();
         fd.append("username", this.username);
-
-        http.post("/accounts/duplicated/username/", fd, config).then(res => {
-          console.log(res);
+        http.post("/accounts/duplicated/username/", fd).then(res => {
+          if (res.data.message === "이미 존재하는 닉네임입니다.") {
+            if (this.previousUsername === this.username) {
+              this.valid = true;
+            } else {
+              this.valid = false;
+            }
+          } else {
+            this.valid = true;
+          }
+          this.errors = this.valid ? [] : ["이미 존재하는 닉네임입니다."];
         });
       }
     }
@@ -151,9 +164,6 @@ export default {
 
       http.put("/accounts/min/image/", fd, config).then(res => {
         this.previous = res.data.image;
-        this.intro = res.data.intro;
-        this.username = res.data.username;
-        this.email = res.data.email;
         console.log(this.previous);
       });
     },
@@ -164,14 +174,20 @@ export default {
     saveInfo() {
       this.saving = false;
       this.updated = true;
-      // let token = localStorage.getItem("token");
-      // let config = {
-      //   headers: {
-      //     Authorization: `Token ${token}`
-      //   }
-      // };
-      //api 연결하고 추가함녀 왈~~
-      // const fd = new FormData();
+      this.valid = true;
+      this.previousUsername = this.username;
+      let token = localStorage.getItem("token");
+      let config = {
+        headers: {
+          Authorization: `Token ${token}`
+        }
+      };
+      const fd = new FormData();
+      fd.append("username", this.username);
+      fd.append("intro", this.intro);
+      http.put("/accounts/{username}/", fd, config).then(res => {
+        console.log(res);
+      });
     }
   }
 };

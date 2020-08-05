@@ -73,6 +73,8 @@ def taste(request):
         return Response({'message': '유효하지 않은 입력입니다.'})
 
 @api_view(['POST'])
+@authentication_classes([])
+@permission_classes([])
 def email_duplicated(request):
     User = get_user_model()
     try:
@@ -82,6 +84,8 @@ def email_duplicated(request):
         return Response({'message': '사용가능한 이메일입니다.'})
 
 @api_view(['POST'])
+@authentication_classes([])
+@permission_classes([])
 def username_duplicated(request):
     User = get_user_model()
     try:

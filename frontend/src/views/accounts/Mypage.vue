@@ -95,7 +95,7 @@ export default {
       username: ""
     };
   },
-  created() {
+  beforeCreate() {
     let token = localStorage.getItem("token");
     let config = {
       headers: {

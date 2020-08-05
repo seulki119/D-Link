@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div @click="launchFilePicker()">
+    <div @click="launchFilePicker()" style="width:0">
       <slot name="activator"></slot>
     </div>
     <input
@@ -8,8 +8,9 @@
       ref="file"
       accept="image/*"
       :name="uploadFieldName"
-      @change="onFileChange($event.target.name, $event.target.files)"
-      style="display:none"
+      @change="onFileChange(
+          $event.target.name, $event.target.files)"
+      style="display:none;"
     />
   </div>
 </template>
@@ -17,12 +18,15 @@
 <script>
 export default {
   name: "image-input",
-  data: () => ({
-    uploadFieldName: "file"
-  }),
-  props: {
-    value: Object
+  data() {
+    return {
+      uploadFieldName: "file"
+    };
   },
+  // props: {
+  //   // Use "value" to enable using v-model
+  //   value: Object
+  // },
   methods: {
     launchFilePicker() {
       this.$refs.file.click();

@@ -25,7 +25,7 @@
         <!-- <p>로고</p> -->
       </div>
 
-      <v-btn icon class="mx-auto" router :to="{ name: 'mypage' }">
+      <v-btn icon class="mx-auto" router :to="{ name: '' }">
         <v-badge color="red" left overlap>
           <span slot="badge">3</span>
           <v-icon>mdi-mail</v-icon>

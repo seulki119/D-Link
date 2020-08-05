@@ -6,7 +6,10 @@
         <!--  -->
         <v-list-item v-for="(comment, index) in comments" :key="index">
           <v-list-item-avatar color="grey" v-if="comment.content != null && comment.content != ' '">
-            <!-- <v-img :src="comment.user.image"></v-img> -->
+            <v-img
+              v-if="comment.user.image != null"
+              :src="`//127.0.0.1:8000/${comment.user.image}`"
+            ></v-img>
           </v-list-item-avatar>
 
           <v-list-item-content v-if="comment.content != null && comment.content != ' '">
@@ -70,15 +73,15 @@ export default {
     };
   },
   created() {
-    console.log(this.comments);
+    // console.log(this.comments);
   },
   beforeUpdate() {
-    console.log("up");
+    // console.log("up");
   },
   methods: {
     //댓글삭제
     deleteComment(commId, index) {
-      console.log(commId);
+      // console.log(commId);
 
       let token = localStorage.getItem("token");
       let config = {

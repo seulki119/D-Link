@@ -3,7 +3,7 @@
     <v-card class="mx-auto pa-5" max-width="600">
       <v-list-item>
         <v-list-item-avatar color="grey">
-          <!-- <v-img :src="item.user.image"></v-img> -->
+          <v-img v-if="item.user.image != null" :src="`//127.0.0.1:8000/${item.user.image}`"></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>{{ item.user.username }}</v-list-item-title>
@@ -69,10 +69,15 @@
       <v-slide-y-transition v-if="item.commentSet.length > 0 && showComment.content != ''">
         <v-card-text v-show="!show">
           <v-list-item>
-            <v-list-item-avatar color="grey"></v-list-item-avatar>
+            <v-list-item-avatar color="grey">
+              <v-img
+                v-if="showComment.userImage != null"
+                :src="`//127.0.0.1:8000/${showComment.userImage}`"
+              ></v-img>
+            </v-list-item-avatar>
 
             <v-list-item-content>
-              <v-list-item-title>{{ showComment.username }}</v-list-item-title>
+              <v-list-item-title>{{ showComment.userName }}</v-list-item-title>
               <v-list-item-subtitle>
                 {{
                 showComment.content
@@ -89,7 +94,10 @@
           <v-list-group v-for="(comment, index) in item.commentSet" :key="index">
             <template v-slot:activator>
               <v-list-item-avatar color="grey">
-                <!-- <v-img :src="comment.user.image"></v-img> -->
+                <v-img
+                  v-if="comment.user.image != null"
+                  :src="`//127.0.0.1:8000/${comment.user.image}`"
+                ></v-img>
               </v-list-item-avatar>
 
               <v-list-item-content>
@@ -168,8 +176,8 @@
       </v-slide-y-transition>
       <!-- 댓글 등록하기 -->
       <v-card-actions>
-        <v-avatar color="grey" size="30px"></v-avatar>
-        <v-spacer></v-spacer>
+        <!-- <v-avatar color="grey" size="30px"></v-avatar>
+        <v-spacer></v-spacer>-->
         <v-textarea
           v-model="myComment"
           auto-grow
@@ -211,7 +219,7 @@ export default {
       scrapYes: "https://img.icons8.com/plasticine/24/000000/wine-glass.png",
       readMoreActivated: false,
       show: false,
-      showComment: { username: "", content: "" },
+      showComment: { userName: "", content: "", userImage: "" },
       myComment: "",
       snackbar: false,
       snackbar2: false,
@@ -245,12 +253,14 @@ export default {
           if (array !== undefined) {
             for (let index = 0; index < array.length; index++) {
               if (array[index].user.id === this.userId) {
-                this.showComment.username = array[index].user.username;
+                this.showComment.userName = array[index].user.username;
                 this.showComment.content = array[index].content;
+                this.showComment.userImage = array[index].user.image;
                 break;
               } else if (index == array.length - 1) {
-                this.showComment.username = array[index].user.username;
+                this.showComment.userName = array[index].user.username;
                 this.showComment.content = array[index].content;
+                this.showComment.userImage = array[index].user.image;
               }
             }
           }

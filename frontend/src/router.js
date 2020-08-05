@@ -86,7 +86,16 @@ const routes = [
     beforeEnter: onlyAuthUser,
     component: () =>
       import(
-        /* webpackChunkName: "mypage" */ "./views/Articles/CreateArticle.vue"
+        /* webpackChunkName: "createArticle" */ "./views/Articles/CreateArticle.vue"
+      ),
+  },
+  {
+    path: "/notifications",
+    name: "notifications",
+    beforeEnter: onlyAuthUser,
+    component: () =>
+      import(
+        /* webpackChunkName: "notifications" */ "./views/accounts/Notifications.vue"
       ),
   },
 ];

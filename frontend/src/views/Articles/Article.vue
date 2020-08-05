@@ -1,6 +1,6 @@
 <template>
   <div v-if="!loading">
-    <v-card max-width="344" class="mx-auto">
+    <v-card class="mx-auto pa-5" max-width="600">
       <v-list-item>
         <v-list-item-avatar color="grey">
           <!-- <v-img :src="item.user.image"></v-img> -->

@@ -24,11 +24,12 @@
         <v-icon>D L I N K</v-icon>
         <!-- <p>로고</p> -->
       </div>
-      <v-btn class="mx-auto" icon router :to="{ name: 'mypage' }">
-        <!-- <div class="d-flex flex-column align-center"> -->
-        <v-icon>mdi-account</v-icon>
-        <!-- <p>마이페이지</p> -->
-        <!-- </div> -->
+
+      <v-btn icon class="mx-auto" router :to="{ name: 'mypage' }">
+        <v-badge color="red" left overlap>
+          <span slot="badge">3</span>
+          <v-icon>mdi-mail</v-icon>
+        </v-badge>
       </v-btn>
     </v-app-bar>
 
@@ -54,12 +55,16 @@
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
         <v-btn prepend-icon="mdi-plus" icon router :to="{ name: 'createArticle' }">
-          파일 업로드
+          업로드
           <v-icon>mdi-plus</v-icon>
         </v-btn>
         <v-btn icon>
           컨텐츠
           <v-icon>mdi-dialpad</v-icon>
+        </v-btn>
+        <v-btn icon router :to="{ name: 'mypage' }">
+          마이페이지
+          <v-icon>mdi-account</v-icon>
         </v-btn>
       </v-bottom-navigation>
     </v-footer>

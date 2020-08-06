@@ -1,6 +1,12 @@
 <template>
   <v-container max-width="600" min-width="300">
     <v-row align="center" justify="center">
+      <v-text-field
+        v-model="password"
+        type="password"
+        @keypress.enter="login({email,password})"
+        label="기존 비밀번호"
+      ></v-text-field>
       <ValidationObserver ref="observer">
         <ValidationProvider name="password" rules="required|min:8|max:16" v-slot="{ errors }">
           <v-text-field
@@ -8,7 +14,7 @@
             :counter="16"
             type="password"
             :error-messages="errors"
-            label="비밀번호"
+            label="변경할 비밀번호"
             required
           ></v-text-field>
         </ValidationProvider>
@@ -65,5 +71,16 @@ extend("passswordConfirm", {
   },
   message: "비밀번호가 일치하지 않습니다"
 });
-export default {};
+export default {
+  components: {
+    ValidationProvider,
+    ValidationObserver
+  },
+  data: () => ({
+    previous: "",
+    password: "",
+    confirmation: "",
+    valid: false
+  })
+};
 </script>

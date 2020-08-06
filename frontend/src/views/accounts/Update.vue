@@ -56,7 +56,7 @@ Row로 나눈다
               <v-icon right dark>mdi-cloud-upload</v-icon>
             </v-btn>
           </v-slide-x-transition>
-          <v-btn block color="black" class="ma-2 white--text" @click="logout()">
+          <v-btn block color="black" class="ma-2 white--text" @click="passwordChange()">
             <v-icon left dark>mdi-key-variant</v-icon>패스워드 변경
           </v-btn>
           <v-btn block color="black" class="ma-2 white--text" @click="logout()">
@@ -195,6 +195,9 @@ export default {
       http.put("/accounts/{username}/", fd, config).then(() => {
         // console.log(res);
       });
+    },
+    passwordChange() {
+      this.$router.push("passwordChange");
     }
   }
 };

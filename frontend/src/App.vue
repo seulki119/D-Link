@@ -3,7 +3,7 @@
   <v-app id="inspire">
     <v-app-bar
       app
-      v-if="isLogin"
+      v-if="!isSearch && isLogin"
       color="indigo"
       dark
       max-width="600"
@@ -50,7 +50,7 @@
           홈
           <v-icon>mdi-home</v-icon>
         </v-btn>
-        <v-btn icon>
+        <v-btn icon router :to="{ name: 'search' }">
           검색
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
@@ -79,7 +79,8 @@ export default {
   },
   data: () => ({
     drawer: null,
-    canBack: true
+    canBack: true,
+    isSearch: false
   }),
   computed: {
     ...mapState(["isLogin"])
@@ -90,10 +91,15 @@ export default {
     let baseUrl = this.$router.options.routes;
     // console.log(this.$router.options.routes);
     console.log(this.$router.history.current.name);
-    for (let i = 0; i < 6; i++) {
-      if (baseUrl[i].name === currentUrl) {
-        this.canBack = false;
-        return;
+    if ("search" === this.$router.history.current.name) {
+      this.isSearch = true;
+    } else {
+      this.isSearch = false;
+      for (let i = 0; i < 6; i++) {
+        if (baseUrl[i].name === currentUrl) {
+          this.canBack = false;
+          return;
+        }
       }
     }
   }

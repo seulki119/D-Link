@@ -104,7 +104,16 @@ const routes = [
     beforeEnter: onlyAuthUser,
     component: () =>
       import(
-        /* webpackChunkName: "createArticle" */ "./views/accounts/PasswordChange.vue"
+        /* webpackChunkName: "passwordChange" */ "./views/accounts/PasswordChange.vue"
+      ),
+  },
+  {
+    path: "/search",
+    name: "search",
+    beforeEnter: onlyAuthUser,
+    component: () =>
+      import(
+        /* webpackChunkName: "search" */ "./views/Articles/Search.vue"
       ),
   },
 ];

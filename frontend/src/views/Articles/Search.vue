@@ -1,59 +1,65 @@
 <template>
-  <!-- <div class="container"> -->
-  <v-container max-width="600" min-width="300">
-    <!-- <v-card class="mx-auto pa-5" max-width="600">
-      <StackGrid :columnWidth="210" :gutterX="20" :gutterY="20">
-        <div class="stack-item" v-for="(item, index) in items.slice().reverse()" :key="index">
-          <div v-if="item.user.id != userId" class="stack-item stack-item-6">
-            <img
-              :src="`//127.0.0.1:8000/${item.image}`"
-              alt
-              @click="showDetail(item.id)"
-              style="cursor: pointer;width:200px;"
-            />
-            <div class="scrapInfo">
-              {{ item.scrap.length }}
-              <img
-                v-if="!item.scrap.includes(userId)"
-                class="scrapInfo"
-                @click="scrapAct(item.id)"
-                :src="(scrapSrc = scrapNo)"
-              />
-              <img v-else class="scrapInfo" @click="scrapAct(item.id)" :src="(scrapSrc = scrapYes)" />
-            </div>
-          </div>
-        </div>
-      </StackGrid>
-    </v-card>-->
-  </v-container>
-  <!-- </div> -->
+  <v-app-bar
+    app
+    color="indigo"
+    dark
+    max-width="600"
+    min-width="300"
+    elevate-on-scroll
+    class="mx-auto"
+  >
+    <v-icon class="mx-auto">mdi-magnify</v-icon>
+    <v-spacer></v-spacer>
+    <v-autocomplete
+      class="pt-2"
+      v-model="tag"
+      :items="tags"
+      :counter="3"
+      dense
+      chips
+      small-chips
+      multiple
+      hide-no-data
+      hide-selected
+      deletable-chips
+      no-data-text
+      hint="Maximum of 3 tags"
+    ></v-autocomplete>
+    <v-spacer></v-spacer>
+    <v-btn icon class="mx-auto">검색</v-btn>
+  </v-app-bar>
 </template>
 <script>
 // import StackGrid from "vue-stack-grid-component";
-import { mapGetters } from "vuex";
-
+import http from "@/util/http-common";
 export default {
   // components: {
   //   StackGrid
   // },
   data() {
     return {
+      tag: [],
+      tags: [],
       scrapSrc: "",
       scrapNo: "https://img.icons8.com/carbon-copy/24/000000/wine-glass.png",
       scrapYes: "https://img.icons8.com/plasticine/24/000000/wine-glass.png"
     };
   },
-  computed: {
-    // ...mapGetters(["items"]),
-    ...mapGetters(["searchWord"])
-  },
   created() {
-    this.$store.dispatch("getSearchWord", "/articles/hashtag/").finally(() => {
-      setTimeout(() => {
-        console.log(this.searchWord);
-      }, 400);
+    let token = localStorage.getItem("token");
+
+    let config = {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    };
+    http.post("/articles/hashtag/", "", config).then(res => {
+      let tmp = [];
+      for (let t in res.data) {
+        tmp.push(res.data[t].tag);
+      }
+      this.tags = tmp;
     });
-    // this.$store.dispatch("getArticles", "/articles");
   },
   methods: {
     showDetail(id) {
@@ -71,6 +77,16 @@ export default {
       // } else {
       //   this.scrapSrc = this.scrapYes;
       // }
+    }
+  },
+  watch: {
+    tag(val) {
+      if (val.length > 3) {
+        this.$nextTick(() => this.tag.pop());
+      }
+      if (val.length <= 3) {
+        console.log(val);
+      }
     }
   }
 };

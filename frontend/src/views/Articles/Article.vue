@@ -111,9 +111,30 @@
 
                 <v-list-item-content>
                   <v-list-item-title>{{ comment.user.username }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ comment.content }}</v-list-item-subtitle>
+                  {{ comment.content }}
                 </v-list-item-content>
               </template>
+
+              <!-- 대댓글달기, 삭제 버튼 ////START//// 
+               댓글 삭제 - 권한 : 1)댓글 작성자 2)글 작성자
+              -->
+              <v-list-item>
+                <v-list-item-content>
+                  <div>
+                    <span
+                      @click="myComment = `@${comment.user.username} `; modeComment=false; comm={id:comment.id,username:comment.user.username}"
+                      class="grey--text text--lighten-1 commentMenu"
+                    >답글달기</span>
+                    <span
+                      v-show="item.user.id == userId || comment.user.id == userId"
+                      @click="deleteComment(comment.id);"
+                      class="grey--text text--lighten-1 commentMenu"
+                    >삭제</span>
+                  </div>
+                </v-list-item-content>
+              </v-list-item>
+              <!-- 대댓글달기, 삭제 버튼 ////END//// -->
+
               <!-- 대댓글 Form ////START//// -->
               <div v-if="comment.recommentSet !== undefined">
                 <!-- props 전달 -->
@@ -125,78 +146,11 @@
                 />
               </div>
               <!-- 대댓글 Form ////END//// -->
-
-              <!-- 댓글 삭제 - 권한 : 1)댓글 작성자 2)글 작성자  -->
-              <v-btn
-                v-show="item.user.id == userId || comment.user.id == userId"
-                text
-                icon
-                color="deep-purple accent-2"
-                @click="snackbar = true; comm = {id:comment.id, username:comment.user.username}"
-              >
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
-
-              <v-snackbar v-model="snackbar" :timeout="timeout">
-                {{ text }}
-                <template v-slot:action="{ attrs }">
-                  <v-btn
-                    text
-                    color="deep-purple accent-1"
-                    v-bind="attrs"
-                    @click="deleteComment(comm.id)"
-                  >삭제</v-btn>
-                  <v-btn
-                    text
-                    color="deep-purple accent-1"
-                    v-bind="attrs"
-                    @click="myComment = `@${comm.username} `; modeComment=false"
-                  >댓글달기</v-btn>
-
-                  <v-btn
-                    text
-                    color="deep-purple accent-2"
-                    v-bind="attrs"
-                    @click="snackbar = false"
-                  >X</v-btn>
-                </template>
-              </v-snackbar>
-              <!-- 나머지 유저 : 대댓글 달기 -->
-              <v-btn
-                v-show="item.user.id != userId && comment.user.id != userId"
-                text
-                icon
-                color="deep-purple accent-2"
-                @click="snackbar2 = true; comm = {id:comment.id, username:comment.user.username}"
-              >
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
-
-              <v-snackbar v-model="snackbar2" :timeout="timeout">
-                {{ text }}
-                <template v-slot:action="{ attrs }">
-                  <v-btn
-                    text
-                    color="deep-purple accent-1"
-                    v-bind="attrs"
-                    @click="myComment = `@${comm.username} `; modeComment=false"
-                  >댓글달기</v-btn>
-
-                  <v-btn
-                    text
-                    color="deep-purple accent-2"
-                    v-bind="attrs"
-                    @click="snackbar2 = false"
-                  >X</v-btn>
-                </template>
-              </v-snackbar>
             </v-list-group>
           </v-card-text>
         </v-slide-y-transition>
         <!-- 댓글 등록하기 -->
         <v-card-actions>
-          <!-- <v-avatar color="grey" size="30px"></v-avatar>
-          <v-spacer></v-spacer>-->
           <v-textarea
             v-model="myComment"
             auto-grow
@@ -507,6 +461,9 @@ export default {
         .catch(response => {
           console.log(response.data);
         });
+    },
+    reply() {
+      alert("!");
     }
   }
 };
@@ -518,5 +475,11 @@ export default {
   justify-content: center;
   z-index: 10;
   color: #ffffff;
+}
+.commentMenu {
+  float: right;
+  font-size: small;
+  cursor: pointer;
+  margin-left: 8px;
 }
 </style>

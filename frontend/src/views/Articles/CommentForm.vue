@@ -14,32 +14,14 @@
 
           <v-list-item-content v-if="comment.content != null && comment.content != ' '">
             <v-list-item-title>{{ comment.user.username }}</v-list-item-title>
-            <v-list-item-subtitle>{{ comment.content }}</v-list-item-subtitle>
+            {{ comment.content }}
           </v-list-item-content>
           <!-- 댓글 삭제 - 권한 : 1)댓글 작성자 2)글 작성자  -->
-          <v-btn
+          <span
             v-show="itemUserId == userId || comment.user.id == userId"
-            text
-            icon
-            color="deep-purple accent-2"
-            @click="snackbar = true; comm = {id:comment.id, username:comment.user.username, index:index}"
-          >
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
-
-          <v-snackbar v-model="snackbar" :timeout="timeout">
-            {{ text }}
-            <template v-slot:action="{ attrs }">
-              <v-btn
-                text
-                color="deep-purple accent-1"
-                v-bind="attrs"
-                @click="deleteComment(comm.id, comm.index)"
-              >삭제</v-btn>
-
-              <v-btn text color="deep-purple accent-2" v-bind="attrs" @click="snackbar = false">X</v-btn>
-            </template>
-          </v-snackbar>
+            @click="deleteComment(comment.id);"
+            class="grey--text text--lighten-1 commentMenu"
+          >삭제</span>
         </v-list-item>
       </v-card-text>
     </v-slide-y-transition>
@@ -66,10 +48,7 @@ export default {
         id: "",
         username: "",
         index: ""
-      },
-      timeout: 2000,
-      text: "댓글 기능 텍스트",
-      snackbar: false
+      }
     };
   },
   created() {
@@ -109,4 +88,9 @@ export default {
 </script>
 
 <style>
+.commentMenu {
+  float: right;
+  font-size: small;
+  cursor: pointer;
+}
 </style>

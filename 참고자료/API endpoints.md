@@ -12,6 +12,7 @@
 | DEL    | 회원 탈퇴                    | http://127.0.0.1:8000/accounts/{username}/                   | O    |
 | PUT    | 비밀번호변경                 | http://127.0.0.1:8000/accounts/password/                     | O    |
 | GET    | 피드 리스트                  | http://127.0.0.1:8000/articles/                              | O    |
+| GET    | 피드 검색                    | http://127.0.0.1:8000/articles/search/                       | O    |
 | POST   | 피드 생성                    | http://127.0.0.1:8000/articles/                              | O    |
 | GET    | 피드 디테일                  | http://127.0.0.1:8000/articles/{article.id}/                 | O    |
 | PUT    | 피드 업데이트                | http://127.0.0.1:8000/articles/{article.id}/                 | O    |

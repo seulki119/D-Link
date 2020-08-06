@@ -1,11 +1,9 @@
 <template>
   <!-- <div class="container"> -->
   <v-container max-width="600" min-width="300">
-    <v-card class="mx-auto pa-5" max-width="600">
+    <!-- <v-card class="mx-auto pa-5" max-width="600">
       <StackGrid :columnWidth="210" :gutterX="20" :gutterY="20">
-        <!-- you component like this -->
         <div class="stack-item" v-for="(item, index) in items.slice().reverse()" :key="index">
-          <!-- some thing have fixed height-->
           <div v-if="item.user.id != userId" class="stack-item stack-item-6">
             <img
               :src="`//127.0.0.1:8000/${item.image}`"
@@ -15,7 +13,6 @@
             />
             <div class="scrapInfo">
               {{ item.scrap.length }}
-              <!-- scrap icon : scrap[]에 로그인된 id가 존재하는지 확인 -->
               <img
                 v-if="!item.scrap.includes(userId)"
                 class="scrapInfo"
@@ -27,18 +24,18 @@
           </div>
         </div>
       </StackGrid>
-    </v-card>
+    </v-card>-->
   </v-container>
   <!-- </div> -->
 </template>
 <script>
-import StackGrid from "vue-stack-grid-component";
+// import StackGrid from "vue-stack-grid-component";
 import { mapGetters } from "vuex";
 
 export default {
-  components: {
-    StackGrid
-  },
+  // components: {
+  //   StackGrid
+  // },
   data() {
     return {
       scrapSrc: "",
@@ -47,11 +44,16 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["items"]),
-    ...mapGetters(["userId"])
+    // ...mapGetters(["items"]),
+    ...mapGetters(["searchWord"])
   },
   created() {
-    this.$store.dispatch("getArticles", "/articles");
+    this.$store.dispatch("getSearchWord", "/articles/hashtag/").finally(() => {
+      setTimeout(() => {
+        console.log(this.searchWord);
+      }, 400);
+    });
+    // this.$store.dispatch("getArticles", "/articles");
   },
   methods: {
     showDetail(id) {

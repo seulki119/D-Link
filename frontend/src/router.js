@@ -113,7 +113,7 @@ const routes = [
     beforeEnter: onlyAuthUser,
     component: () =>
       import(
-        /* webpackChunkName: "search" */ "./views/Articles/search.vue"
+        /* webpackChunkName: "search" */ "./views/Articles/Search.vue"
       ),
   },
 ];

@@ -55,13 +55,13 @@ Row로 나눈다
               회원정보수정
               <v-icon right dark>mdi-cloud-upload</v-icon>
             </v-btn>
-            <v-btn block color="black" class="ma-2 white--text" @click="logout()">
-              <v-icon left dark>mdi-logout</v-icon>패스워드 변경
-            </v-btn>
-            <v-btn block color="black" class="ma-2 white--text" @click="logout()">
-              <v-icon left dark>mdi-logout</v-icon>로그아웃
-            </v-btn>
           </v-slide-x-transition>
+          <v-btn block color="black" class="ma-2 white--text" @click="logout()">
+            <v-icon left dark>mdi-key-variant</v-icon>패스워드 변경
+          </v-btn>
+          <v-btn block color="black" class="ma-2 white--text" @click="logout()">
+            <v-icon left dark>mdi-logout</v-icon>로그아웃
+          </v-btn>
         </v-col>
       </v-row>
     </v-card>

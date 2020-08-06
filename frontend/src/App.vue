@@ -50,7 +50,7 @@
           홈
           <v-icon>mdi-home</v-icon>
         </v-btn>
-        <v-btn icon>
+        <v-btn icon router :to="{ name: 'search' }">
           검색
           <v-icon>mdi-magnify</v-icon>
         </v-btn>

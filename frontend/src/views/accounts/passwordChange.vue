@@ -92,16 +92,28 @@ export default {
     async submit() {
       const isValid = await this.$refs.observer.validate();
       if (isValid) {
+        let token = localStorage.getItem("token");
+        let config = {
+          headers: {
+            Authorization: `Token ${token}`
+          }
+        };
         http
-          .put("/accounts/password/", {
-            old_password: this.previous,
-            new_password: this.password
+          .put(
+            "/accounts/password/",
+            {
+              old_password: this.previous,
+              new_password: this.password
+            },
+            config
+          )
+          .then(() => {
+            this.$router.push("mypage");
           })
-          .then(response => {
-            console.log(response);
-          })
-          .catch(response => {
-            console.log(response);
+          .catch(() => {
+            alert(
+              "비밀번호 변경에 실패하였습니다. 기존 비밀번호를 다시 확인해주세요"
+            );
           });
       }
     }

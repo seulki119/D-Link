@@ -25,7 +25,7 @@
         </v-menu>
         <!-- article menu -->
       </v-list-item>
-      <v-img :src="`//127.0.0.1:8000/${item.image}`" height="300"></v-img>
+      <v-img :src="`//127.0.0.1:8000/${item.image}`" class="max-small"></v-img>
 
       <!-- 이미지 아래 부분 -->
       <div v-if="!modeUpdate">
@@ -160,9 +160,10 @@
             row-height="15"
             :placeholder="`${userName} 님의 댓글`"
             :modeComment="modeComment"
-            style="width: 270px"
             append-icon="mdi-comment"
             @keydown.enter="modeComment ?  createComment() : createRecomment()"
+            maxlength="80"
+            counter="80"
           ></v-textarea>
         </v-card-actions>
       </div>
@@ -488,5 +489,12 @@ export default {
   font-size: small;
   cursor: pointer;
   margin-left: 8px;
+}
+.max-small {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 350px;
 }
 </style>

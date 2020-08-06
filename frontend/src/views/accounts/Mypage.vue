@@ -15,7 +15,8 @@
       <v-row class="pa-5" no-gutters>
         <v-col>
           <v-avatar class="profileImage" color="grey" size="80" round>
-            <v-img :src="`//127.0.0.1:8000/${image}`"></v-img>
+            <v-img v-if="image!==null" :src="`//127.0.0.1:8000/${image}`"></v-img>
+            <span v-else>이미지를 추가해주세요!</span>
           </v-avatar>
         </v-col>
         <v-col>

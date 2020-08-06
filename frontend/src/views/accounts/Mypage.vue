@@ -49,7 +49,7 @@
           <v-tab-item>
             <v-container fluid>
               <v-row>
-                <v-col v-for="n in articleSet" :key="n.image" cols="4">
+                <v-col v-for="n in articleSet.slice().reverse()" :key="n.image" cols="4">
                   <v-img
                     :src="`//127.0.0.1:8000/${n.image}`"
                     class="grey lighten-2 pa-1"
@@ -63,7 +63,7 @@
           <v-tab-item>
             <v-container fluid>
               <v-row>
-                <v-col v-for="n in scrapSet" :key="n.image" cols="4">
+                <v-col v-for="n in scrapSet.slice().reverse()" :key="n.image" cols="4">
                   <v-img
                     :src="`//127.0.0.1:8000/${n.image}`"
                     class="grey lighten-2 pa-1"

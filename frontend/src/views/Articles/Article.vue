@@ -75,21 +75,21 @@
           <v-spacer></v-spacer>
         </v-card-actions>
         <!-- 본인댓글이나 최신댓글 1개 보여주기 -->
-        <v-slide-y-transition v-if="item.commentSet.length > 0 && showComment.content != ''">
+        <v-slide-y-transition v-if="item.commentSet.length > 0 && repComment!= null">
           <v-card-text v-show="!show">
             <v-list-item>
               <v-list-item-avatar color="grey">
                 <v-img
-                  v-if="showComment.userImage != null"
-                  :src="`//127.0.0.1:8000/${showComment.userImage}`"
+                  v-if="repComment.userImage != null"
+                  :src="`//127.0.0.1:8000/${repComment.userImage}`"
                 ></v-img>
               </v-list-item-avatar>
 
               <v-list-item-content>
-                <v-list-item-title>{{ showComment.userName }}</v-list-item-title>
+                <v-list-item-title>{{ repComment.userName }}</v-list-item-title>
                 <v-list-item-subtitle>
                   {{
-                  showComment.content
+                  repComment.content
                   }}
                 </v-list-item-subtitle>
               </v-list-item-content>
@@ -231,12 +231,9 @@ export default {
       scrapYes: "https://img.icons8.com/plasticine/24/000000/wine-glass.png",
       readMoreActivated: false,
       show: false,
-      showComment: { userName: "", content: "", userImage: "" },
+      repComment: { id: "", userName: "", content: "", userImage: "" },
       myComment: "",
-      snackbar: false,
-      snackbar2: false,
-      timeout: 2000,
-      text: "댓글 기능 텍스트",
+
       hashtags: [],
       articleMenu: ["수정", "삭제"],
       comm: {
@@ -247,7 +244,8 @@ export default {
       modeUpdate: false,
       content: "",
       items: [],
-      max: 20
+      max: 20,
+      comments: []
     };
   },
   watch: {
@@ -269,17 +267,20 @@ export default {
           if (array !== undefined) {
             for (let index = 0; index < array.length; index++) {
               if (array[index].user.id === this.userId) {
-                this.showComment.userName = array[index].user.username;
-                this.showComment.content = array[index].content;
-                this.showComment.userImage = array[index].user.image;
+                this.repComment.id = array[index].id;
+                this.repComment.userName = array[index].user.username;
+                this.repComment.content = array[index].content;
+                this.repComment.userImage = array[index].user.image;
                 break;
               } else if (index == array.length - 1) {
-                this.showComment.userName = array[index].user.username;
-                this.showComment.content = array[index].content;
-                this.showComment.userImage = array[index].user.image;
+                this.repComment.id = array[index].id;
+                this.repComment.userName = array[index].user.username;
+                this.repComment.content = array[index].content;
+                this.repComment.userImage = array[index].user.image;
               }
             }
           }
+          this.comments = array;
           this.content = this.item.content;
 
           let tagArray = this.item.hashtag;
@@ -346,13 +347,19 @@ export default {
 
       http
         .delete(`/articles/${this.item.id}/comment/${commId}/`, config)
-        .then(response => {
-          console.log(response);
-          this.snackbar = false;
+        .then(() => {
+          // console.log(response);
+
           this.$store.dispatch(
             "getArticle",
             `/articles/${this.$route.query.id}`
           );
+
+          // this.comments.splice(index, 1);
+          if (this.repComment.id == commId) {
+            this.repComment = null;
+          }
+          // if(commId)
         })
         .catch(err => {
           console.log(err.response);

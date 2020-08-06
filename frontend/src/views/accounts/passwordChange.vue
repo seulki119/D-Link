@@ -38,6 +38,9 @@
             ></v-text-field>
           </ValidationProvider>
           <v-btn color="primary" :disabled="!valid" class="mr-4" @click="submit">비밀번호 변경</v-btn>
+          <v-btn block color="black" class="ma-2 white--text" @click="unsubscribe()">
+            <v-icon left dark>mdi-delete</v-icon>탈퇴하기
+          </v-btn>
         </v-form>
       </ValidationObserver>
     </v-row>
@@ -77,6 +80,7 @@ extend("passswordConfirm", {
   },
   message: "비밀번호가 일치하지 않습니다"
 });
+// import { mapActions } from "vuex";
 export default {
   components: {
     ValidationProvider,
@@ -89,6 +93,7 @@ export default {
     valid: false
   }),
   methods: {
+    // ...mapActions(["logout"]),
     async submit() {
       const isValid = await this.$refs.observer.validate();
       if (isValid) {
@@ -115,6 +120,29 @@ export default {
               "비밀번호 변경에 실패하였습니다. 기존 비밀번호를 다시 확인해주세요"
             );
           });
+      }
+    },
+    unsubscribe() {
+      let check = confirm("탈퇴하시겠습니까?");
+      if (check) {
+        let token = localStorage.getItem("token");
+        let config = {
+          headers: {
+            Authorization: `Token ${token}`
+          }
+        };
+        http
+          .delete("/accounts/{username}/", config)
+          .then(() => {
+            alert("그 동안 이용해주셔서 감사합니다.");
+            this.$store.dispatch("logout");
+            // this.$router.push("home");
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        this.$router.push("mypage");
       }
     }
   }

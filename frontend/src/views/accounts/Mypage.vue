@@ -15,7 +15,8 @@
       <v-row class="pa-5" no-gutters>
         <v-col>
           <v-avatar class="profileImage" color="grey" size="80" round>
-            <v-img :src="`//127.0.0.1:8000/${image}`"></v-img>
+            <v-img v-if="image!==null" :src="`//127.0.0.1:8000/${image}`"></v-img>
+            <span v-else>이미지를 추가해주세요!</span>
           </v-avatar>
         </v-col>
         <v-col>
@@ -38,7 +39,7 @@
         <v-icon left dark>mdi-account</v-icon>프로필 수정
       </v-btn>
       <v-btn block color="black" class="ma-2 white--text" @click="logout()">
-        <v-icon left dark>mdi-logout</v-icon>로그아웃
+        <v-icon left dark>mdi-logout</v-icon>테스트용 로그아웃(진짜 로그아웃은 숨겨둠)
       </v-btn>
       <v-divider></v-divider>
 

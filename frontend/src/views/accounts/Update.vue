@@ -20,7 +20,7 @@ Row로 나눈다
         <v-col>
           <image-input v-model="avatar">
             <div slot="activator">
-              <v-avatar size="136px" v-ripple v-if="!previous" class="grey lighten-3">
+              <v-avatar size="136px" v-ripple v-if="!previous && !avatar" class="grey lighten-3">
                 <span>Click to add avatar</span>
               </v-avatar>
               <v-avatar size="136px" v-ripple v-else-if="!avatar">

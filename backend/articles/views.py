@@ -102,7 +102,7 @@ def hashtag(request):
     serializer = HashtagSerializser(hashtag, many=True)
     return Response(serializer.data)
 
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def search(request):
     hashtags = request.data.get('hashtags')

@@ -26,7 +26,7 @@
       hint="Maximum of 3 tags"
     ></v-autocomplete>
     <v-spacer></v-spacer>
-    <v-btn icon class="mx-auto">검색</v-btn>
+    <v-btn icon class="mx-auto" v-show="tag.length !==0 " @click="search()">검색</v-btn>
   </v-app-bar>
 </template>
 <script>
@@ -77,15 +77,38 @@ export default {
       // } else {
       //   this.scrapSrc = this.scrapYes;
       // }
+    },
+    search() {
+      let token = localStorage.getItem("token");
+
+      let config = {
+        headers: {
+          Authorization: `Token ${token}`
+        }
+      };
+
+      let searchWord = "";
+
+      for (let t in this.tag) {
+        searchWord += "#" + this.tag[t];
+      }
+      const fd = new FormData();
+      console.log(searchWord);
+      fd.append("hashtags", searchWord);
+      http
+        .post("/articles/search/", fd, config)
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err.response);
+        });
     }
   },
   watch: {
     tag(val) {
       if (val.length > 3) {
         this.$nextTick(() => this.tag.pop());
-      }
-      if (val.length <= 3) {
-        console.log(val);
       }
     }
   }

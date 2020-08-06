@@ -1,38 +1,44 @@
 <template>
   <v-container max-width="600" min-width="300">
     <v-row align="center" justify="center">
-      <v-text-field
-        v-model="password"
-        type="password"
-        @keypress.enter="login({email,password})"
-        label="기존 비밀번호"
-      ></v-text-field>
       <ValidationObserver ref="observer">
-        <ValidationProvider name="password" rules="required|min:8|max:16" v-slot="{ errors }">
-          <v-text-field
-            v-model="password"
-            :counter="16"
-            type="password"
-            :error-messages="errors"
-            label="변경할 비밀번호"
-            required
-          ></v-text-field>
-        </ValidationProvider>
+        <v-form v-model="valid">
+          <ValidationProvider name="previous" rules="required|min:8|max:16" v-slot="{ errors }">
+            <v-text-field
+              v-model="previous"
+              type="password"
+              :error-messages="errors"
+              label="기존 비밀번호"
+              required
+            ></v-text-field>
+          </ValidationProvider>
+          <ValidationProvider name="password" rules="required|min:8|max:16" v-slot="{ errors }">
+            <v-text-field
+              v-model="password"
+              :counter="16"
+              type="password"
+              :error-messages="errors"
+              label="변경할 비밀번호"
+              required
+            ></v-text-field>
+          </ValidationProvider>
 
-        <ValidationProvider
-          name="confirm"
-          rules="required|passswordConfirm:@password"
-          v-slot="{ errors }"
-        >
-          <v-text-field
-            v-model="confirmation"
-            :counter="password.length"
-            type="password"
-            :error-messages="errors"
-            label="비밀번호 확인"
-            required
-          ></v-text-field>
-        </ValidationProvider>
+          <ValidationProvider
+            name="confirm"
+            rules="required|passswordConfirm:@password"
+            v-slot="{ errors }"
+          >
+            <v-text-field
+              v-model="confirmation"
+              :counter="password.length"
+              type="password"
+              :error-messages="errors"
+              label="비밀번호 확인"
+              required
+            ></v-text-field>
+          </ValidationProvider>
+          <v-btn color="primary" :disabled="!valid" class="mr-4" @click="submit">비밀번호 변경</v-btn>
+        </v-form>
       </ValidationObserver>
     </v-row>
   </v-container>
@@ -81,6 +87,24 @@ export default {
     password: "",
     confirmation: "",
     valid: false
-  })
+  }),
+  methods: {
+    async submit() {
+      const isValid = await this.$refs.observer.validate();
+      if (isValid) {
+        http
+          .put("/accounts/password/", {
+            old_password: this.previous,
+            new_password: this.password
+          })
+          .then(response => {
+            console.log(response);
+          })
+          .catch(response => {
+            console.log(response);
+          });
+      }
+    }
+  }
 };
 </script>

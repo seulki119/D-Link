@@ -37,9 +37,9 @@
       <v-btn block color="black" class="ma-2 white--text" @click="update()">
         <v-icon left dark>mdi-account</v-icon>프로필 수정
       </v-btn>
-      <v-btn block color="black" class="ma-2 white--text" @click="logout()">
+      <!-- <v-btn block color="black" class="ma-2 white--text" @click="logout()">
         <v-icon left dark>mdi-logout</v-icon>로그아웃
-      </v-btn>
+      </v-btn>-->
       <v-divider></v-divider>
 
       <v-card>

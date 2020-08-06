@@ -12,30 +12,37 @@
 <template>
   <v-container max-width="600" min-width="300">
     <v-card class="mx-auto pa-5" max-width="600">
-      <v-row class="pa-5" no-gutters align="end" dense>
-        <v-col class="pa-0">
+      <v-row class="pa-5" no-gutters>
+        <v-col>
           <v-avatar class="profileImage" color="grey" size="80" round>
-            <v-img src="image"></v-img>
+            <v-img v-if="image!==null" :src="`//127.0.0.1:8000/${image}`"></v-img>
+            <span v-else>이미지를 추가해주세요!</span>
           </v-avatar>
         </v-col>
-        <v-col align="center">
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title>{{username}}</v-list-item-title>
-              <v-list-item-subtitle>{{email}}</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
+        <v-col>
+          <v-row>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>{{username}}</v-list-item-title>
+                <v-list-item-subtitle>{{email}}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-content>
+                <span>{{intro}}</span>
+              </v-list-item-content>
+            </v-list-item>
+          </v-row>
         </v-col>
       </v-row>
-      <v-btn block color="black" class="ma-2 white--text" @click="update">
+      <v-btn block color="black" class="ma-2 white--text" @click="update()">
         <v-icon left dark>mdi-account</v-icon>프로필 수정
       </v-btn>
       <v-btn block color="black" class="ma-2 white--text" @click="logout()">
-        <v-icon left dark>mdi-logout</v-icon>로그아웃
+        <v-icon left dark>mdi-logout</v-icon>테스트용 로그아웃(진짜 로그아웃은 숨겨둠)
       </v-btn>
       <v-divider></v-divider>
 
-      <!-- <v-col cols="12"> -->
       <v-card>
         <v-tabs centered icons-and-text background-color="white" color="deep-purple accent-4">
           <v-tab>업로드한 게시물</v-tab>
@@ -43,7 +50,7 @@
           <v-tab-item>
             <v-container fluid>
               <v-row>
-                <v-col v-for="n in articleSet" :key="n.image" cols="4">
+                <v-col v-for="n in articleSet.slice().reverse()" :key="n.image" cols="4">
                   <v-img
                     :src="`//127.0.0.1:8000/${n.image}`"
                     class="grey lighten-2 pa-1"
@@ -57,7 +64,7 @@
           <v-tab-item>
             <v-container fluid>
               <v-row>
-                <v-col v-for="n in scrapSet" :key="n.image" cols="4">
+                <v-col v-for="n in scrapSet.slice().reverse()" :key="n.image" cols="4">
                   <v-img
                     :src="`//127.0.0.1:8000/${n.image}`"
                     class="grey lighten-2 pa-1"
@@ -89,7 +96,7 @@ export default {
       username: ""
     };
   },
-  created() {
+  beforeCreate() {
     let token = localStorage.getItem("token");
     let config = {
       headers: {
@@ -104,7 +111,7 @@ export default {
       this.intro = res.data.intro;
       this.username = res.data.username;
       this.email = this.userInfo.email;
-      // console.log(this.articleSet[0].image);
+      console.log(res);
     });
     // console.log(this.articleSet);
   },
@@ -116,7 +123,9 @@ export default {
     showDetail(id) {
       this.$router.push(`article?id=${id}`);
     },
-    update() {}
+    update() {
+      this.$router.push("updateuser");
+    }
   }
 };
 </script>

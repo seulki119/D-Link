@@ -58,6 +58,13 @@ const routes = [
       import(/* webpackChunkName: "mypage" */ "./views/accounts/Mypage.vue"),
   },
   {
+    path: "/updateuser",
+    name: "updateuser",
+    beforeEnter: onlyAuthUser,
+    component: () =>
+      import(/* webpackChunkName: "mypage" */ "./views/accounts/Update.vue"),
+  },
+  {
     path: "/articlelist",
     name: "articlelist",
     beforeEnter: onlyAuthUser,
@@ -89,6 +96,15 @@ const routes = [
     component: () =>
       import(
         /* webpackChunkName: "notifications" */ "./views/accounts/Notifications.vue"
+      ),
+  },
+  {
+    path: "/passwordChange",
+    name: "passwordChange",
+    beforeEnter: onlyAuthUser,
+    component: () =>
+      import(
+        /* webpackChunkName: "createArticle" */ "./views/accounts/PasswordChange.vue"
       ),
   },
 ];

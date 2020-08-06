@@ -98,6 +98,15 @@ const routes = [
         /* webpackChunkName: "notifications" */ "./views/accounts/Notifications.vue"
       ),
   },
+  {
+    path: "/passwordChange",
+    name: "passwordChange",
+    beforeEnter: onlyAuthUser,
+    component: () =>
+      import(
+        /* webpackChunkName: "createArticle" */ "./views/Articles/PasswordChange.vue"
+      ),
+  },
 ];
 
 const router = new VueRouter({

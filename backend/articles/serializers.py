@@ -3,7 +3,6 @@ from  accounts.models import User
 import uuid
 import base64
 
-from drf_extra_fields.fields import Base64ImageField
 from .models import Article, Comment, Recomment, Hashtag
 from django.contrib.auth import get_user_model
 

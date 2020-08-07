@@ -25,4 +25,5 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('articles/', include('articles.urls')),
     path('authaccounts/', include('allauth.urls')),
+    path('versus/', include('versus.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

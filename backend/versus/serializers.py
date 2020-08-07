@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from .models import Topic, VoteComment
+from .models import Topic, VS_Comment, Vote
 
 User = get_user_model()
 
@@ -16,25 +16,28 @@ class UserSerializer(serializers.ModelSerializer):
 
 class TopicSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False)
-    topic1 = serializers.CharField(max_length=100)
-    topic2 = serializers.CharField(max_length=100)
-    image1 = serializers.ImageField(use_url=True)
-    image2 = serializers.ImageField(use_url=True)
 
-    
     class Meta:
         model = Topic
         fields = '__all__'
-        read_only_fields = ('id', 'user', 'topic1', 'topic2','image1','image2')    
+        read_only_fields = ('id', 'user', ' topic_A', 'topic_B','image_A','image_B')    
 
 
-class VoteCommentSerializer(serializers.ModelSerializer):
-    user  = UserSerializer(required=False)
-    side  = serializers.BooleanField()   
-    comment = serializers.TextField()
+class VoteSerializer(serializers.ModelSerializer):
+    user = UserSerializer(required=False)
 
-    
     class Meta:
-        model = VoteComment
+        model = Vote
         fields = '__all__'
-        read_only_fields = ('id', 'user', 'side', 'comment')  
+        read_only_fields = ('id','user','topic','select_A','select_B')
+
+
+
+
+class VS_CommentCommentSerializer(serializers.ModelSerializer):
+    user  = UserSerializer(required=False)
+
+    class Meta:
+        model = VS_Comment
+        fields = '__all__'
+        read_only_fields = ('id', 'user', 'comment','select')  

@@ -13,6 +13,7 @@ export default new Vuex.Store({
     isLoginError: false,
     items: [],
     item: {},
+    alarms: [],
   },
   getters: {
     userId(state) {
@@ -27,6 +28,9 @@ export default new Vuex.Store({
     item(state) {
       return state.item;
     },
+    alarms(state) {
+      return state.alarms;
+    }
   },
   //차후 Taste는 로그인이 되어있을때만 갈 수 있게;
   mutations: {
@@ -56,10 +60,13 @@ export default new Vuex.Store({
     setItem(state, payload) {
       state.item = payload;
     },
+    addAlarm(state, message) {
+      state.alarms.push(message)
+    }
   },
   actions: {
     //로그인 시도
-    login({ dispatch }, loginObj) {
+    login({ dispatch, commit }, loginObj) {
       //로그인 -> 토큰 반환
       http
         .post("/rest-auth/login/", loginObj)
@@ -79,6 +86,7 @@ export default new Vuex.Store({
               var data = JSON.parse(e.data);
               var message = data['message'];
               console.log(message)
+              commit("addAlarm", message)
           };
       
           this.socket.onopen = function(e) {

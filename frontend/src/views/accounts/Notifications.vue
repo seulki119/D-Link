@@ -19,10 +19,12 @@
         </v-list-item>
       </template>
     </v-list>
+    <p v-for="(alarm) in this.alarms" :key="alarm"> {{ alarm }} </p>
   </v-card>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   data: () => ({
     items: [
@@ -71,6 +73,9 @@ export default {
           "<span class='text--primary'>Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos. We should eat this: Grate, Squash, Corn, and tomatillo Tacos."
       }
     ]
-  })
+  }),
+  computed: {
+    ...mapGetters(["alarms"])
+  },
 };
 </script>

@@ -39,7 +39,7 @@
               @click="scrapAct(item.id, item.user.id)"
               :src="(scrapSrc = scrapNo)"
             />
-            <img v-else class="scrapInfo" @click="scrapAct(item.id, item.user.id)" :src="(scrapSrc = scrapYes)" />
+            <img v-else class="scrapInfo" @click="scrapAct(item.id)" :src="(scrapSrc = scrapYes)" />
           </div>
         </v-card-text>
         <!-- scrap field -->

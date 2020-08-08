@@ -98,15 +98,15 @@ const routes = [
         /* webpackChunkName: "notifications" */ "./views/accounts/Notifications.vue"
       ),
   },
-  {
-    path: "/passwordChange",
-    name: "passwordChange",
-    beforeEnter: onlyAuthUser,
-    component: () =>
-      import(
-        /* webpackChunkName: "passwordChange" */ "./views/accounts/PasswordChange.vue"
-      ),
-  },
+  // {
+  //   path: "/passwordChange",
+  //   name: "passwordChange",
+  //   beforeEnter: onlyAuthUser,
+  //   component: () =>
+  //     import(
+  //       /* webpackChunkName: "passwordChange" */ "./views/accounts/PasswordChange.vue"
+  //     ),
+  // },
   {
     path: "/search",
     name: "search",

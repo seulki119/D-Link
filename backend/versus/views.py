@@ -92,10 +92,14 @@ def comment(request, topic_pk):
  
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
-def comment_delete(request, topic_pk, comment_pk):
+def comment_delete(request,topic_pk, comment_pk):
+        print('들어오는오지')
         topic = get_object_or_404(Topic, pk=topic_pk)
-        comments = topic.comment_set.all()
-        comment = comments.get(pk=comment_pk)
+        # print(topic)
+        # comments = topic.comment_set.all()
+        
+        comment = get_object_or_404(VS_Comment, pk=comment_pk)
+        print(comment)
         serializer = VS_CommentCommentSerializer(data=request.data)
         if request.user == comment.user or request.user == topic.user:             
             comment.delete()

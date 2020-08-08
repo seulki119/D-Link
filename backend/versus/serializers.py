@@ -20,7 +20,8 @@ class TopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topic
         fields = '__all__'
-        read_only_fields = ('id', 'user', ' topic_A', 'topic_B','image_A','image_B')    
+        # read_only_fields 로 넣으면 바디로 넣어서 못받음
+        read_only_fields = ('id', 'user', 'createdAt', 'updatedAt')    
 
 
 class VoteSerializer(serializers.ModelSerializer):
@@ -29,7 +30,7 @@ class VoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vote
         fields = '__all__'
-        read_only_fields = ('id','user','topic','select_A','select_B')
+        read_only_fields = ('id','user')
 
 
 
@@ -40,4 +41,4 @@ class VS_CommentCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = VS_Comment
         fields = '__all__'
-        read_only_fields = ('id', 'user', 'comment','select')  
+        read_only_fields = ('id', 'user', 'createdAt', 'updatedAt')  

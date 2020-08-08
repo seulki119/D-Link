@@ -15,47 +15,45 @@ from .models import Topic, VS_Comment, Vote
 from .serializers import TopicSerializer, VS_CommentCommentSerializer, VoteSerializer
 
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def index(request):
     if request.method == 'GET':
-        topic = Topic.objects.all()
-        serializer = TopicSerializer(articles, many=True)
-        return Response(serializer.data)
+        topics = Topic.objects.all()
+        serializer = TopicSerializer(topics, many=True)
+    else:
+        # 관리자 로직추가
+        if request.user.is_staff:
+            serializer = TopicSerializer(data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save(user=request.user)
+        else:
+            return Response({"message": "관리자가 아닙니다."})
+    return Response(serializer.data)
 
-
-@api_view(['POST'])
+@api_view(['GET', 'DELETE', 'PUT'])
 @permission_classes([IsAuthenticated])
-def create(request):
-        serializer = TopicSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save(user=request.user)
-            return Response(serializer.data)
-
-
-@api_view(['GET'])
-def detail(request,topic_pk):
-        topic = get_object_or_404(Topic, pk=topic_pk)    
+def detail(request, topic_pk):
+    # 인덴트 두번 띄워져이씀
+    topic = get_object_or_404(Topic, pk=topic_pk)  
+    if request.method == 'GET':  
         serializer = TopicSerializer(topic)
         return Response(serializer.data)
 
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def delete(request, topic_pk):
-    topic = get_object_or_404(Topic, pk=topic_pk) 
+    # 어떤 경우에든 Response해주어야함
     if request.user == topic.user:
-        topic.delete()
-        return Response({'message':'성공적으로 삭제'})
-
-
-@api_view(['PUT'])
-@permission_classes([IsAuthenticated])
-def update(request, topic_pk):
-    topic = get_object_or_404(Topic, pk=topic_pk)    
-    if request.user == topic.user:
-        serializer = TopicSerializer(data=request.data, instance=topic)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save(user=request.user)
-            return Response({'message':'성공적으로 수정'})
+        # 현재 versus_vs_comment 테이블이 안만들어져서 동작안함 -> 확인해보셔야할듯
+        if request.method == 'DELETE':
+            if request.user == topic.user:
+                topic.delete()
+                return Response({'message':'성공적으로 삭제'})
+        else:
+            if request.user == topic.user:
+                serializer = TopicSerializer(data=request.data, instance=topic)
+                if serializer.is_valid(raise_exception=True):
+                    serializer.save(user=request.user)
+                    return Response({'message':'성공적으로 수정'})
+    else:
+        return Response({'message': '권한이 없습니다.'})
 
 
 @api_view(['GET'])
@@ -78,10 +76,7 @@ def vote(request, topic_pk):
     serializer = VoteSerializer(vote)
     return Response(serializer.data)    
     
-
  
-
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def comment(request, topic_pk):

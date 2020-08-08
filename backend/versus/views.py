@@ -11,8 +11,8 @@ from django.conf import settings
 
 
 
-from .models import Topic, VS_Comment, Vote
-from .serializers import TopicSerializer, VS_CommentCommentSerializer, VoteSerializer
+from .models import Topic, VS_Comment
+from .serializers import TopicSerializer, VS_CommentCommentSerializer
 
 
 @api_view(['GET', 'POST'])
@@ -60,20 +60,23 @@ def detail(request, topic_pk):
 @permission_classes([IsAuthenticated])
 def vote(request, topic_pk):
     select = request.data.get('select')
-    vote = get_object_or_404(Vote, pk=topic_pk)    
+    print(select)
+    topic = get_object_or_404(Topic, pk=topic_pk)  
+    # vote = get_object_or_404(Vote, pk=topic_pk) 
+    print(topic)   
     if select == 'A':
-        if vote.select_A.filter(pk=request.user.pk).exists():
-            vote.select_A.remove(request.user)
+        if topic.select_A.filter(pk=request.user.pk).exists():
+            topic.select_A.remove(request.user)
         else:
-            vote.select_A.add(request.user)
+            topic.select_A.add(request.user)
     
     else :
-        if vote.select_B.filter(pk=request.user.pk).exists():
-            vote.select_B.remove(request.user)
+        if topic.select_B.filter(pk=request.user.pk).exists():
+            topic.select_B.remove(request.user)
         else:
-            vote.select_B.add(request.user)    
+            topic.select_B.add(request.user)    
 
-    serializer = VoteSerializer(vote)
+    serializer = TopicSerializer(topic)
     return Response(serializer.data)    
     
  

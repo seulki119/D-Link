@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from .models import Topic, VS_Comment, Vote
+from .models import Topic, VS_Comment
 
 User = get_user_model()
 
@@ -24,13 +24,13 @@ class TopicSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'user', 'createdAt', 'updatedAt')    
 
 
-class VoteSerializer(serializers.ModelSerializer):
-    user = UserSerializer(required=False)
+# class VoteSerializer(serializers.ModelSerializer):
+#     user = UserSerializer(required=False)
 
-    class Meta:
-        model = Vote
-        fields = '__all__'
-        read_only_fields = ('id','user')
+#     class Meta:
+#         model = Vote
+#         fields = '__all__'
+#         read_only_fields = ('id','user')
 
 
 

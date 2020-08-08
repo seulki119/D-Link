@@ -11,15 +11,17 @@ class Topic(models.Model):
     topic_B = models.CharField(max_length=100)
     image_A = models.ImageField()
     image_B = models.ImageField()
+    select_A = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='selectASet')
+    select_B = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='selectBSet')
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
 
 
-class Vote(models.Model):
-    user = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='voteSet')
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE) 
-    select_A = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='selectASet')
-    select_B = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='selectBSet')
+# class Vote(models.Model):
+#     user = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='voteSet')
+#     topic = models.ForeignKey(Topic, on_delete=models.CASCADE) 
+#     select_A = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='selectASet')
+#     select_B = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='selectBSet')
 
 
 

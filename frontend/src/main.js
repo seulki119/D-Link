@@ -5,6 +5,7 @@ import store from "./store";
 import vuetify from "./plugins/vuetify";
 import GAuth from 'vue-google-oauth2'
 import VueResource from 'vue-resource';
+import VuejsClipper from 'vuejs-clipper';
 
 Vue.config.productionTip = false;
 // const gauthOption = {
@@ -14,8 +15,13 @@ Vue.config.productionTip = false;
 // }
 // Vue.use(GAuth, gauthOption)
 
-Vue.use(GAuth, {clientId: '122178100323-91dhrvqu6bm14umnnovogcud8upb4c71.apps.googleusercontent.com', scope: 'profile email'})
+Vue.use(GAuth, { clientId: '122178100323-91dhrvqu6bm14umnnovogcud8upb4c71.apps.googleusercontent.com', scope: 'profile email' })
 Vue.use(VueResource);
+Vue.use(VuejsClipper, {
+  components: {
+    clipperFixed: true,
+  }
+})
 
 new Vue({
   router,

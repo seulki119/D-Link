@@ -27,6 +27,6 @@ class VS_Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)                         # 0이면 아무것도 아님 1이면 첫 번째, 2면 두 번재 컨텐츠
     comment = models.TextField()
-    select = models.IntegerField()
+    select = models.CharField(max_length=10)
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)

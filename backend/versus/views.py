@@ -77,11 +77,26 @@ def vote(request, topic_pk):
     return Response(serializer.data)    
     
  
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def comment(request, topic_pk):
-        serializer = VoteCommentSerializer(data=request.data)
-
+        serializer = VS_CommentCommentSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user, topic_id=topic_pk)
             return Response(serializer.data)    
+
+
+ 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def comment_delete(request, topic_pk, comment_pk):
+        topic = get_object_or_404(Topic, pk=topic_pk)
+        comments = topic.comment_set.all()
+        comment = comments.get(pk=comment_pk)
+        serializer = VS_CommentCommentSerializer(data=request.data)
+        if request.user == comment.user or request.user == topic.user:             
+            comment.delete()
+            return Response({'message': "성공적으로 삭제되었습니다"})
+        else:
+            return Response({'message': '권한이 없습니다.'})
+         

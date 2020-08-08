@@ -3,7 +3,7 @@
   <v-app id="inspire">
     <v-app-bar
       app
-      v-if="isLogin"
+      v-if="!isSearch && isLogin"
       color="indigo"
       dark
       max-width="600"
@@ -24,18 +24,19 @@
         <v-icon>D L I N K</v-icon>
         <!-- <p>로고</p> -->
       </div>
-      <v-btn class="mx-auto" icon router :to="{ name: 'mypage' }">
-        <!-- <div class="d-flex flex-column align-center"> -->
-        <v-icon>mdi-account</v-icon>
-        <!-- <p>마이페이지</p> -->
-        <!-- </div> -->
+
+      <v-btn icon class="mx-auto" router :to="{ name: 'notifications' }">
+        <v-badge color="red" left overlap>
+          <span slot="badge">3</span>
+          <v-icon>mdi-mail</v-icon>
+        </v-badge>
       </v-btn>
     </v-app-bar>
 
     <v-main>
       <router-view></router-view>
     </v-main>
-    <v-footer class="pa-0">
+    <v-footer class="pa-0" app style=" background-color:transparent">
       <v-bottom-navigation
         v-if="isLogin"
         grow
@@ -49,17 +50,21 @@
           홈
           <v-icon>mdi-home</v-icon>
         </v-btn>
-        <v-btn icon router :to="{ name: 'articlelist' }">
+        <v-btn icon router :to="{ name: 'search' }">
           검색
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
         <v-btn prepend-icon="mdi-plus" icon router :to="{ name: 'createArticle' }">
-          파일 업로드
+          업로드
           <v-icon>mdi-plus</v-icon>
         </v-btn>
         <v-btn icon>
           컨텐츠
           <v-icon>mdi-dialpad</v-icon>
+        </v-btn>
+        <v-btn icon router :to="{ name: 'mypage' }">
+          마이페이지
+          <v-icon>mdi-account</v-icon>
         </v-btn>
       </v-bottom-navigation>
     </v-footer>
@@ -74,7 +79,8 @@ export default {
   },
   data: () => ({
     drawer: null,
-    canBack: true
+    canBack: true,
+    isSearch: false
   }),
   computed: {
     ...mapState(["isLogin"])
@@ -83,12 +89,17 @@ export default {
     this.canBack = true;
     let currentUrl = this.$router.history.current.name;
     let baseUrl = this.$router.options.routes;
-    console.log(this.$router.options.routes);
+    // console.log(this.$router.options.routes);
     console.log(this.$router.history.current.name);
-    for (let i = 0; i < 6; i++) {
-      if (baseUrl[i].name === currentUrl) {
-        this.canBack = false;
-        return;
+    if ("search" === this.$router.history.current.name) {
+      this.isSearch = true;
+    } else {
+      this.isSearch = false;
+      for (let i = 0; i < 6; i++) {
+        if (baseUrl[i].name === currentUrl) {
+          this.canBack = false;
+          return;
+        }
       }
     }
   }

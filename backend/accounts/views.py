@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework import generics  
 from rest_framework.authtoken.models import Token
 from .serializers import ChangePasswordSerializer
-from .serializers import UserSerializer, UserTasteSerializer, UserUpdateSerializer, UserImageUpdateSerializer
+from .serializers import UserSerializer, UserTasteSerializer, UserUpdateSerializer, UserImageUpdateSerializer, UserSimpleSerializer
 from pprint import pprint
 import requests
 
@@ -73,6 +73,8 @@ def taste(request):
         return Response({'message': '유효하지 않은 입력입니다.'})
 
 @api_view(['POST'])
+@authentication_classes([])
+@permission_classes([])
 def email_duplicated(request):
     User = get_user_model()
     try:
@@ -82,6 +84,8 @@ def email_duplicated(request):
         return Response({'message': '사용가능한 이메일입니다.'})
 
 @api_view(['POST'])
+@authentication_classes([])
+@permission_classes([])
 def username_duplicated(request):
     User = get_user_model()
     try:
@@ -172,4 +176,9 @@ def image_update(request, username):
     if serializer.is_valid(raise_exception=True):
         serializer.save()
 
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def user_info(request):
+    serializer = UserSimpleSerializer(request.user)
     return Response(serializer.data)

@@ -4,8 +4,9 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Article, Hashtag
-from .serializers import ArticleSerializer, ArticleListSerializer, ArticleCreateSerializer, ArticleScrapSerializer, CommentSerializer, HashtagSerializser
+from .models import Article, Hashtag, Comment
+from .serializers import ArticleSerializer, ArticleListSerializer, ArticleCreateSerializer, ArticleScrapSerializer, ArticleUpdateSerializer
+from .serializers import CommentSerializer, RecommentSerializer, HashtagSerializser
 import os
 from django.conf import settings
 
@@ -45,9 +46,21 @@ def detail(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
     if request.user == article.user:
         if request.method == "PUT":
-            serializer = ArticleSerializer(data=request.data, instance=article)
+            serializer = ArticleUpdateSerializer(data=request.data, instance=article)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
+                hashtags = request.data.get('hashtags')
+                if hashtags:
+                    article.hashtag.clear()
+                    for hashtag in hashtags.split('#'):
+                        if hashtag:
+                            try:
+                                exist_tag = Hashtag.objects.get(tag=hashtag)
+                                article.hashtag.add(exist_tag)
+                            except:
+                                new_tag = Hashtag(tag=hashtag)
+                                new_tag.save()
+                                article.hashtag.add(new_tag)
                 return Response(serializer.data)
         else:
             article.delete()
@@ -89,11 +102,11 @@ def comment_ud(request, article_pk, comment_pk):
                 if serializer.is_valid(raise_exception=True):
                     serializer.save()
                     return Response(serializer.data)
-        else:
-            comment.delete()
-            return Response({'message': "성공적으로 삭제되었습니다"})
+    if request.user == comment.user or request.user == article.user:             
+        comment.delete()
+        return Response({'message': "성공적으로 삭제되었습니다"})
     else:
-        return Response({'message': '글쓴이가 아닙니다'})
+        return Response({'message': '권한이 없습니다.'})
 
 @api_view(['POST'])
 def hashtag(request):
@@ -101,7 +114,7 @@ def hashtag(request):
     serializer = HashtagSerializser(hashtag, many=True)
     return Response(serializer.data)
 
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def search(request):
     hashtags = request.data.get('hashtags')
@@ -117,3 +130,28 @@ def search(request):
             is_first = True
     serializer = ArticleListSerializer(articles, many=True)
     return Response(serializer.data)
+
+@api_view(['POST'])
+def recomment_create(request, comment_pk):
+    serializer = RecommentSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save(user=request.user, comment_id=comment_pk)
+        return Response(serializer.data)
+
+@api_view(['PUT', 'DELETE'])
+def recomment_ud(request, comment_pk, recomment_pk):
+    comment = get_object_or_404(Comment, pk=comment_pk)
+    article = Article.objects.get(pk=comment.article_id)
+    recomments = comment.recomment_set.all()
+    recomment = recomments.get(pk=recomment_pk)
+    if request.user == recomment.user:
+        if request.method == 'PUT':
+                serializer = RecommentSerializer(data=request.data, instance=recomment)
+                if serializer.is_valid(raise_exception=True):
+                    serializer.save()
+                    return Response(serializer.data)
+    if request.user == recomment.user or request.user == article.user:             
+        recomment.delete()
+        return Response({'message': "성공적으로 삭제되었습니다"})
+    else:
+        return Response({'message': '권한이 없습니다.'})

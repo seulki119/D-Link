@@ -46,7 +46,7 @@ const routes = [
   {
     path: "/taste",
     name: "taste",
-    beforeEnter: rejectAuthUser,
+    // beforeEnter: rejectAuthUser,
     component: () =>
       import(/* webpackChunkName: "taste" */ "./views/accounts/Taste.vue"),
   },
@@ -56,6 +56,13 @@ const routes = [
     beforeEnter: onlyAuthUser,
     component: () =>
       import(/* webpackChunkName: "mypage" */ "./views/accounts/Mypage.vue"),
+  },
+  {
+    path: "/updateuser",
+    name: "updateuser",
+    beforeEnter: onlyAuthUser,
+    component: () =>
+      import(/* webpackChunkName: "mypage" */ "./views/accounts/Update.vue"),
   },
   {
     path: "/articlelist",
@@ -79,7 +86,34 @@ const routes = [
     beforeEnter: onlyAuthUser,
     component: () =>
       import(
-        /* webpackChunkName: "mypage" */ "./views/Articles/CreateArticle.vue"
+        /* webpackChunkName: "createArticle" */ "./views/Articles/CreateArticle.vue"
+      ),
+  },
+  {
+    path: "/notifications",
+    name: "notifications",
+    beforeEnter: onlyAuthUser,
+    component: () =>
+      import(
+        /* webpackChunkName: "notifications" */ "./views/accounts/Notifications.vue"
+      ),
+  },
+  {
+    path: "/passwordChange",
+    name: "passwordChange",
+    beforeEnter: onlyAuthUser,
+    component: () =>
+      import(
+        /* webpackChunkName: "passwordChange" */ "./views/accounts/PasswordChange.vue"
+      ),
+  },
+  {
+    path: "/search",
+    name: "search",
+    beforeEnter: onlyAuthUser,
+    component: () =>
+      import(
+        /* webpackChunkName: "search" */ "./views/Articles/Search.vue"
       ),
   },
 ];

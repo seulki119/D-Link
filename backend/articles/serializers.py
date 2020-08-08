@@ -71,3 +71,9 @@ class ArticleScrapSerializer(serializers.ModelSerializer):
     class Meta:
         model= Article
         fields = ['scrap']
+
+class ArticleUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model= Article
+        fields = ['content']

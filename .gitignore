@@ -391,5 +391,6 @@ $RECYCLE.BIN/
 
 *.rdb
 .myRedis.redis
+.vscode
 
 # End of https://www.toptal.com/developers/gitignore/api/redis

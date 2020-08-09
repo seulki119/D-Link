@@ -14,6 +14,7 @@ export default new Vuex.Store({
     items: [],
     item: {},
     alarms: [],
+    socket: null,
   },
   getters: {
     userId(state) {
@@ -62,6 +63,12 @@ export default new Vuex.Store({
     },
     addAlarm(state, message) {
       state.alarms.push(message)
+    },
+    setSocket(state, socket) {
+      state.socket = socket;
+    },
+    removeSocket(state) {
+      state.socket = null;
     }
   },
   actions: {
@@ -79,9 +86,9 @@ export default new Vuex.Store({
           this.dispatch("getUserInfo");
 
           // 소켓 연결
-          this.socket = new WebSocket(`ws://127.0.0.1:8000/ws/test/${token}`);
+          let socket = new WebSocket(`ws://127.0.0.1:8000/ws/test/${token}`);
           // 데이터 수신
-          this.socket.onmessage = function(e) {
+          socket.onmessage = function(e) {
               console.log(e);
               var data = JSON.parse(e.data);
               var message = data['message'];
@@ -89,11 +96,12 @@ export default new Vuex.Store({
               commit("addAlarm", message)
           };
       
-          this.socket.onopen = function(e) {
+          socket.onopen = function(e) {
             console.log(e);
+            commit("setSocket", socket)
           };
       
-          this.socket.onclose = function(e) {
+          socket.onclose = function(e) {
             console.log(e);
           };
         })
@@ -104,6 +112,12 @@ export default new Vuex.Store({
     },
     logout({ commit }) {
       commit("logout");
+      // 소켓이 연결되어있는 경우 연결해제
+      let socket = this.state.socket
+      if (socket) {
+        socket.close();
+        commit("removeSocket")
+      }
       router.push({ name: "home" }).catch((error) => {
         if (error.name != "NavigationDuplicated") {
           throw error;
@@ -274,6 +288,31 @@ export default new Vuex.Store({
         .then((res) => {
           console.log(res);
         })
+    },
+    checkSocket({ commit }, context) {
+      let socket = this.state.socket
+      // 소켓 닫혀있는 경우
+      if (socket == null) {
+        let token = localStorage.getItem("token");
+        let socket = new WebSocket(`ws://127.0.0.1:8000/ws/test/${token}`);
+        // 데이터 수신
+        socket.onmessage = function(e) {
+            console.log(e);
+            var data = JSON.parse(e.data);
+            var message = data['message'];
+            console.log(message)
+            commit("addAlarm", message)
+        };
+    
+        socket.onopen = function(e) {
+          console.log(e);
+          commit("setSocket", socket)
+        };
+    
+        socket.onclose = function(e) {
+          console.log(e);
+        };
+      }
     }
   },
 });

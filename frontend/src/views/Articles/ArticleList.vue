@@ -19,7 +19,7 @@
               <img
                 v-if="!item.scrap.includes(userId)"
                 class="scrapInfo"
-                @click="scrapAct(item.id)"
+                @click="scrapAct(item.id, item.user.id)"
                 :src="(scrapSrc = scrapNo)"
               />
               <img v-else class="scrapInfo" @click="scrapAct(item.id)" :src="(scrapSrc = scrapYes)" />
@@ -57,7 +57,7 @@ export default {
     showDetail(id) {
       this.$router.push(`article?id=${id}`);
     },
-    scrapAct(id) {
+    scrapAct(id, articleUserId) {
       this.$store.dispatch("doScrap", {
         url: `/articles/${id}/scrap`,
         page: "articlelist"
@@ -69,6 +69,13 @@ export default {
       // } else {
       //   this.scrapSrc = this.scrapYes;
       // }
+      if (articleUserId) {
+        this.$store.dispatch("sendAlarm", {
+          url: '/alarms/Share/',
+          articleUserId: `${articleUserId}`,
+          requestUserId: `${this.userId}`,
+        })
+      }
     }
   }
 };

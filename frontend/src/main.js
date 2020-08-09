@@ -25,7 +25,8 @@ new Vue({
   vuetify,
   //페이지 리로드시 token이 있으면 로그인 상태 유지
   beforeCreate() {
-    store.dispatch("getUserInfo")
+    store.dispatch("getUserInfo");
+    store.dispatch("checkSocket");
   },
   render: h => h(App)
 }).$mount("#app");

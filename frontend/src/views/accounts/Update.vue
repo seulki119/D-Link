@@ -5,7 +5,7 @@
       <v-layout row wrap class="pa-5">
         <v-flex xs12 sm6 md4 lg3 x12>
           <image-input v-model="avatar">
-            <div slot="activator" v-if="!saved">
+            <div slot="activator">
               <v-avatar size="136px" v-ripple v-if="!previous && !avatar" class="grey lighten-3">
                 <span>Click to add avatar</span>
               </v-avatar>
@@ -154,7 +154,6 @@ export default {
     savedAvatar() {
       this.saving = false;
       this.saved = true;
-      this.image = this.avatar.formData.get("file");
       let token = localStorage.getItem("token");
       let config = {
         headers: {
@@ -162,11 +161,15 @@ export default {
         }
       };
       const fd = new FormData();
+      let file = this.avatar.formData.get("file");
+      const canvas = this.$refs.clipper.clip();
+      let resultURL = canvas.toDataURL("image/jpeg", 1);
+      let blob = this.dataURItoBlob(resultURL);
+      this.image = new File([blob], file.name);
       fd.append("image", this.image);
-
       http.put("/accounts/min/image/", fd, config).then(res => {
         this.previous = res.data.image;
-        // console.log(this.previous);
+        this.avatar = null;
       });
     },
     updateInfo() {
@@ -193,6 +196,21 @@ export default {
     },
     passwordChange() {
       this.$router.push("passwordChange");
+    },
+    dataURItoBlob(dataURI) {
+      var byteString = atob(dataURI.split(",")[1]);
+      var mimeString = dataURI
+        .split(",")[0]
+        .split(":")[1]
+        .split(";")[0];
+      var ab = new ArrayBuffer(byteString.length);
+      var ia = new Uint8Array(ab);
+      for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+
+      var bb = new Blob([ab], { type: mimeString });
+      return bb;
     }
   }
 };

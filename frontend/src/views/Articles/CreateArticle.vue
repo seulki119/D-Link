@@ -1,17 +1,9 @@
-<!-- 1. HashTag DB에서 hashTag 목록 불러오기 Axios 활용해서 해결하기
-    (차후 erd를 1:N 식으로 바꿀수도 있다)
-    2. 차후 tag Chip 색상 설정 or 대문자 추가하기
-    3. 이미지 필터링 기능 추가하기
--->
-
 <template>
   <v-container class="mx-auto" max-width="600" min-width="300">
     <v-card class="mx-auto pa-5" max-width="590" min-width="290">
-      <v-input type="file" v-model="file" />
       <clipper-fixed class="my-clipper" ref="clipper" :src="preview">
         <div class="placeholder" slot="placeholder">No image</div>
       </clipper-fixed>
-      <!-- <v-img :src="preview" class="img-fluid ma-5" /> -->
       <v-file-input
         small-chips
         color="deep-purple accent-4"
@@ -123,7 +115,6 @@ export default {
       fd.append("image", this.file);
       fd.append("content", this.content);
       fd.append("hashtag", this.tags);
-      console.log(this.file);
       http
         .post("/articles/", fd, config)
         .then(res => {

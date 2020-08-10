@@ -32,11 +32,12 @@
         </v-badge>
       </v-btn>
     </v-app-bar>
-
     <v-main>
-      <router-view></router-view>
+      <v-container fill-height>
+        <router-view></router-view>
+      </v-container>
     </v-main>
-    <v-footer class="pa-0" app style=" background-color:transparent">
+    <v-footer fill-height>
       <v-bottom-navigation
         v-if="isLogin"
         grow
@@ -45,6 +46,7 @@
         max-width="600"
         min-width="300"
         class="mx-auto"
+        fixed
       >
         <v-btn icon router :to="{ name: 'articlelist' }">
           홈

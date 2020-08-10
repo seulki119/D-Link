@@ -258,11 +258,11 @@ export default new Vuex.Store({
         })
         .then((res) => {
           console.log(res);
-          // let token = res.data.key;
+          let token = res.data.key;
 
-          // // 토큰을 로컬스토리지에 저장
-          // localStorage.setItem("token", token);
-          // this.dispatch("getUserInfo");
+          // 토큰을 로컬스토리지에 저장
+          localStorage.setItem("token", token);
+          this.dispatch("getUserInfo");
         })
         .catch((error) => {
           console.log(error);

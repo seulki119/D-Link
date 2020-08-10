@@ -58,7 +58,7 @@
           업로드
           <v-icon>mdi-plus</v-icon>
         </v-btn>
-        <v-btn icon>
+        <v-btn icon router :to="{ name: 'contentlist' }">
           컨텐츠
           <v-icon>mdi-dialpad</v-icon>
         </v-btn>

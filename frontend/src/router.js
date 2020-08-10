@@ -116,6 +116,15 @@ const routes = [
         /* webpackChunkName: "search" */ "./views/Articles/Search.vue"
       ),
   },
+  {
+    path: "/contentlist",
+    name: "contentlist",
+    beforeEnter: onlyAuthUser,
+    component: () =>
+      import(
+        /* webpackChunkName: "search" */ "./views/Contents/ContentList.vue"
+      ),
+  },
 ];
 
 const router = new VueRouter({

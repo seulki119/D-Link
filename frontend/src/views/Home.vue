@@ -10,15 +10,23 @@
                 <v-toolbar-title>DLINK에 오신걸 환영합니다</v-toolbar-title>
               </v-toolbar>
               <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn icon router :to="{ name:'login' }">
-                  <span>로그인</span>
-                </v-btn>
-                <v-spacer></v-spacer>
-                <v-btn icon router :to="{ name:'signup' }">
-                  <span>회원가입</span>
-                </v-btn>
-                <v-spacer></v-spacer>
+                <v-tabs
+                  centered
+                  icons-and-text
+                  background-color="white"
+                  color="deep-purple accent-4"
+                >
+                  <v-tab>로그인</v-tab>
+                  <v-tab>회원가입</v-tab>
+                  <!-- <v-btn icon router :to="{ name:'login' }">
+                    <span>로그인</span>
+                  </v-btn>
+                  <v-spacer></v-spacer>
+                  <v-btn icon router :to="{ name:'signup' }">
+                    <span>회원가입</span>
+                  </v-btn>-->
+                  <!-- <v-spacer></v-spacer> -->
+                </v-tabs>
               </v-card-actions>
             </v-card>
           </v-col>

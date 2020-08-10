@@ -76,7 +76,7 @@ export default new Vuex.Store({
     login({ dispatch, commit }, loginObj) {
       //로그인 -> 토큰 반환
       http
-        .post("/rest-auth/login/", loginObj)
+        .post("/login/", loginObj)
         .then((res) => {
           // 로그인 성공시, token을 헤더에 포함시킴
           let token = res.data.key;

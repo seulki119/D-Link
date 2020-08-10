@@ -23,6 +23,8 @@
               ref="clipper"
               v-if="avatar && !saved"
               :src="avatar.imageURL"
+              rotate
+              round
             ></clipper-fixed>
           </v-slide-x-transition>
           <v-slide-x-transition>

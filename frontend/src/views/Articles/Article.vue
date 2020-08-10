@@ -3,7 +3,7 @@
     <v-card class="mx-auto pa-5" max-width="600">
       <v-list-item>
         <v-list-item-avatar color="grey">
-          <v-img v-if="item.user.image != null" :src="`//127.0.0.1:8000/${item.user.image}`"></v-img>
+          <v-img v-if="item.user.image != null" :src="`//i3b307.p.ssafy.io/${item.user.image}`"></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>{{ item.user.username }}</v-list-item-title>
@@ -25,7 +25,7 @@
         </v-menu>
         <!-- article menu -->
       </v-list-item>
-      <v-img :src="`//127.0.0.1:8000/${item.image}`" class="max-small"></v-img>
+      <v-img :src="`//i3b307.p.ssafy.io/${item.image}`" class="max-small"></v-img>
 
       <!-- 이미지 아래 부분 -->
       <div v-if="!modeUpdate">
@@ -81,7 +81,7 @@
               <v-list-item-avatar color="grey">
                 <v-img
                   v-if="repComment.userImage != null"
-                  :src="`//127.0.0.1:8000/${repComment.userImage}`"
+                  :src="`//i3b307.p.ssafy.io/${repComment.userImage}`"
                 ></v-img>
               </v-list-item-avatar>
 
@@ -105,7 +105,7 @@
                 <v-list-item-avatar color="grey">
                   <v-img
                     v-if="comment.user.image != null"
-                    :src="`//127.0.0.1:8000/${comment.user.image}`"
+                    :src="`//i3b307.p.ssafy.io/${comment.user.image}`"
                   ></v-img>
                 </v-list-item-avatar>
 

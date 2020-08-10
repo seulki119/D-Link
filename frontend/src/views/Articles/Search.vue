@@ -41,7 +41,7 @@
             <!-- some thing have fixed height-->
             <div v-if="item.user.id != userId" class="stack-item stack-item-6">
               <img
-                :src="`//127.0.0.1:8000/${item.image}`"
+                :src="`//i3b307.p.ssafy.io/${item.image}`"
                 alt
                 @click="showDetail(item.id)"
                 style="cursor: pointer;width:200px;"

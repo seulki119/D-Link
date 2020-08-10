@@ -15,7 +15,7 @@
       <v-row class="pa-5" no-gutters>
         <v-col>
           <v-avatar class="profileImage" color="grey" size="80" round>
-            <v-img v-if="image!==null" :src="`//127.0.0.1:8000/${image}`"></v-img>
+            <v-img v-if="image!==null" :src="`//i3b307.p.ssafy.io/${image}`"></v-img>
             <span v-else>이미지를 추가해주세요!</span>
           </v-avatar>
         </v-col>
@@ -52,7 +52,7 @@
               <v-row>
                 <v-col v-for="n in articleSet.slice().reverse()" :key="n.image" cols="4">
                   <v-img
-                    :src="`//127.0.0.1:8000/${n.image}`"
+                    :src="`//i3b307.p.ssafy.io/${n.image}`"
                     class="grey lighten-2 pa-1"
                     aspect-ratio="1"
                     @click="showDetail(n.id)"
@@ -66,7 +66,7 @@
               <v-row>
                 <v-col v-for="n in scrapSet.slice().reverse()" :key="n.image" cols="4">
                   <v-img
-                    :src="`//127.0.0.1:8000/${n.image}`"
+                    :src="`//i3b307.p.ssafy.io/${n.image}`"
                     class="grey lighten-2 pa-1"
                     aspect-ratio="1"
                     @click="showDetail(n.id)"

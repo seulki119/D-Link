@@ -1,21 +1,15 @@
 <template>
-  <v-container max-width="600" min-width="250" fill-height>
-    <v-card class="mx-auto ma-5" max-width="600" height="100%">
-      <v-layout row wrap fill-height>
-        <v-flex xs12 sm12 md4 lg4 x12>
-          <!-- <div> -->
-          <v-btn block color="blue" height="100%" class="ma-2 white--text">화상채팅</v-btn>
-          <!-- </div> -->
-        </v-flex>
-        <v-flex xs12 sm12 md4 lg4 x12>
-          <v-btn block color="red" height="100%" class="ma-2 white--text">VS</v-btn>
-        </v-flex>
-        <v-flex xs12 sm12 md4 lg4 x12>
-          <v-btn block color="green" height="100%" class="ma-2 white--text">칵테일</v-btn>
-        </v-flex>
-      </v-layout>
+  <!-- <v-container max-width="600" min-width="300" fill-height> -->
+  <v-container max-width="600" min-width="300" height="100%">
+    <v-card class="mx-auto pa-5" max-width="600" fill-height>
+      <v-row no-gutters>
+        <v-btn block color="blue" fill-height class="white--text">화상채팅</v-btn>
+        <v-btn block color="red" fill-height class="white--text">VS</v-btn>
+        <v-btn block color="green" fill-height class="white--text">칵테일</v-btn>
+      </v-row>
     </v-card>
   </v-container>
+  <!-- </v-container> -->
 </template>
 
 <script>

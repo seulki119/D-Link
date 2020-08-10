@@ -37,16 +37,18 @@
         <router-view></router-view>
       </v-container>
     </v-main>
-    <v-footer fill-height>
+    <div style="height:36px">
       <v-bottom-navigation
         v-if="isLogin"
         grow
+        center
         color="teal"
         dark
         max-width="600"
         min-width="300"
         class="mx-auto"
-        fixed
+        style="position: fixed; left: 50%;
+    transform: translateX(-50%);"
       >
         <v-btn icon router :to="{ name: 'articlelist' }">
           홈
@@ -69,7 +71,7 @@
           <v-icon>mdi-account</v-icon>
         </v-btn>
       </v-bottom-navigation>
-    </v-footer>
+    </div>
   </v-app>
 </template>
 

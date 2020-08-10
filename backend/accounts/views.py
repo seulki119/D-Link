@@ -120,7 +120,6 @@ def google_login(request):
 
     email = profile_response_json.get('email')
     username = profile_response_json.get('name')
-    profile_img = profile_response_json.get('picture')
     last_name = profile_response_json.get('family_name')
     first_name = profile_response_json.get('given_name')
     User = get_user_model()
@@ -136,7 +135,6 @@ def google_login(request):
         new_user_to_db = User.objects.create(
             email=email,
             username=username,
-            image=profile_img,
             last_name=last_name,
             first_name=first_name,
         )

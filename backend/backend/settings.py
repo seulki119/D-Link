@@ -15,7 +15,11 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+FRONTEND_DIR = os.path.join(BASE_DIR, '../frontend')
 
+# STATICFILES_DIRS = [
+#     os.path.join(FRONTEND_DIR, 'dist/static'),
+# ]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
@@ -55,10 +59,12 @@ INSTALLED_APPS = [
     'articles',
     'accounts',
     'versus',
+    'alarms',
 
     # 3rd party
     'corsheaders',
     'django_extensions',
+    'channels',
 
     # provider
     'allauth.socialaccount.providers.google',
@@ -80,7 +86,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(FRONTEND_DIR, 'dist')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -157,9 +163,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(FRONTEND_DIR, 'dist/static')
 
 SITE_ID = 1
 
+CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:8080' ,'http://localhost:8080']
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
@@ -183,3 +191,26 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',
     'social_core.backends.kakao.KakaoOAuth2',
 )
+
+# channels 세팅
+
+ASGI_APPLICATION = 'routing.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}

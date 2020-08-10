@@ -8,7 +8,7 @@
           <v-list-item-avatar color="grey" v-if="comment.content != null && comment.content != ' '">
             <v-img
               v-if="comment.user.image != null"
-              :src="`//127.0.0.1:8000/${comment.user.image}`"
+              :src="`//i3b307.p.ssafy.io/${comment.user.image}`"
             ></v-img>
           </v-list-item-avatar>
 

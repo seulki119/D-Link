@@ -36,7 +36,7 @@ media
 .Python
 build/
 develop-eggs/
-dist/
+# dist/
 downloads/
 eggs/
 .eggs/
@@ -247,7 +247,7 @@ typings/
 
 # Nuxt.js build / generate output
 .nuxt
-dist
+# dist
 
 # Gatsby files
 .cache/
@@ -256,7 +256,7 @@ dist
 # public
 
 # vuepress build output
-.vuepress/dist
+# .vuepress/dist
 
 # Serverless directories
 .serverless/
@@ -391,5 +391,6 @@ $RECYCLE.BIN/
 
 *.rdb
 .myRedis.redis
+.vscode
 
 # End of https://www.toptal.com/developers/gitignore/api/redis

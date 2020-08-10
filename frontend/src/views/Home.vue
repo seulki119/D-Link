@@ -18,6 +18,12 @@
                 >
                   <v-tab>로그인</v-tab>
                   <v-tab>회원가입</v-tab>
+                  <v-tab-item>
+                    <login></login>
+                  </v-tab-item>
+                  <v-tab-item>
+                    <sign-up></sign-up>
+                  </v-tab-item>
                   <!-- <v-btn icon router :to="{ name:'login' }">
                     <span>로그인</span>
                   </v-btn>
@@ -38,12 +44,18 @@
 
 <script>
 import { mapState } from "vuex";
+import Login from "./accounts/Login.vue";
+import SignUp from "./accounts/Signup.vue";
 export default {
   props: {
     source: String
   },
   computed: {
     ...mapState(["isLogin"])
+  },
+  components: {
+    Login: Login,
+    SignUp: SignUp
   }
 };
 </script>

@@ -1,18 +1,8 @@
 <!-- eslint-disable -->
-<!--
-1. 회원 아이디 기반으로 정보 가져오기
-2. 회원이 스크랩한 게시물 목록
-3. 회원이 업로드한 게시물 목록
-4. 회원정보 관련 버튼(disabled 처리)
-      - 수정
-        -탈퇴
-      - 로그아웃
-
--->
 <template>
   <v-container max-width="600" min-width="300">
     <v-card class="mx-auto pa-5" max-width="600">
-      <v-row class="pa-5" no-gutters>
+      <v-row no-gutters>
         <v-col>
           <v-avatar class="profileImage" color="grey" size="80" round>
             <v-img v-if="image!==null" :src="`//i3b307.p.ssafy.io/${image}`"></v-img>
@@ -41,42 +31,40 @@
       <v-btn block color="black" class="ma-2 white--text" @click="logout()">
         <v-icon left dark>mdi-logout</v-icon>테스트용 로그아웃(진짜 로그아웃은 숨겨둠)
       </v-btn>
-      <v-divider></v-divider>
-
-      <v-card>
-        <v-tabs centered icons-and-text background-color="white" color="deep-purple accent-4">
-          <v-tab>업로드한 게시물</v-tab>
-          <v-tab>스크랩한 게시물</v-tab>
-          <v-tab-item>
-            <v-container fluid>
-              <v-row>
-                <v-col v-for="n in articleSet.slice().reverse()" :key="n.image" cols="4">
-                  <v-img
-                    :src="`//i3b307.p.ssafy.io/${n.image}`"
-                    class="grey lighten-2 pa-1"
-                    aspect-ratio="1"
-                    @click="showDetail(n.id)"
-                  ></v-img>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-tab-item>
-          <v-tab-item>
-            <v-container fluid>
-              <v-row>
-                <v-col v-for="n in scrapSet.slice().reverse()" :key="n.image" cols="4">
-                  <v-img
-                    :src="`//i3b307.p.ssafy.io/${n.image}`"
-                    class="grey lighten-2 pa-1"
-                    aspect-ratio="1"
-                    @click="showDetail(n.id)"
-                  ></v-img>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-tab-item>
-        </v-tabs>
-      </v-card>
+    </v-card>
+    <v-card class="mx-auto pa-5" max-width="600">
+      <v-tabs centered icons-and-text background-color="white" color="deep-purple accent-4">
+        <v-tab>업로드한 게시물</v-tab>
+        <v-tab>스크랩한 게시물</v-tab>
+        <v-tab-item>
+          <v-container fluid>
+            <v-row>
+              <v-col v-for="n in articleSet.slice().reverse()" :key="n.image" cols="4">
+                <v-img
+                  :src="`//i3b307.p.ssafy.io/${n.image}`"
+                  class="grey lighten-2 pa-1"
+                  aspect-ratio="1"
+                  @click="showDetail(n.id)"
+                ></v-img>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-tab-item>
+        <v-tab-item>
+          <v-container fluid>
+            <v-row>
+              <v-col v-for="n in scrapSet.slice().reverse()" :key="n.image" cols="4">
+                <v-img
+                  :src="`//i3b307.p.ssafy.io/${n.image}`"
+                  class="grey lighten-2 pa-1"
+                  aspect-ratio="1"
+                  @click="showDetail(n.id)"
+                ></v-img>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-tab-item>
+      </v-tabs>
     </v-card>
   </v-container>
 </template>

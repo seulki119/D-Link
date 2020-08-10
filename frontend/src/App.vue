@@ -47,8 +47,9 @@
         max-width="600"
         min-width="300"
         class="mx-auto"
-        style="position: fixed; left: 50%;
-    transform: translateX(-50%);"
+        style="position: fixed;
+  left: 0;
+  right: 0;"
       >
         <v-btn icon router :to="{ name: 'articlelist' }">
           홈

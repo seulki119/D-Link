@@ -17,12 +17,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('rest-auth/', include('rest_auth.urls')),
-    path('rest-auth/signup/', include('rest_auth.registration.urls')),
-    path('accounts/', include('accounts.urls')),
-    path('articles/', include('articles.urls')),
-    path('authaccounts/', include('allauth.urls')),
+    path('', TemplateView.as_view(template_name='index.html')),
+    path('api/admin/', admin.site.urls),
+    path('api/', include('rest_auth.urls')),
+    path('api/signup/', include('rest_auth.registration.urls')),
+    path('api/accounts/', include('accounts.urls')),
+    path('api/articles/', include('articles.urls')),
+    path('api/alarms/', include('alarms.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

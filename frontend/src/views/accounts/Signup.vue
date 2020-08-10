@@ -187,7 +187,7 @@ export default {
       const isValid = await this.$refs.observer.validate();
       if (isValid) {
         http
-          .post("/rest-auth/signup/", {
+          .post("/signup/", {
             email: this.email,
             username: this.name,
             password1: this.password,

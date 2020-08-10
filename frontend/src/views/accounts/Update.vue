@@ -10,7 +10,7 @@
                 <span>Click to add avatar</span>
               </v-avatar>
               <v-avatar size="136px" v-ripple v-else-if="!avatar">
-                <img :src="`//127.0.0.1:8000/${previous}`" alt />
+                <img :src="`//i3b307.p.ssafy.io/${previous}`" alt />
               </v-avatar>
               <v-avatar size="136px" v-ripple v-else>
                 <img :src="avatar.imageURL" alt="avatar" />

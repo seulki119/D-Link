@@ -3,7 +3,36 @@
 </template>
 
 <script>
-export default {};
+import http from "@/util/http-common";
+export default {
+  data() {
+    return {
+      imgA: "",
+      imgB: "",
+      topicA: "",
+      topicB: "",
+      createdAt: ""
+    };
+  },
+  beforeCreate() {
+    let token = localStorage.getItem("token");
+    let config = {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    };
+    http
+      .get("토픽주제주소", config)
+      .then(res => {
+        console.log(res);
+        //res에 따라서 data에 값 리턴하기
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  },
+  methods: {}
+};
 </script>
 
 <style>

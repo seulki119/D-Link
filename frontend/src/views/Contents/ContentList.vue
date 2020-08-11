@@ -33,11 +33,5 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      height: ""
-    };
-  }
-};
+export default {};
 </script>

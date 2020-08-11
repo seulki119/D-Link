@@ -296,12 +296,15 @@ export default new Vuex.Store({
   
       socket.onopen = function(e) {
         console.log(e);
-        this.commit("setSocket", socket)
       };
-  
+
       socket.onclose = function(e) {
         console.log(e);
       };
+
+      if (socket.readyState < 2) {
+        this.commit("setSocket", socket)
+      }
     }
   },
 });

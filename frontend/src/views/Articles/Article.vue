@@ -122,7 +122,7 @@
                 <v-list-item-content>
                   <div>
                     <span
-                      @click="myComment = `@${comment.user.username} `; modeComment=false; comm={id:comment.id,username:comment.user.username}"
+                      @click="myComment = `@${comment.user.username} `; modeComment=false; comm={id:comment.id,username:comment.user.username,userid:comment.user.id}"
                       class="grey--text text--lighten-1 commentMenu"
                     >답글달기</span>
                     <span
@@ -323,13 +323,13 @@ export default {
       });
       if (articleUserId) {
         this.$store.dispatch("sendAlarm", {
-          url: '/alarms/Share/',
+          url: "/alarms/Share/",
           articleUserId: `${articleUserId}`,
           articleId: `${id}`,
           thumbnailPath: `${thumbnailPath}`,
           message: "",
           alarmType: 0 // 스크랩
-        })
+        });
       }
     },
     activateReadMore() {
@@ -337,6 +337,14 @@ export default {
     },
     // 댓글 등록
     createComment() {
+      this.$store.dispatch("sendAlarm", {
+        url: "/alarms/Share/",
+        articleUserId: `${this.item.user.id}`,
+        articleId: `${this.item.id}`,
+        thumbnailPath: `${this.item.image}`,
+        message: this.myComment,
+        alarmType: 1 // 댓글
+      });
       // alert(this.myComment);
       let token = localStorage.getItem("token");
       let config = {
@@ -348,7 +356,6 @@ export default {
       const fd = new FormData();
       fd.append("user", this.userId);
       fd.append("content", this.myComment);
-
       http
         .post(`/articles/${this.item.id}/comment/`, fd, config)
         .then(response => {
@@ -471,7 +478,16 @@ export default {
     },
     //대댓글 생성
     createRecomment() {
-      console.log(this.comm.id + " " + this.comm.username);
+      console.log(this.comm);
+      // console.log(this.comm.id + " " + this.comm.username);
+      this.$store.dispatch("sendAlarm", {
+        url: "/alarms/Share/",
+        articleUserId: `${this.comm.userid}`,
+        articleId: `${this.item.id}`,
+        thumbnailPath: `${this.item.image}`,
+        message: this.myComment,
+        alarmType: 2 // 대댓글
+      });
       //
       let token = localStorage.getItem("token");
       let config = {

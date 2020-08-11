@@ -60,24 +60,32 @@ def detail(request, topic_pk):
 @permission_classes([IsAuthenticated])
 def vote(request, topic_pk):
     select = request.data.get('select')
-    print(select)
     topic = get_object_or_404(Topic, pk=topic_pk)  
     # vote = get_object_or_404(Vote, pk=topic_pk) 
-    print(topic)   
+    
     if select == 'A':
-        if topic.select_A.filter(pk=request.user.pk).exists():
-            topic.select_A.remove(request.user)
+        if topic.select_B.filter(pk=request.user.pk).exists():
+            message = '이미 반대쪽에 투표하셨습니다'
+            return Response(message)
         else:
-            topic.select_A.add(request.user)
+            if topic.select_A.filter(pk=request.user.pk).exists():
+                topic.select_A.remove(request.user)
+            else:
+                topic.select_A.add(request.user)
     
     else :
-        if topic.select_B.filter(pk=request.user.pk).exists():
-            topic.select_B.remove(request.user)
+        if topic.select_A.filter(pk=request.user.pk).exists():
+            message = '이미 반대쪽에 투표하셨습니다'
+            return Response(message)
         else:
-            topic.select_B.add(request.user)    
-
+            if topic.select_B.filter(pk=request.user.pk).exists():
+                topic.select_B.remove(request.user)
+            else:
+                topic.select_B.add(request.user)    
     serializer = TopicSerializer(topic)
-    return Response(serializer.data)    
+    res_a = len(serializer.data['select_A'])
+    res_b = len(serializer.data['select_B'])
+    return Response(serializer.data)
     
  
 @api_view(['POST'])
@@ -92,15 +100,14 @@ def comment(request, topic_pk):
  
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
-def comment_delete(request,topic_pk, comment_pk):
+def comment_delete(request, topic_pk , comment_pk):
         print('들어오는오지')
         topic = get_object_or_404(Topic, pk=topic_pk)
         # print(topic)
         # comments = topic.comment_set.all()
-        
+        print('들어오지 2')
         comment = get_object_or_404(VS_Comment, pk=comment_pk)
-        print(comment)
-        serializer = VS_CommentCommentSerializer(data=request.data)
+        print('들어오지 3')
         if request.user == comment.user or request.user == topic.user:             
             comment.delete()
             return Response({'message': "성공적으로 삭제되었습니다"})

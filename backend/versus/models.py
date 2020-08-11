@@ -11,8 +11,8 @@ class Topic(models.Model):
     topic_B = models.CharField(max_length=100)
     image_A = models.ImageField()
     image_B = models.ImageField()
-    select_A = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='selectASet')
-    select_B = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='selectBSet')
+    select_A = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='selectASet', blank=True)
+    select_B = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='selectBSet', blank=True)
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
 

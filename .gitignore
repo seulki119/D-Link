@@ -36,6 +36,7 @@ media
 .Python
 build/
 develop-eggs/
+
 # dist/
 downloads/
 eggs/
@@ -247,7 +248,6 @@ typings/
 
 # Nuxt.js build / generate output
 .nuxt
-# dist
 
 # Gatsby files
 .cache/

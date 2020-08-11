@@ -125,7 +125,34 @@ const routes = [
         /* webpackChunkName: "search" */ "./views/Contents/ContentList.vue"
       ),
   },
-];
+  {
+    path: "/cocktail",
+    name: "cocktail",
+    beforeEnter: onlyAuthUser,
+    component: () =>
+      import(
+        /* webpackChunkName: "search" */ "./views/Contents/Cocktail.vue"
+      ),
+  },
+  {
+    path: "/vs",
+    name: "vs",
+    beforeEnter: onlyAuthUser,
+    component: () =>
+      import(
+        /* webpackChunkName: "search" */ "./views/Contents/Vs.vue"
+      ),
+  },
+  {
+    path: "/videochat",
+    name: "videochat",
+    beforeEnter: onlyAuthUser,
+    component: () =>
+      import(
+        /* webpackChunkName: "search" */ "./views/Contents/VideoChat.vue"
+      ),
+  }
+]
 
 const router = new VueRouter({
   mode: "history",

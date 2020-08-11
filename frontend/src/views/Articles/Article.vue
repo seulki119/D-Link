@@ -3,7 +3,7 @@
     <v-card class="mx-auto pa-5" max-width="600">
       <v-list-item>
         <v-list-item-avatar color="grey">
-          <v-img v-if="item.user.image != null" :src="`//127.0.0.1:8000/${item.user.image}`"></v-img>
+          <v-img v-if="item.user.image != null" :src="`//i3b307.p.ssafy.io/${item.user.image}`"></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>{{ item.user.username }}</v-list-item-title>
@@ -25,7 +25,7 @@
         </v-menu>
         <!-- article menu -->
       </v-list-item>
-      <v-img :src="`//127.0.0.1:8000/${item.image}`" class="max-small"></v-img>
+      <v-img :src="`//i3b307.p.ssafy.io/${item.image}`" class="max-small"></v-img>
 
       <!-- 이미지 아래 부분 -->
       <div v-if="!modeUpdate">
@@ -36,7 +36,7 @@
             <img
               v-if="!item.scrap.includes(userId)"
               class="scrapInfo"
-              @click="scrapAct(item.id)"
+              @click="scrapAct(item.id, item.user.id)"
               :src="(scrapSrc = scrapNo)"
             />
             <img v-else class="scrapInfo" @click="scrapAct(item.id)" :src="(scrapSrc = scrapYes)" />
@@ -81,7 +81,7 @@
               <v-list-item-avatar color="grey">
                 <v-img
                   v-if="repComment.userImage != null"
-                  :src="`//127.0.0.1:8000/${repComment.userImage}`"
+                  :src="`//i3b307.p.ssafy.io/${repComment.userImage}`"
                 ></v-img>
               </v-list-item-avatar>
 
@@ -105,7 +105,7 @@
                 <v-list-item-avatar color="grey">
                   <v-img
                     v-if="comment.user.image != null"
-                    :src="`//127.0.0.1:8000/${comment.user.image}`"
+                    :src="`//i3b307.p.ssafy.io/${comment.user.image}`"
                   ></v-img>
                 </v-list-item-avatar>
 
@@ -237,6 +237,7 @@ export default {
 
       hashtags: [],
       articleMenu: ["수정", "삭제"],
+      socket: null,
       comm: {
         id: "",
         username: ""
@@ -294,15 +295,39 @@ export default {
         }, 400);
       });
     // console.log(this.hashtags);
+    // let token = localStorage.getItem("token");
+    // this.socket = new WebSocket(`ws://127.0.0.1:8000/ws/test/${token}`);
+    // // 데이터 수신
+    // this.socket.onmessage = function(e) {
+    //     console.log(e);
+    //     var data = JSON.parse(e.data);
+    //     var message = data['message'];
+    //     console.log(message)
+    // };
+
+    // this.socket.onopen = function(e) {
+    //   console.log(e);
+    // };
+
+    // this.socket.onclose = function(e) {
+    //   console.log(e);
+    // };
   },
 
   methods: {
-    scrapAct(id) {
+    scrapAct(id, articleUserId) {
       this.$store.dispatch("doScrap", {
         url: `/articles/${id}/scrap`,
         page: "article",
         id: `${id}`
       });
+      if (articleUserId) {
+        this.$store.dispatch("sendAlarm", {
+          url: '/alarms/Share/',
+          articleUserId: `${articleUserId}`,
+          requestUserId: `${this.userId}`,
+        })
+      }
     },
     activateReadMore() {
       this.readMoreActivated = true;

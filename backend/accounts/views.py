@@ -120,7 +120,6 @@ def google_login(request):
 
     email = profile_response_json.get('email')
     username = profile_response_json.get('name')
-    profile_img = profile_response_json.get('picture')
     last_name = profile_response_json.get('family_name')
     first_name = profile_response_json.get('given_name')
     User = get_user_model()
@@ -136,7 +135,6 @@ def google_login(request):
         new_user_to_db = User.objects.create(
             email=email,
             username=username,
-            image=profile_img,
             last_name=last_name,
             first_name=first_name,
         )
@@ -160,10 +158,29 @@ def kakao_login(request):
     }
 
     profile_request = requests.post("https://kapi.kakao.com/v2/user/me", headers=headers, data=params)
-    profile_response_json = profile_request.json()
-    # print(profile_response_json)
+    kakao_account_json = profile_request.json().get('kakao_account')
+    # pprint(kakao_account_json)
 
-    return Response({"id": "{}".format(profile_response_json.get('id'))})
+    email = kakao_account_json.get('email')
+    username = kakao_account_json.get('profile').get('nickname')
+    User = get_user_model()
+    # username 유니크화
+    if User.objects.filter(username=username).exists():
+        username = email.split('@')[0]
+
+    try:
+        user_in_db = User.objects.get(email=email)
+        token = Token.objects.get(user_id=user_in_db.pk)
+        # 소셜유저인지 이메일유저인지 확인하는 절차 추가해야함
+    except User.DoesNotExist:
+        new_user_to_db = User.objects.create(
+            email=email,
+            username=username,
+        )
+        new_user_to_db.set_unusable_password()
+        new_user_to_db.save()
+        token = Token.objects.create(user=new_user_to_db)         
+    return Response({"key": "{}".format(token.key)})
 
 def kakao_callback(request):
     print(request.data)

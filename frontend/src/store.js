@@ -13,6 +13,8 @@ export default new Vuex.Store({
     isLoginError: false,
     items: [],
     item: {},
+    alarms: [],
+    socket: null,
   },
   getters: {
     userId(state) {
@@ -27,6 +29,9 @@ export default new Vuex.Store({
     item(state) {
       return state.item;
     },
+    alarms(state) {
+      return state.alarms;
+    }
   },
   //차후 Taste는 로그인이 되어있을때만 갈 수 있게;
   mutations: {
@@ -56,13 +61,22 @@ export default new Vuex.Store({
     setItem(state, payload) {
       state.item = payload;
     },
+    addAlarm(state, message) {
+      state.alarms.push(message)
+    },
+    setSocket(state, socket) {
+      state.socket = socket;
+    },
+    removeSocket(state) {
+      state.socket = null;
+    }
   },
   actions: {
     //로그인 시도
-    login({ dispatch }, loginObj) {
+    login({ dispatch, commit }, loginObj) {
       //로그인 -> 토큰 반환
       http
-        .post("/rest-auth/login/", loginObj)
+        .post("/login/", loginObj)
         .then((res) => {
           // 로그인 성공시, token을 헤더에 포함시킴
           let token = res.data.key;
@@ -70,6 +84,26 @@ export default new Vuex.Store({
           // 토큰을 로컬스토리지에 저장
           localStorage.setItem("token", token);
           this.dispatch("getUserInfo");
+
+          // 소켓 연결
+          let socket = new WebSocket(`ws://i3b307.p.ssafy.io/ws/test/${token}`);
+          // 데이터 수신
+          socket.onmessage = function(e) {
+              console.log(e);
+              var data = JSON.parse(e.data);
+              var message = data['message'];
+              console.log(message)
+              commit("addAlarm", message)
+          };
+      
+          socket.onopen = function(e) {
+            console.log(e);
+            commit("setSocket", socket)
+          };
+      
+          socket.onclose = function(e) {
+            console.log(e);
+          };
         })
         .catch((res) => {
           console.log(res);
@@ -78,6 +112,12 @@ export default new Vuex.Store({
     },
     logout({ commit }) {
       commit("logout");
+      // 소켓이 연결되어있는 경우 연결해제
+      let socket = this.state.socket
+      if (socket) {
+        socket.close();
+        commit("removeSocket")
+      }
       router.push({ name: "home" }).catch((error) => {
         if (error.name != "NavigationDuplicated") {
           throw error;
@@ -218,15 +258,61 @@ export default new Vuex.Store({
         })
         .then((res) => {
           console.log(res);
-          // let token = res.data.key;
+          let token = res.data.key;
 
-          // // 토큰을 로컬스토리지에 저장
-          // localStorage.setItem("token", token);
-          // this.dispatch("getUserInfo");
+          // 토큰을 로컬스토리지에 저장
+          localStorage.setItem("token", token);
+          this.dispatch("getUserInfo");
         })
         .catch((error) => {
           console.log(error);
         });
     },
+    sendAlarm(context, payload) {
+      let token = localStorage.getItem("token");
+
+      let config = {
+        headers: {
+          "X-CSRFToken": "token",
+          "Content-Type": "application/json",
+        },
+      };
+      let body = {
+        message: `${this.state.userInfo.username}님이 스크랩을 했어요!`,
+        article_user_id: payload.articleUserId,
+        request_user_id: payload.requestUserId
+      }
+      
+      http
+        .post(payload.url, body, config)
+        .then((res) => {
+          console.log(res);
+        })
+    },
+    checkSocket({ commit }, context) {
+      let socket = this.state.socket
+      // 소켓 닫혀있는 경우
+      if (socket == null) {
+        let token = localStorage.getItem("token");
+        let socket = new WebSocket(`ws://i3b307.p.ssafy.io/ws/test/${token}`);
+        // 데이터 수신
+        socket.onmessage = function(e) {
+            console.log(e);
+            var data = JSON.parse(e.data);
+            var message = data['message'];
+            console.log(message)
+            commit("addAlarm", message)
+        };
+    
+        socket.onopen = function(e) {
+          console.log(e);
+          commit("setSocket", socket)
+        };
+    
+        socket.onclose = function(e) {
+          console.log(e);
+        };
+      }
+    }
   },
 });

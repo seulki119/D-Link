@@ -1,21 +1,11 @@
 <!-- eslint-disable -->
-<!--
-1. 회원 아이디 기반으로 정보 가져오기
-2. 회원이 스크랩한 게시물 목록
-3. 회원이 업로드한 게시물 목록
-4. 회원정보 관련 버튼(disabled 처리)
-      - 수정
-        -탈퇴
-      - 로그아웃
-
--->
 <template>
   <v-container max-width="600" min-width="300">
     <v-card class="mx-auto pa-5" max-width="600">
       <v-row class="pa-5" no-gutters>
         <v-col>
           <v-avatar class="profileImage" color="grey" size="80" round>
-            <v-img v-if="image!==null" :src="`//127.0.0.1:8000/${image}`"></v-img>
+            <v-img v-if="image!==null" :src="`//i3b307.p.ssafy.io/${image}`"></v-img>
             <span v-else>이미지를 추가해주세요!</span>
           </v-avatar>
         </v-col>
@@ -52,7 +42,7 @@
               <v-row>
                 <v-col v-for="n in articleSet.slice().reverse()" :key="n.image" cols="4">
                   <v-img
-                    :src="`//127.0.0.1:8000/${n.image}`"
+                    :src="`//i3b307.p.ssafy.io/${n.image}`"
                     class="grey lighten-2 pa-1"
                     aspect-ratio="1"
                     @click="showDetail(n.id)"
@@ -66,7 +56,7 @@
               <v-row>
                 <v-col v-for="n in scrapSet.slice().reverse()" :key="n.image" cols="4">
                   <v-img
-                    :src="`//127.0.0.1:8000/${n.image}`"
+                    :src="`//i3b307.p.ssafy.io/${n.image}`"
                     class="grey lighten-2 pa-1"
                     aspect-ratio="1"
                     @click="showDetail(n.id)"

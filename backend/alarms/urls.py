@@ -7,9 +7,6 @@ app_name = 'alarms'
 
 
 urlpatterns = [
-    # path('Share/', views.ShareMe.as_view()),
-    # path('Share', csrf_exempt(views.ShareMe.as_view())),
     path('Share/', csrf_exempt(views.ShareMe)),
-    # path('Share/', views.ShareMe),
-    path('Alarm', views.Alarm.as_view()),
+    path('<int:user_pk>/', views.alarm),
 ]

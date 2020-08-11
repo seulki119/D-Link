@@ -3,4 +3,9 @@ from django.db import models
 # Create your models here.
 
 class Alarm(models.Model):
-    message=models.CharField(max_length=100)
+    message=models.TextField()
+    username=models.CharField(max_length=30)
+    articleId=models.IntegerField()
+    articleUserId=models.IntegerField()
+    thumbnailPath=models.TextField()
+    alarmType=models.IntegerField()

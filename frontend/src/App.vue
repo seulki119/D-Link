@@ -91,15 +91,24 @@ export default {
   beforeUpdate() {
     this.canBack = true;
     let currentUrl = this.$router.history.current.name;
-    let baseUrl = this.$router.options.routes;
+    let baseUrl = [
+      "home",
+      "login",
+      "signup",
+      "taste",
+      "mypage",
+      "articlelist",
+      "passwordChange",
+      "search"
+    ];
     // console.log(this.$router.options.routes);
-    console.log(this.$router.history.current.name);
+    // console.log(this.$router.history.current.name);
     if ("search" === this.$router.history.current.name) {
       this.isSearch = true;
     } else {
       this.isSearch = false;
-      for (let i = 0; i < 6; i++) {
-        if (baseUrl[i].name === currentUrl) {
+      for (let i = 0; i < baseUrl.length; i++) {
+        if (baseUrl[i] === currentUrl) {
           this.canBack = false;
           return;
         }

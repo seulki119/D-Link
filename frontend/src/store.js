@@ -86,7 +86,7 @@ export default new Vuex.Store({
           this.dispatch("getUserInfo");
 
           // 소켓 연결
-          let socket = new WebSocket(`ws://127.0.0.1:8000/ws/test/${token}`);
+          let socket = new WebSocket(`ws://i3b307.p.ssafy.io/ws/test/${token}`);
           // 데이터 수신
           socket.onmessage = function(e) {
               console.log(e);
@@ -258,11 +258,11 @@ export default new Vuex.Store({
         })
         .then((res) => {
           console.log(res);
-          // let token = res.data.key;
+          let token = res.data.key;
 
-          // // 토큰을 로컬스토리지에 저장
-          // localStorage.setItem("token", token);
-          // this.dispatch("getUserInfo");
+          // 토큰을 로컬스토리지에 저장
+          localStorage.setItem("token", token);
+          this.dispatch("getUserInfo");
         })
         .catch((error) => {
           console.log(error);
@@ -294,7 +294,7 @@ export default new Vuex.Store({
       // 소켓 닫혀있는 경우
       if (socket == null) {
         let token = localStorage.getItem("token");
-        let socket = new WebSocket(`ws://127.0.0.1:8000/ws/test/${token}`);
+        let socket = new WebSocket(`ws://i3b307.p.ssafy.io/ws/test/${token}`);
         // 데이터 수신
         socket.onmessage = function(e) {
             console.log(e);

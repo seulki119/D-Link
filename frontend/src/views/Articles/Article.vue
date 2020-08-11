@@ -292,7 +292,7 @@ export default {
           }
           this.hashtags = tmp;
           this.loading = false;
-        }, 400);
+        }, 600);
       });
     // console.log(this.hashtags);
     // let token = localStorage.getItem("token");

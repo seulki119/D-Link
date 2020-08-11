@@ -3,7 +3,7 @@
     <v-list>
       <template v-for="(alarm,index) in this.alarms">
         <!-- <v-subheader :key="index" v-text="messageType[alarm.alarmType]"></v-subheader> -->
-        <v-list-item :key="index">
+        <v-list-item :key="index" router :to="(`article?id=${alarm.articleId}`)">
           <v-list-item-avatar>
             <v-img :src="`//i3b307.p.ssafy.io/${alarm.thumbnailPath}`"></v-img>
           </v-list-item-avatar>

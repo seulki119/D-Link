@@ -268,7 +268,7 @@ export default new Vuex.Store({
         username: this.state.userInfo.username,
         alarmType: payload.alarmType
       }
-      
+      console.log(body)
       http
         .post(payload.url, body, config)
         .then((res) => {
@@ -284,22 +284,20 @@ export default new Vuex.Store({
       }
     },
     socketConnect({ commit, context }, token) {
-      let socket = new WebSocket(`ws://127.0.0.1:8000/ws/test/${token}`);
+      let socket = new WebSocket(`ws://i3b307.p.ssafy.io/ws/test/${token}`);
       // 데이터 수신
-      socket.onmessage = function(e) {
-          // console.log(e);
-          var data = JSON.parse(e.data);
-          // var message = data['message'];
-          console.log(data)
-          // commit("addAlarm", message)
+      socket.onmessage = function (res) {
+        var msg = JSON.parse(res.data);
+        console.log(msg)
+        commit("addAlarm", msg)
       };
-  
-      socket.onopen = function(e) {
+
+      socket.onopen = function (e) {
         console.log(e);
         this.commit("setSocket", socket)
       };
-  
-      socket.onclose = function(e) {
+
+      socket.onclose = function (e) {
         console.log(e);
       };
     }

@@ -251,11 +251,6 @@ typings/
 
 # Nuxt.js build / generate output
 .nuxt
-<<<<<<< HEAD
-
-=======
-# dist
->>>>>>> 437f18e09cb491672efd618d841ef83b274926a3
 
 # Gatsby files
 .cache/

@@ -27,6 +27,10 @@
 | POST   | 이메일 중복체크              | http://localhost:8000/accounts/duplicated/email/             | O    |
 | POST   | 닉네임 중복체크              | http://localhost:8000/accounts/duplicated/username/          | O    |
 | POST   | 비밀번호리셋(이메일로요청)   | http://127.0.0.1:8000/rest-auth/password/reset/              | X    |
+| GET    | VS 리스트                    | http://127.0.0.1:8000/api/vers                               | X    |
+| POST   | 비밀번호리셋(새로운비번등록) | http://127.0.0.1:8000/rest-auth/password/reset/confirm/      | X    |
+| POST   | 비밀번호리셋(새로운비번등록) | http://127.0.0.1:8000/rest-auth/password/reset/confirm/      | X    |
+| POST   | 비밀번호리셋(새로운비번등록) | http://127.0.0.1:8000/rest-auth/password/reset/confirm/      | X    |
 | POST   | 비밀번호리셋(새로운비번등록) | http://127.0.0.1:8000/rest-auth/password/reset/confirm/      | X    |
 
 

@@ -284,7 +284,7 @@ export default new Vuex.Store({
       }
     },
     socketConnect(context, token) {
-      let socket = new WebSocket(`ws://127.0.0.1:8000/ws/test/${token}`);
+      let socket = new WebSocket(`ws://i3b307.p.ssafy.io/ws/test/${token}`);
       // 데이터 수신
       socket.onmessage = function(e) {
           // console.log(e);

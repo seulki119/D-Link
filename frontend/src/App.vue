@@ -33,9 +33,7 @@
       </v-btn>
     </v-app-bar>
     <v-main>
-      <v-container fill-height>
-        <router-view></router-view>
-      </v-container>
+      <router-view></router-view>
     </v-main>
     <div style="height:36px">
       <v-bottom-navigation

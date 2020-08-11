@@ -283,8 +283,8 @@ export default new Vuex.Store({
         this.dispatch("socketConnect", token)
       }
     },
-    socketConnect(context, token) {
-      let socket = new WebSocket(`ws://i3b307.p.ssafy.io/ws/test/${token}`);
+    socketConnect({ commit, context }, token) {
+      let socket = new WebSocket(`ws://127.0.0.1:8000/ws/test/${token}`);
       // 데이터 수신
       socket.onmessage = function(e) {
           // console.log(e);
@@ -296,7 +296,7 @@ export default new Vuex.Store({
   
       socket.onopen = function(e) {
         console.log(e);
-        commit("setSocket", socket)
+        this.commit("setSocket", socket)
       };
   
       socket.onclose = function(e) {

@@ -30,6 +30,11 @@
 | DELETE | 알림 삭제                    | http://i3b307.p.ssafy.io/api/alarms/{user.id}/               | O    |
 | POST   | 비밀번호리셋(이메일로요청)   | http://i3b307.p.ssafy.io/api/password/reset/                 | X    |
 | POST   | 비밀번호리셋(새로운비번등록) | http://i3b307.p.ssafy.io/api/password/reset/confirm/         | X    |
+| GET    | VS 리스트                    | http://i3b307.p.ssafy.io/api/versus/                         | O    |
+| GET    | VS 디테일                    | http://i3b307.p.ssafy.io/api/versus/{topic_id}/              | O    |
+| GET    | VS 투표                      | http://i3b307.p.ssafy.io/api/versus/{topic_id}/vote/         | O    |
+| POST   | VS 댓글 생성                 | http://i3b307.p.ssafy.io/api/versus/{topic_id}/comment/      | O    |
+| POST   | 비밀번호리셋(새로운비번등록) | http://i3b307.p.ssafy.io/api/versus/{topic_id}/comment/{comment_id}/delete/ | O    |
 
 
 

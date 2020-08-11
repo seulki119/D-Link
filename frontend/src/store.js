@@ -84,26 +84,7 @@ export default new Vuex.Store({
           // 토큰을 로컬스토리지에 저장
           localStorage.setItem("token", token);
           this.dispatch("getUserInfo");
-
-          // 소켓 연결
-          let socket = new WebSocket(`ws://i3b307.p.ssafy.io/ws/test/${token}`);
-          // 데이터 수신
-          socket.onmessage = function(e) {
-              console.log(e);
-              var data = JSON.parse(e.data);
-              var message = data['message'];
-              console.log(message)
-              commit("addAlarm", message)
-          };
-      
-          socket.onopen = function(e) {
-            console.log(e);
-            commit("setSocket", socket)
-          };
-      
-          socket.onclose = function(e) {
-            console.log(e);
-          };
+          this.dispatch("socketConnect", token);
         })
         .catch((res) => {
           console.log(res);
@@ -245,6 +226,7 @@ export default new Vuex.Store({
           // 토큰을 로컬스토리지에 저장
           localStorage.setItem("token", token);
           this.dispatch("getUserInfo");
+          this.dispatch("socketConnect", token);
         })
         .catch((error) => {
           console.log(error);
@@ -257,12 +239,13 @@ export default new Vuex.Store({
           redirect_uri: "http://127.0.0.1:8000/accounts/kakao/callback/",
         })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           let token = res.data.key;
 
           // 토큰을 로컬스토리지에 저장
           localStorage.setItem("token", token);
           this.dispatch("getUserInfo");
+          this.dispatch("socketConnect", token);
         })
         .catch((error) => {
           console.log(error);
@@ -289,30 +272,33 @@ export default new Vuex.Store({
           console.log(res);
         })
     },
-    checkSocket({ commit }, context) {
+    checkSocket({ dispatch, commit }, context) {
       let socket = this.state.socket
       // 소켓 닫혀있는 경우
       if (socket == null) {
         let token = localStorage.getItem("token");
-        let socket = new WebSocket(`ws://i3b307.p.ssafy.io/ws/test/${token}`);
-        // 데이터 수신
-        socket.onmessage = function(e) {
-            console.log(e);
-            var data = JSON.parse(e.data);
-            var message = data['message'];
-            console.log(message)
-            commit("addAlarm", message)
-        };
-    
-        socket.onopen = function(e) {
-          console.log(e);
-          commit("setSocket", socket)
-        };
-    
-        socket.onclose = function(e) {
-          console.log(e);
-        };
+        this.dispatch("socketConnect", token)
       }
+    },
+    socketConnect(context, token) {
+      let socket = new WebSocket(`ws://i3b307.p.ssafy.io/ws/test/${token}`);
+      // 데이터 수신
+      socket.onmessage = function(e) {
+          console.log(e);
+          var data = JSON.parse(e.data);
+          var message = data['message'];
+          console.log(message)
+          commit("addAlarm", message)
+      };
+  
+      socket.onopen = function(e) {
+        console.log(e);
+        commit("setSocket", socket)
+      };
+  
+      socket.onclose = function(e) {
+        console.log(e);
+      };
     }
   },
 });

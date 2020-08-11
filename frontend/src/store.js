@@ -261,9 +261,12 @@ export default new Vuex.Store({
         },
       };
       let body = {
-        message: `${this.state.userInfo.username}님이 스크랩을 했어요!`,
-        article_user_id: payload.articleUserId,
-        request_user_id: payload.requestUserId
+        message: payload.message,
+        articleUserId: payload.articleUserId,
+        articleId: payload.articleId,
+        thumbnailPath: payload.thumbnailPath,
+        username: this.state.userInfo.username,
+        alarmType: payload.alarmType
       }
       
       http
@@ -281,14 +284,14 @@ export default new Vuex.Store({
       }
     },
     socketConnect(context, token) {
-      let socket = new WebSocket(`ws://i3b307.p.ssafy.io/ws/test/${token}`);
+      let socket = new WebSocket(`ws://127.0.0.1:8000/ws/test/${token}`);
       // 데이터 수신
       socket.onmessage = function(e) {
-          console.log(e);
+          // console.log(e);
           var data = JSON.parse(e.data);
-          var message = data['message'];
-          console.log(message)
-          commit("addAlarm", message)
+          // var message = data['message'];
+          console.log(data)
+          // commit("addAlarm", message)
       };
   
       socket.onopen = function(e) {

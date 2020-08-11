@@ -36,16 +36,30 @@ class Alarm(TemplateView):
 def ShareMe(request):
     data_unicode=request.body.decode('utf-8')
     data=json.loads(data_unicode)
-    friend = data['article_user_id']
-    message = data['message']
     print(data)
-    # friend = data['request_user_id']
+
+    alarm = models.Alarm()
+    alarm.message = data['message']
+    alarm.articleId = data['articleId']
+    alarm.articleUserId = data['articleUserId']
+    alarm.thumbnailPath = data['thumbnailPath']
+    alarm.alarmType = data['alarmType']
+    alarm.username = data['username']
+    alarm.save()
+
+    rx_user_id = data['articleUserId']
+    # print(data)
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
-        friend,
+        data['articleUserId'],
         {
             'type': 'share_message',
-            'message': message,
+            'message': data['message'],
+            'articleId': data['articleId'],
+            'articleUserId': data['articleUserId'],
+            'thumbnailPath': data['thumbnailPath'],
+            'alarmType': data['alarmType'],
+            'username': data['username'],
             'accept': True
         }
     )

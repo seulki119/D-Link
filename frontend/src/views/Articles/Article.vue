@@ -36,7 +36,7 @@
             <img
               v-if="!item.scrap.includes(userId)"
               class="scrapInfo"
-              @click="scrapAct(item.id, item.user.id)"
+              @click="scrapAct(item.id, item.user.id, item.image)"
               :src="(scrapSrc = scrapNo)"
             />
             <img v-else class="scrapInfo" @click="scrapAct(item.id)" :src="(scrapSrc = scrapYes)" />
@@ -315,7 +315,7 @@ export default {
   },
 
   methods: {
-    scrapAct(id, articleUserId) {
+    scrapAct(id, articleUserId, thumbnailPath) {
       this.$store.dispatch("doScrap", {
         url: `/articles/${id}/scrap`,
         page: "article",
@@ -325,7 +325,10 @@ export default {
         this.$store.dispatch("sendAlarm", {
           url: '/alarms/Share/',
           articleUserId: `${articleUserId}`,
-          requestUserId: `${this.userId}`,
+          articleId: `${id}`,
+          thumbnailPath: `${thumbnailPath}`,
+          message: "",
+          alarmType: 0 // 스크랩
         })
       }
     },

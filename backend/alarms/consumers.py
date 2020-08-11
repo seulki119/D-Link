@@ -51,8 +51,13 @@ class UserTestConsumer(WebsocketConsumer):
     # Receive message from room group
     def share_message(self, event):
         print("event={}".format(event))
-        message = event['message']
+
         # Send message to WebSocket
         self.send(text_data=json.dumps({
-            'message': message
+            'message': event['message'],
+            'articleId': event['articleId'],
+            'articleUserId': event['articleUserId'],
+            'thumbnailPath': event['thumbnailPath'],
+            'alarmType': event['alarmType'],
+            'username': event['username'],
         }))

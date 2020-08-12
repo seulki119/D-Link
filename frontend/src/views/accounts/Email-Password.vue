@@ -16,10 +16,11 @@ export default {
       return {
         templateParams: {
             from_name: "D_LINK",
-            message_html: "http://localhost:8000/api/" ,
             company_email: "d_link.com",
             target_email: "",
+            message_html: `http://localhost:8000/api/password/change/` ,
         },
+        token:""
       }
   },
   methods: {
@@ -27,9 +28,12 @@ export default {
       axios.get("http://localhost:8000/api/accounts/emailpw/", {
           email: this.templateParams.target_email,
         })
-        .then(() => {
-            console.log('보내짐')
+        .then(res => {
+            console.log(res.data);
         })
+        .catch(err => {
+                console.log(err.response)
+            })
 
 
       emailjs.sendForm('gmail', 'template_Bb6olUlG', e.target, 'user_M9vvPfnsBcPdxG5CdE1mQ')

@@ -11,7 +11,7 @@ from .serializers import ChangePasswordSerializer
 from .serializers import UserSerializer, UserTasteSerializer, UserUpdateSerializer, UserImageUpdateSerializer, UserSimpleSerializer
 from pprint import pprint
 import requests
-
+from .models import User as AUTH_USER
 # Create your views here.
 
 @api_view(['POST', 'PUT', 'DELETE'])
@@ -204,14 +204,16 @@ def user_info(request):
 @authentication_classes([])
 @permission_classes([])
 def emailpw(request, email_value):
-    print(email_value)
-    return Response('들어옴')
-        
-    # if model.email.filter(email=email_).exists():
-    #     return Response(email_)
-    # else:
-    #     return Response('가입하지 않은 회원입니다')
-    
+    # print(email_value)
+    models =  AUTH_USER.objects.all()
+    token_pk =- 1
+    if  AUTH_USER.objects.filter(email=email_value).exists():
+        token_pk = AUTH_USER.objects.filter(email=email_value)[0].id
+        token_user = Token.objects.filter(user_id=token_pk)[0].key
+        print(token_user)
+        return Response(token_user)
+    else :
+        return Response('가입하지 않은 회원입니다')
 
 
    

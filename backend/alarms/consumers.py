@@ -6,16 +6,16 @@ from django.dispatch import receiver
 from channels.layers import get_channel_layer
 from .models import Alarm
 
-@receiver(post_save, sender=Alarm)
-def announce_likes(sender, instance, created, **kwargs):
-    if created:
-        channel_layer=get_channel_layer()
-        async_to_sync(channel_layer.group_send)(
-            "shares", {
-                "type": "share_message",
-                "message": instance.message,
-            }
-    )
+# @receiver(post_save, sender=Alarm)
+# def announce_likes(sender, instance, created, **kwargs):
+#     if created:
+#         channel_layer=get_channel_layer()
+#         async_to_sync(channel_layer.group_send)(
+#             "shares", {
+#                 "type": "share_message",
+#                 "message": instance.message,
+#             }
+#     )
 
 
 class UserTestConsumer(WebsocketConsumer):
@@ -51,8 +51,13 @@ class UserTestConsumer(WebsocketConsumer):
     # Receive message from room group
     def share_message(self, event):
         print("event={}".format(event))
-        message = event['message']
+
         # Send message to WebSocket
         self.send(text_data=json.dumps({
-            'message': message
+            'message': event['message'],
+            'articleId': event['articleId'],
+            'articleUserId': event['articleUserId'],
+            'thumbnailPath': event['thumbnailPath'],
+            'alarmType': event['alarmType'],
+            'username': event['username'],
         }))

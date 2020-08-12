@@ -27,7 +27,7 @@
 
       <v-btn icon class="mx-auto" router :to="{ name: 'notifications' }">
         <v-badge color="red" left overlap>
-          <span slot="badge">{{alarms.length}}</span>
+          <span slot="badge">{{alarms}}</span>
           <v-icon>mdi-mail</v-icon>
         </v-badge>
       </v-btn>

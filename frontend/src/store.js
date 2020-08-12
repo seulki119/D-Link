@@ -13,8 +13,7 @@ export default new Vuex.Store({
     isLoginError: false,
     items: [],
     item: {},
-    alarms: [],
-    logs: [], // 알람 + DB 기록 저장용
+    alarms: 0, //알람 숫자 기록용
     socket: null,
   },
   getters: {
@@ -33,9 +32,6 @@ export default new Vuex.Store({
     alarms(state) {
       return state.alarms;
     },
-    logs(state) {
-      return state.logs;
-    }
   },
   //차후 Taste는 로그인이 되어있을때만 갈 수 있게;
   mutations: {
@@ -65,22 +61,17 @@ export default new Vuex.Store({
     setItem(state, payload) {
       state.item = payload;
     },
-    addAlarm(state, message) {
-      state.alarms.push(message)
-    },
-    setLogs(state, payload) {
-      state.logs = payload;
-    },
-    removeLogs(state) {
-      state.logs = null;
-      state.alarms = null;
-    },
     setSocket(state, socket) {
       state.socket = socket;
     },
     removeSocket(state) {
       state.socket = null;
     },
+    setAlarms(state, payload) {
+      console.log(localStorage.getItem("alarmCount"));
+      state.alarms++;
+      console.log(state.alarms)
+    }
   },
   actions: {
     //로그인 시도
@@ -94,6 +85,7 @@ export default new Vuex.Store({
 
           // 토큰을 로컬스토리지에 저장
           localStorage.setItem("token", token);
+
           this.dispatch("getUserInfo");
           this.dispatch("socketConnect", token);
         })
@@ -101,6 +93,7 @@ export default new Vuex.Store({
           console.log(res);
           alert("이메일과 비밀번호를 확인하세요.");
         });
+
     },
     logout({ commit }) {
       commit("logout");
@@ -143,6 +136,16 @@ export default new Vuex.Store({
             taste1: response.data.taste1,
             taste2: response.data.taste2,
           };
+          //안 읽은 알람 카운트 갯수 가져오는 용
+          http
+            .post(`/alarms/` + response.data.id, config)
+            .then(res => {
+              console.log(res);
+              // localStorage.setItem("alarmCount", res);
+            })
+            .catch(err => {
+              console.log(err);
+            });
           //여기서 나중에 userinfo에서 취향 여부를 확인하고 취향을 선택 안 했을경우,
           //taste로 가게 한다.!!
           commit("loginSuccess", userInfo);
@@ -301,7 +304,7 @@ export default new Vuex.Store({
       socket.onmessage = function (res) {
         var msg = JSON.parse(res.data);
         // console.log(msg)
-        commit("addAlarm", msg)
+        commit("setAlarms")
       };
 
       socket.onopen = function (e) {
@@ -316,9 +319,5 @@ export default new Vuex.Store({
         this.commit("setSocket", socket)
       }
     },
-    removeLogs({ commit }) {
-      commit(removeLogs);
-    },
-
   },
 });

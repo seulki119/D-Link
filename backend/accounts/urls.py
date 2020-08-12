@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import ChangePasswordView
 from . import views
-from django.views.decorators.csrf import csrf_exempt
+
 
 app_name = 'accounts'
 
@@ -12,9 +12,9 @@ urlpatterns = [
     path('kakao/callback/', views.kakao_callback),
     path('taste/', views.taste),
     path('user/', views.user_info),
+    path('<str:email_value>/emailpw/', views.emailpw),
     path('<str:username>/', views.mypage),
     path('<str:username>/image/', views.image_update),
     path('duplicated/email/', views.email_duplicated),
     path('duplicated/username/', views.username_duplicated),
-    path('emailpw/', csrf_exempt(views.emailpw))
 ]

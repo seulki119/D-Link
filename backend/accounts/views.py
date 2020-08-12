@@ -204,16 +204,15 @@ def user_info(request):
 @api_view(['GET'])
 @authentication_classes([])
 @permission_classes([])
-def emailpw(request):
+def emailpw(request, email_value):
+    print(email_value)
     return Response('들어옴')
-    # model = User 
-    # email_ = request.data.email
-    # Token
         
     # if model.email.filter(email=email_).exists():
-    #     return 
+    #     return Response(email_)
     # else:
     #     return Response('가입하지 않은 회원입니다')
     
 
-       
+
+   

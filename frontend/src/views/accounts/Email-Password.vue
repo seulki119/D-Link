@@ -1,12 +1,5 @@
 <template>
     <div class='app'>
-        <form class="contact-form" @submit.prevent="sendEmail">
-            <label>Email</label>
-            <input type="email" name="user_email">
-            <label>Message</label>
-            <textarea name="message"></textarea>
-            <input type="submit" value="Send">
-        </form>
         <label>Email</label>
         <input v-model='templateParams.target_email' name="user_email" @keypress.enter="sendTest">
         <input @click="sendTest"  value="Send">
@@ -47,7 +40,14 @@ export default {
         });
     },
     sendTest() {
+
         console.log(this.templateParams)
+
+        axios.get(`http://127.0.0.1:8000/api/accounts/${this.templateParams.target_email}/emailpw/`)
+            .then(() => {
+                console.log('보내짐')
+            })
+
         emailjs.send('gmail', 'template_Bb6olUlG', this.templateParams, 'user_M9vvPfnsBcPdxG5CdE1mQ')
             .then(function(response) {
             console.log('SUCCESS!', response.status, response.text);

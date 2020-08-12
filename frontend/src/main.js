@@ -34,6 +34,9 @@ new Vue({
     store.dispatch("getUserInfo");
     store.dispatch("checkSocket");
   },
+  // created() {
+  //   store.dispatch("getLogs");
+  // },
   render: h => h(App)
 }).$mount("#app");
 

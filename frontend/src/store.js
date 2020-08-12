@@ -14,6 +14,7 @@ export default new Vuex.Store({
     items: [],
     item: {},
     alarms: [],
+    logs: [], // 알람 + DB 기록 저장용
     socket: null,
   },
   getters: {
@@ -31,6 +32,9 @@ export default new Vuex.Store({
     },
     alarms(state) {
       return state.alarms;
+    },
+    logs(state) {
+      return state.logs;
     }
   },
   //차후 Taste는 로그인이 되어있을때만 갈 수 있게;
@@ -64,12 +68,19 @@ export default new Vuex.Store({
     addAlarm(state, message) {
       state.alarms.push(message)
     },
+    setLogs(state, payload) {
+      state.logs = payload;
+    },
+    removeLogs(state) {
+      state.logs = null;
+      state.alarms = null;
+    },
     setSocket(state, socket) {
       state.socket = socket;
     },
     removeSocket(state) {
       state.socket = null;
-    }
+    },
   },
   actions: {
     //로그인 시도
@@ -288,7 +299,7 @@ export default new Vuex.Store({
       // 데이터 수신
       socket.onmessage = function (res) {
         var msg = JSON.parse(res.data);
-        console.log(msg)
+        // console.log(msg)
         commit("addAlarm", msg)
       };
 
@@ -300,6 +311,20 @@ export default new Vuex.Store({
       socket.onclose = function (e) {
         console.log(e);
       };
+    },
+    getLogs() {
+      let token = localStorage.getItem("token");
+
+      let config = {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      };
+      console.log(userInfo)
+      http.get(`/alarms/` + this.userInfo, config)
+        .then(res => {
+          console.log(res)
+        })
     }
   },
 });

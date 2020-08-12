@@ -9,3 +9,4 @@ class Alarm(models.Model):
     articleUserId=models.IntegerField()
     thumbnailPath=models.TextField()
     alarmType=models.IntegerField()
+    isFetch=models.BooleanField(default=False)

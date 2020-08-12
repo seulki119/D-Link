@@ -6,4 +6,4 @@ class AlarmSerializser(serializers.ModelSerializer):
     class Meta:
         model = Alarm
         fields = '__all__'
-        read_only_fields = ['id']
+        read_only_fields = ['id', 'isFetch']

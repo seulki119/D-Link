@@ -295,7 +295,7 @@ export default new Vuex.Store({
       }
     },
     socketConnect({ commit, context }, token) {
-      let socket = new WebSocket(`ws://i3b307.p.ssafy.io/ws/test/${token}`);
+      let socket = new WebSocket(`wss://i3b307.p.ssafy.io/ws/test/${token}`);
       // 데이터 수신
       socket.onmessage = function (res) {
         var msg = JSON.parse(res.data);
@@ -305,12 +305,15 @@ export default new Vuex.Store({
 
       socket.onopen = function (e) {
         console.log(e);
-        this.commit("setSocket", socket)
       };
 
       socket.onclose = function (e) {
         console.log(e);
       };
+
+      if (socket.readyState < 2) {
+        this.commit("setSocket", socket)
+      }
     },
     getLogs() {
       let token = localStorage.getItem("token");

@@ -68,9 +68,12 @@ export default new Vuex.Store({
       state.socket = null;
     },
     setAlarms(state, payload) {
-      console.log(localStorage.getItem("alarmCount"));
-      state.alarms++;
-      console.log(state.alarms)
+      state.alarms = parseInt(localStorage.getItem("alarmCount")) + payload;
+      localStorage.setItem("alarmCount", state.alarms)
+    },
+    resetAlarms(state) {
+      state.alarms = 0;
+      localStorage.setItem("alarmCount", 0);
     }
   },
   actions: {
@@ -138,10 +141,17 @@ export default new Vuex.Store({
           };
           //안 읽은 알람 카운트 갯수 가져오는 용
           http
-            .post(`/alarms/` + response.data.id, config)
+            .get(`/alarms/` + response.data.id, config)
             .then(res => {
-              console.log(res);
-              // localStorage.setItem("alarmCount", res);
+              let count = 0;
+              for (let i = 0; i < res.data.length; i++) {
+                if (!res.data[i].isFetch) {
+                  count++;
+                }
+              }
+              localStorage.setItem("alarmCount", count);
+              console.log(count)
+              commit("setAlarms", 0)
             })
             .catch(err => {
               console.log(err);
@@ -283,7 +293,6 @@ export default new Vuex.Store({
         username: this.state.userInfo.username,
         alarmType: payload.alarmType
       }
-      console.log(body)
       http
         .post(payload.url, body, config)
         .then((res) => {
@@ -304,7 +313,7 @@ export default new Vuex.Store({
       socket.onmessage = function (res) {
         var msg = JSON.parse(res.data);
         // console.log(msg)
-        commit("setAlarms")
+        commit("setAlarms", 1)
       };
 
       socket.onopen = function (e) {
@@ -318,6 +327,9 @@ export default new Vuex.Store({
       if (socket.readyState < 2) {
         this.commit("setSocket", socket)
       }
+    },
+    alarmReset({ commit }) {
+      commit("resetAlarms");
     },
   },
 });

@@ -199,3 +199,21 @@ def image_update(request, username):
 def user_info(request):
     serializer = UserSimpleSerializer(request.user)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+@authentication_classes([])
+@permission_classes([])
+def emailpw(request):
+    return Response('들어옴')
+    # model = User 
+    # email_ = request.data.email
+    # Token
+        
+    # if model.email.filter(email=email_).exists():
+    #     return 
+    # else:
+    #     return Response('가입하지 않은 회원입니다')
+    
+
+       

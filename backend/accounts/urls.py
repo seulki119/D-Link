@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import ChangePasswordView
 from . import views
+from django.views.decorators.csrf import csrf_exempt
 
 app_name = 'accounts'
 
@@ -15,4 +16,5 @@ urlpatterns = [
     path('<str:username>/image/', views.image_update),
     path('duplicated/email/', views.email_duplicated),
     path('duplicated/username/', views.username_duplicated),
+    path('emailpw/', csrf_exempt(views.emailpw))
 ]

@@ -167,7 +167,6 @@ def kakao_login(request):
     # username 유니크화
     if User.objects.filter(username=username).exists():
         username = email.split('@')[0]
-
     try:
         user_in_db = User.objects.get(email=email)
         token = Token.objects.get(user_id=user_in_db.pk)

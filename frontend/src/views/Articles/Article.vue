@@ -263,6 +263,16 @@ export default {
 
     this.$store
       .dispatch("getArticle", `/articles/${this.$route.query.id}`)
+      .then(res => {
+        console.log(res);
+        //res가 undefined면 오류 뜨는게 문제여서 안번더 실행시켜서 해결
+        if (res === undefined) {
+          this.$store.dispatch(
+            "getArticle",
+            `/articles/${this.$route.query.id}`
+          );
+        }
+      })
       .finally(() => {
         setTimeout(() => {
           let array = this.item.commentSet;
@@ -287,6 +297,7 @@ export default {
 
           let tagArray = this.item.hashtag;
           let tmp = [];
+          console.log(this.item);
           for (let index = 0; index < tagArray.length; index++) {
             tmp.push(tagArray[index].tag);
           }

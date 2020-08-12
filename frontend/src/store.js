@@ -125,7 +125,6 @@ export default new Vuex.Store({
           Authorization: `Token ${token}`,
         },
       };
-
       let data = "";
 
       // 헤더 with 토큰 -> 유저 정보를 반환
@@ -157,6 +156,8 @@ export default new Vuex.Store({
           } else {
             router.push("articlelist");
           }
+
+
         })
         .catch((response) => {
           console.log(response);
@@ -315,19 +316,9 @@ export default new Vuex.Store({
         this.commit("setSocket", socket)
       }
     },
-    getLogs() {
-      let token = localStorage.getItem("token");
+    removeLogs({ commit }) {
+      commit(removeLogs);
+    },
 
-      let config = {
-        headers: {
-          Authorization: `Token ${token}`,
-        },
-      };
-      console.log(userInfo)
-      http.get(`/alarms/` + this.userInfo, config)
-        .then(res => {
-          console.log(res)
-        })
-    }
   },
 });

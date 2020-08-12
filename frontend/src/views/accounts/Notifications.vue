@@ -1,7 +1,8 @@
 <template>
   <v-card class="mx-auto pa-5" max-width="600">
+    <v-btn @click="remove">삭제</v-btn>
     <v-list>
-      <template v-for="(alarm,index) in this.alarms">
+      <template v-for="(alarm,index) in logs">
         <!-- <v-subheader :key="index" v-text="messageType[alarm.alarmType]"></v-subheader> -->
         <v-list-item :key="index" router :to="(`article?id=${alarm.articleId}`)">
           <v-list-item-avatar>
@@ -22,7 +23,8 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+// import { mapGetters } from "vuex";
+import http from "@/util/http-common";
 export default {
   data() {
     return {
@@ -30,11 +32,48 @@ export default {
         "게시물이 스크랩되었습니다.",
         "댓글이 달렸습니다.",
         "대댓글이 달렸습니다."
-      ]
+      ],
+      logs: []
     };
   },
-  computed: {
-    ...mapGetters(["alarms"])
+  beforeCreate() {
+    console.log("Dfdfd");
+    let token = localStorage.getItem("token");
+
+    let config = {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    };
+    await http
+      .get(`/alarms/` + this.$store.getters.userId, config)
+      .then(res => {
+        this.logs = res.data;
+        console.log(this.logs);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  },
+
+  methods: {
+    remove() {
+      let token = localStorage.getItem("token");
+      let config = {
+        headers: {
+          Authorization: `Token ${token}`
+        }
+      };
+      http
+        .delete(`/alarms/${this.$store.getters.userId}`, config)
+        .then(res => {
+          console.log(res);
+          this.log = null;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   }
 };
 </script>

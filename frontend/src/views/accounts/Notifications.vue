@@ -2,7 +2,7 @@
   <v-card class="mx-auto pa-5" max-width="600">
     <v-btn @click="remove">삭제</v-btn>
     <v-list>
-      <template v-for="(alarm,index) in logs">
+      <template v-for="(alarm,index) in logs.slice().reverse()">
         <!-- <v-subheader :key="index" v-text="messageType[alarm.alarmType]"></v-subheader> -->
         <v-list-item :key="index" router :to="(`article?id=${alarm.articleId}`)">
           <v-list-item-avatar>
@@ -37,7 +37,7 @@ export default {
     };
   },
   beforeCreate() {
-    console.log("Dfdfd");
+    localStorage.setItem("alarmCount", 0);
     let token = localStorage.getItem("token");
 
     let config = {
@@ -45,7 +45,7 @@ export default {
         Authorization: `Token ${token}`
       }
     };
-    await http
+    http
       .get(`/alarms/` + this.$store.getters.userId, config)
       .then(res => {
         this.logs = res.data;
@@ -68,7 +68,7 @@ export default {
         .delete(`/alarms/${this.$store.getters.userId}`, config)
         .then(res => {
           console.log(res);
-          this.log = null;
+          this.logs = null;
         })
         .catch(err => {
           console.log(err);

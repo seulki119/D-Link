@@ -15,7 +15,7 @@
       >
         <!-- tab -->
         <v-tabs v-show="!hidden" center-active v-model="tab" background-color="white">
-          <v-tab v-for="(item, index) in items" :key="item.name">{{ index+1 }}</v-tab>
+          <v-tab class="d-none" v-for="(item, index) in items" :key="item.name">{{ index+1 }}</v-tab>
         </v-tabs>
 
         <!-- content -->
@@ -49,12 +49,19 @@
               </v-layout>
             </v-card>
             <!-- submit botton : 모든 문항에 응답한 경우, 마지막 검사문항에서 보여줌  -->
-            <div class="text-center ma-2" v-show="index === items.length-1">
+            <div class="text-center ma-2">
+              <v-btn
+                block
+                color="indigo lighten-1 white--text"
+                @click="moveNext(index)"
+                v-if="!valid"
+              >다음</v-btn>
               <v-btn
                 block
                 color="indigo lighten-1 white--text"
                 @click="submit"
                 :disabled="!valid"
+                v-else
               >결과 보기</v-btn>
             </div>
           </v-tab-item>
@@ -74,6 +81,7 @@
             </template>
           </v-img>
 
+          <hr />
           <v-btn color="indigo lighten-1 white--text" @click="clear">다시 검사하기</v-btn>
           <v-btn color="indigo lighten-1 white--text" @click="goRecipes">전체 레시피 보러가기</v-btn>
         </v-card>
@@ -90,7 +98,7 @@ export default {
   },
   data() {
     return {
-      cocktail: "레몬주",
+      cocktail: null,
       hidden: false,
       valid: false,
       tab: null,
@@ -318,9 +326,18 @@ export default {
       this.items.forEach(element => {
         element.score = null;
       });
+      this.tab = null;
     },
     goRecipes() {
       this.$router.push({ name: "recipes", params: { recipes: this.recipes } });
+    },
+    // radio select여부 체크 : 응답하지 않았다면 다른 탭으로 이동 불가.
+    moveNext(index) {
+      if (this.items[index].score === null) {
+        this.tab = index;
+      } else {
+        this.tab = index + 1;
+      }
     }
   }
 };

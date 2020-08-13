@@ -135,6 +135,15 @@ const routes = [
       ),
   },
   {
+    path: "/recipes",
+    name: "recipes",
+    beforeEnter: onlyAuthUser,
+    component: () =>
+      import(
+        /* webpackChunkName: "search" */ "./views/Contents/Recipes.vue"
+      ),
+  },
+  {
     path: "/vs",
     name: "vs",
     beforeEnter: onlyAuthUser,

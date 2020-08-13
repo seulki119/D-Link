@@ -277,18 +277,20 @@ export default {
         setTimeout(() => {
           let array = this.item.commentSet;
           if (array !== undefined) {
-            for (let index = 0; index < array.length; index++) {
+            for (let index = array.length - 1; index >= 0; index--) {
+              if (index == array.length - 1) {
+                this.repComment.id = array[index].id;
+                this.repComment.userName = array[index].user.username;
+                this.repComment.content = array[index].content;
+                this.repComment.userImage = array[index].user.image;
+              }
+
               if (array[index].user.id === this.userId) {
                 this.repComment.id = array[index].id;
                 this.repComment.userName = array[index].user.username;
                 this.repComment.content = array[index].content;
                 this.repComment.userImage = array[index].user.image;
                 break;
-              } else if (index == array.length - 1) {
-                this.repComment.id = array[index].id;
-                this.repComment.userName = array[index].user.username;
-                this.repComment.content = array[index].content;
-                this.repComment.userImage = array[index].user.image;
               }
             }
           }
@@ -375,6 +377,18 @@ export default {
             "getArticle",
             `/articles/${this.$route.query.id}`
           );
+
+          if (this.repComment === null) {
+            this.repComment.userName = this.userId;
+            this.repComment.content = this.myComment;
+            this.repComment.userImage = this.userImage;
+            //
+            // this.repComment.id = array[index].id;
+            //     this.repComment.userName = array[index].user.username;
+            //     this.repComment.content = array[index].content;
+            //     this.repComment.userImage = array[index].user.image;
+          }
+          console.log("THIS.REPCOMM : " + this.repComment);
           this.myComment = "";
         })
         .catch(err => {

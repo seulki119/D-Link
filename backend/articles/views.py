@@ -15,7 +15,8 @@ from django.conf import settings
 @api_view(['GET', 'POST'])
 def index(request):
     if request.method == 'GET':
-        articles = Article.objects.all()
+        counter = request.data['counter']
+        articles = Article.objects.all()[counter:][:5]
         serializer = ArticleListSerializer(articles, many=True)
         return Response(serializer.data)
     else:

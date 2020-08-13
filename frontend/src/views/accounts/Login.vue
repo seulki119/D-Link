@@ -20,12 +20,12 @@
             <v-btn color="primary" depressed block large @click="login({email,password})">로그인</v-btn>
             <hr style="border: solid 0.5px grey; margin: 5px;" />
             <button @click="getAuth()">
-              <img src="@/assets/google.png" alt="구글로그인버튼" />
+              <img src="@/assets/google.png" alt="구글로그인버튼" style="width:50px" />
             </button>
 
             <KakaoLogin
+              class="kakao"
               api-key="20b828e1eee0b26f49e9d6200fcae186"
-              image="kakao_login_btn_round"
               :on-success="onSuccess"
               :on-failure="onFailure"
             />
@@ -51,6 +51,12 @@ export default {
   },
   computed: {
     ...mapState(["isLogin", "isLoginError"])
+  },
+  mounted() {
+    console.log(document.getElementById("kakao-login-btn").firstChild);
+    document.getElementById("kakao-login-btn").firstChild.src =
+      "/static/img/kakao_login_button_round.55b2ddfe.png";
+    document.getElementById("kakao-login-btn").firstChild.style.width = "50px";
   },
   methods: {
     ...mapActions(["login"]),

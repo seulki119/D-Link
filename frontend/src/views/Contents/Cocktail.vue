@@ -26,7 +26,6 @@
               :src="require(`@/assets/cocktail/image${index+1}.png`)"
               aspect-ratio="1.4"
               contain
-              class="grey lighten-2"
               max-height="300"
             >
               <template v-slot:placeholder>
@@ -62,9 +61,8 @@
         </v-tabs-items>
 
         <!-- 결과 레시피 출력 -->
-        <v-card>
+        <v-card v-if="hidden">
           <v-img
-            v-if="hidden"
             :src="require(`@/assets/cocktail/${cocktail}.png`)"
             class="grey lighten-2 pa-10"
             max-width="100%"
@@ -75,6 +73,9 @@
               </v-row>
             </template>
           </v-img>
+
+          <v-btn color="indigo lighten-1 white--text" @click="clear">다시 검사하기</v-btn>
+          <v-btn color="indigo lighten-1 white--text" @click="goRecipes">전체 레시피 보러가기</v-btn>
         </v-card>
       </v-layout>
     </v-card>
@@ -311,6 +312,15 @@ export default {
       };
       cocktails.push(element);
       return this.sortedArray(cocktails);
+    },
+    clear() {
+      this.hidden = false;
+      this.items.forEach(element => {
+        element.score = null;
+      });
+    },
+    goRecipes() {
+      this.$router.push({ name: "recipes", params: { recipes: this.recipes } });
     }
   }
 };

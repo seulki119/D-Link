@@ -36,7 +36,7 @@
             <img
               v-if="!item.scrap.includes(userId)"
               class="scrapInfo"
-              @click="scrapAct(item.id, item.user.id)"
+              @click="scrapAct(item.id, item.user.id, item.image)"
               :src="(scrapSrc = scrapNo)"
             />
             <img v-else class="scrapInfo" @click="scrapAct(item.id)" :src="(scrapSrc = scrapYes)" />
@@ -122,7 +122,7 @@
                 <v-list-item-content>
                   <div>
                     <span
-                      @click="myComment = `@${comment.user.username} `; modeComment=false; comm={id:comment.id,username:comment.user.username}"
+                      @click="myComment = `@${comment.user.username} `; modeComment=false; comm={id:comment.id,username:comment.user.username,userid:comment.user.id}"
                       class="grey--text text--lighten-1 commentMenu"
                     >답글달기</span>
                     <span
@@ -263,6 +263,16 @@ export default {
 
     this.$store
       .dispatch("getArticle", `/articles/${this.$route.query.id}`)
+      .then(res => {
+        console.log(res);
+        //res가 undefined면 오류 뜨는게 문제여서 안번더 실행시켜서 해결
+        if (res === undefined) {
+          this.$store.dispatch(
+            "getArticle",
+            `/articles/${this.$route.query.id}`
+          );
+        }
+      })
       .finally(() => {
         setTimeout(() => {
           let array = this.item.commentSet;
@@ -287,12 +297,13 @@ export default {
 
           let tagArray = this.item.hashtag;
           let tmp = [];
+          console.log(this.item);
           for (let index = 0; index < tagArray.length; index++) {
             tmp.push(tagArray[index].tag);
           }
           this.hashtags = tmp;
           this.loading = false;
-        }, 400);
+        }, 600);
       });
     // console.log(this.hashtags);
     // let token = localStorage.getItem("token");
@@ -315,7 +326,7 @@ export default {
   },
 
   methods: {
-    scrapAct(id, articleUserId) {
+    scrapAct(id, articleUserId, thumbnailPath) {
       this.$store.dispatch("doScrap", {
         url: `/articles/${id}/scrap`,
         page: "article",
@@ -323,10 +334,13 @@ export default {
       });
       if (articleUserId) {
         this.$store.dispatch("sendAlarm", {
-          url: '/alarms/Share/',
+          url: "/alarms/Share/",
           articleUserId: `${articleUserId}`,
-          requestUserId: `${this.userId}`,
-        })
+          articleId: `${id}`,
+          thumbnailPath: `${thumbnailPath}`,
+          message: "",
+          alarmType: 0 // 스크랩
+        });
       }
     },
     activateReadMore() {
@@ -334,6 +348,14 @@ export default {
     },
     // 댓글 등록
     createComment() {
+      this.$store.dispatch("sendAlarm", {
+        url: "/alarms/Share/",
+        articleUserId: `${this.item.user.id}`,
+        articleId: `${this.item.id}`,
+        thumbnailPath: `${this.item.image}`,
+        message: this.myComment,
+        alarmType: 1 // 댓글
+      });
       // alert(this.myComment);
       let token = localStorage.getItem("token");
       let config = {
@@ -345,7 +367,6 @@ export default {
       const fd = new FormData();
       fd.append("user", this.userId);
       fd.append("content", this.myComment);
-
       http
         .post(`/articles/${this.item.id}/comment/`, fd, config)
         .then(response => {
@@ -468,7 +489,16 @@ export default {
     },
     //대댓글 생성
     createRecomment() {
-      console.log(this.comm.id + " " + this.comm.username);
+      console.log(this.comm);
+      // console.log(this.comm.id + " " + this.comm.username);
+      this.$store.dispatch("sendAlarm", {
+        url: "/alarms/Share/",
+        articleUserId: `${this.comm.userid}`,
+        articleId: `${this.item.id}`,
+        thumbnailPath: `${this.item.image}`,
+        message: this.myComment,
+        alarmType: 2 // 대댓글
+      });
       //
       let token = localStorage.getItem("token");
       let config = {

@@ -13,7 +13,7 @@ export default new Vuex.Store({
     isLoginError: false,
     items: [],
     item: {},
-    alarms: [],
+    alarms: 0, //알람 숫자 기록용
     socket: null,
   },
   getters: {
@@ -31,7 +31,7 @@ export default new Vuex.Store({
     },
     alarms(state) {
       return state.alarms;
-    }
+    },
   },
   //차후 Taste는 로그인이 되어있을때만 갈 수 있게;
   mutations: {
@@ -61,14 +61,19 @@ export default new Vuex.Store({
     setItem(state, payload) {
       state.item = payload;
     },
-    addAlarm(state, message) {
-      state.alarms.push(message)
-    },
     setSocket(state, socket) {
       state.socket = socket;
     },
     removeSocket(state) {
       state.socket = null;
+    },
+    setAlarms(state, payload) {
+      state.alarms = parseInt(localStorage.getItem("alarmCount")) + payload;
+      localStorage.setItem("alarmCount", state.alarms)
+    },
+    resetAlarms(state) {
+      state.alarms = 0;
+      localStorage.setItem("alarmCount", 0);
     }
   },
   actions: {
@@ -83,32 +88,15 @@ export default new Vuex.Store({
 
           // 토큰을 로컬스토리지에 저장
           localStorage.setItem("token", token);
-          this.dispatch("getUserInfo");
 
-          // 소켓 연결
-          let socket = new WebSocket(`ws://i3b307.p.ssafy.io/ws/test/${token}`);
-          // 데이터 수신
-          socket.onmessage = function(e) {
-              console.log(e);
-              var data = JSON.parse(e.data);
-              var message = data['message'];
-              console.log(message)
-              commit("addAlarm", message)
-          };
-      
-          socket.onopen = function(e) {
-            console.log(e);
-            commit("setSocket", socket)
-          };
-      
-          socket.onclose = function(e) {
-            console.log(e);
-          };
+          this.dispatch("getUserInfo");
+          this.dispatch("socketConnect", token);
         })
         .catch((res) => {
           console.log(res);
           alert("이메일과 비밀번호를 확인하세요.");
         });
+
     },
     logout({ commit }) {
       commit("logout");
@@ -133,7 +121,6 @@ export default new Vuex.Store({
           Authorization: `Token ${token}`,
         },
       };
-
       let data = "";
 
       // 헤더 with 토큰 -> 유저 정보를 반환
@@ -152,6 +139,23 @@ export default new Vuex.Store({
             taste1: response.data.taste1,
             taste2: response.data.taste2,
           };
+          //안 읽은 알람 카운트 갯수 가져오는 용
+          http
+            .get(`/alarms/` + response.data.id, config)
+            .then(res => {
+              let count = 0;
+              for (let i = 0; i < res.data.length; i++) {
+                if (!res.data[i].isFetch) {
+                  count++;
+                }
+              }
+              localStorage.setItem("alarmCount", count);
+              console.log(count)
+              commit("setAlarms", 0)
+            })
+            .catch(err => {
+              console.log(err);
+            });
           //여기서 나중에 userinfo에서 취향 여부를 확인하고 취향을 선택 안 했을경우,
           //taste로 가게 한다.!!
           commit("loginSuccess", userInfo);
@@ -165,6 +169,8 @@ export default new Vuex.Store({
           } else {
             router.push("articlelist");
           }
+
+
         })
         .catch((response) => {
           console.log(response);
@@ -245,6 +251,7 @@ export default new Vuex.Store({
           // 토큰을 로컬스토리지에 저장
           localStorage.setItem("token", token);
           this.dispatch("getUserInfo");
+          this.dispatch("socketConnect", token);
         })
         .catch((error) => {
           console.log(error);
@@ -257,12 +264,13 @@ export default new Vuex.Store({
           redirect_uri: "http://127.0.0.1:8000/accounts/kakao/callback/",
         })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           let token = res.data.key;
 
           // 토큰을 로컬스토리지에 저장
           localStorage.setItem("token", token);
           this.dispatch("getUserInfo");
+          this.dispatch("socketConnect", token);
         })
         .catch((error) => {
           console.log(error);
@@ -278,41 +286,50 @@ export default new Vuex.Store({
         },
       };
       let body = {
-        message: `${this.state.userInfo.username}님이 스크랩을 했어요!`,
-        article_user_id: payload.articleUserId,
-        request_user_id: payload.requestUserId
+        message: payload.message,
+        articleUserId: payload.articleUserId,
+        articleId: payload.articleId,
+        thumbnailPath: payload.thumbnailPath,
+        username: this.state.userInfo.username,
+        alarmType: payload.alarmType
       }
-      
       http
         .post(payload.url, body, config)
         .then((res) => {
           console.log(res);
         })
     },
-    checkSocket({ commit }, context) {
+    checkSocket({ dispatch, commit }, context) {
       let socket = this.state.socket
       // 소켓 닫혀있는 경우
       if (socket == null) {
         let token = localStorage.getItem("token");
-        let socket = new WebSocket(`ws://i3b307.p.ssafy.io/ws/test/${token}`);
-        // 데이터 수신
-        socket.onmessage = function(e) {
-            console.log(e);
-            var data = JSON.parse(e.data);
-            var message = data['message'];
-            console.log(message)
-            commit("addAlarm", message)
-        };
-    
-        socket.onopen = function(e) {
-          console.log(e);
-          commit("setSocket", socket)
-        };
-    
-        socket.onclose = function(e) {
-          console.log(e);
-        };
+        this.dispatch("socketConnect", token)
       }
-    }
+    },
+    socketConnect({ commit, context }, token) {
+      let socket = new WebSocket(`wss://i3b307.p.ssafy.io/ws/test/${token}`);
+      // 데이터 수신
+      socket.onmessage = function (res) {
+        var msg = JSON.parse(res.data);
+        // console.log(msg)
+        commit("setAlarms", 1)
+      };
+
+      socket.onopen = function (e) {
+        console.log(e);
+      };
+
+      socket.onclose = function (e) {
+        console.log(e);
+      };
+
+      if (socket.readyState < 2) {
+        this.commit("setSocket", socket)
+      }
+    },
+    alarmReset({ commit }) {
+      commit("resetAlarms");
+    },
   },
 });

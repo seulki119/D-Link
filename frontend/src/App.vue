@@ -27,24 +27,27 @@
 
       <v-btn icon class="mx-auto" router :to="{ name: 'notifications' }">
         <v-badge color="red" left overlap>
-          <span slot="badge">3</span>
+          <span slot="badge">{{alarms}}</span>
           <v-icon>mdi-mail</v-icon>
         </v-badge>
       </v-btn>
     </v-app-bar>
-
     <v-main>
       <router-view></router-view>
     </v-main>
-    <v-footer class="pa-0" app style=" background-color:transparent">
+    <div style="height:36px">
       <v-bottom-navigation
         v-if="isLogin"
         grow
+        center
         color="teal"
         dark
         max-width="600"
         min-width="300"
         class="mx-auto"
+        style="position: fixed;
+  left: 0;
+  right: 0;"
       >
         <v-btn icon router :to="{ name: 'articlelist' }">
           홈
@@ -58,7 +61,7 @@
           업로드
           <v-icon>mdi-plus</v-icon>
         </v-btn>
-        <v-btn icon>
+        <v-btn icon router :to="{ name: 'contentlist' }">
           컨텐츠
           <v-icon>mdi-dialpad</v-icon>
         </v-btn>
@@ -67,7 +70,7 @@
           <v-icon>mdi-account</v-icon>
         </v-btn>
       </v-bottom-navigation>
-    </v-footer>
+    </div>
   </v-app>
 </template>
 
@@ -83,7 +86,8 @@ export default {
     isSearch: false
   }),
   computed: {
-    ...mapState(["isLogin"])
+    ...mapState(["isLogin"]),
+    ...mapState(["alarms"])
   },
   beforeUpdate() {
     this.canBack = true;

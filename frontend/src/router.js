@@ -99,6 +99,8 @@ const routes = [
       ),
   },
   {
+
+    
     path: "/emailpw",
     name: "emailpw",
     component: () =>

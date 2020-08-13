@@ -25,9 +25,7 @@ export default {
   },
   methods: {
     sendEmail: (e) => {
-      axios.get("http://localhost:8000/api/accounts/emailpw/", {
-          email: this.templateParams.target_email,
-        })
+      axios.get(`http://localhost:8000/api/accounts/${this.target_email}/emailpw/`)
         .then(res => {
             console.log(res.data);
         })

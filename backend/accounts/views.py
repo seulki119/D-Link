@@ -204,16 +204,16 @@ def user_info(request):
 @authentication_classes([])
 @permission_classes([])
 def emailpw(request, email_value):
-    # print(email_value)
-    models =  AUTH_USER.objects.all()
+    print(email_value)
+    
     token_pk =- 1
     if  AUTH_USER.objects.filter(email=email_value).exists():
         token_pk = AUTH_USER.objects.filter(email=email_value)[0].id
         token_user = Token.objects.filter(user_id=token_pk)[0].key
         print(token_user)
-        return Response(token_user)
+        return Response({"token_user":"{}".format(token_user)})
     else :
-        return Response('가입하지 않은 회원입니다')
+        return Response("가입하지 않은 회원입니다")
 
 
    

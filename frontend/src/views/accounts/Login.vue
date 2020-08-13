@@ -9,9 +9,7 @@
           <v-toolbar flat justify-space-between>
             <v-toolbar-title>로그인</v-toolbar-title>
             <v-spacer></v-spacer>
-            <button @click="getAuth()" class="mx-1">
-              <img src="@/assets/google.png" alt="구글로그인버튼" style="width:30px" />
-            </button>
+            <img @click="getAuth()" src="@/assets/google.png" alt="구글로그인버튼" style="width:30px" />
             <KakaoLogin
               class="mx-1"
               api-key="20b828e1eee0b26f49e9d6200fcae186"
@@ -29,6 +27,7 @@
             ></v-text-field>
             <v-btn color="primary" depressed block large @click="login({email,password})">로그인</v-btn>
             <hr style="border: solid 0.5px grey; margin: 5px;" />
+            <v-btn color="error" depressed block large router :to="{ name: 'emailpw' }">비밀번호찾기</v-btn>
           </div>
         </v-card>
       </v-flex>

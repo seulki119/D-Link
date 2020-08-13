@@ -22,7 +22,7 @@ export default {
       }
     };
     http
-      .get("토픽모델 가져오는 주소", config)
+      .get("versus", config)
       .then(res => {
         console.log(res);
         //res에 따라서 data에 값 리턴하기

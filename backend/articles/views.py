@@ -12,9 +12,9 @@ from django.conf import settings
 
 # Create your views here.
 
-@api_view(['GET', 'POST'])
+@api_view(['PATCH', 'POST'])
 def index(request):
-    if request.method == 'GET':
+    if request.method == 'PATCH':
         counter = request.data['counter']
         articles = Article.objects.all()[counter:][:5]
         serializer = ArticleListSerializer(articles, many=True)

@@ -5,7 +5,6 @@
       <v-flex xs12>
         <v-alert class="mb-3" :value="isLoginError" type="error">이메일과 비밀번호를 확인해주세요.</v-alert>
         <v-alert :value="isLogin" type="success">로그인에 성공하였습니다.</v-alert>
-        <!-- 차후에는 바로 화면 변경시킬에정!!-->
         <v-card>
           <v-toolbar flat>
             <v-toolbar-title>로그인</v-toolbar-title>
@@ -21,11 +20,12 @@
             <v-btn color="primary" depressed block large @click="login({email,password})">로그인</v-btn>
             <hr style="border: solid 0.5px grey; margin: 5px;" />
             <button @click="getAuth()">
-              <img src="@/assets/btn_google_signin_dark_focus_web.png" alt="구글로그인버튼" />
+              <img src="@/assets/google.png" alt="구글로그인버튼" />
             </button>
+
             <KakaoLogin
               api-key="20b828e1eee0b26f49e9d6200fcae186"
-              image="kakao_login_btn_medium"
+              image="kakao_login_btn_round"
               :on-success="onSuccess"
               :on-failure="onFailure"
             />

@@ -211,7 +211,8 @@ def emailpw(request, email_value):
         token_pk = AUTH_USER.objects.filter(email=email_value)[0].id
         token_user = Token.objects.filter(user_id=token_pk)[0].key
         print(token_user)
-        return Response({"token_user":"{}".format(token_user)})
+        # return Response({"token_user":"{}".format(token_user)})
+        return Response(token_user)
     else :
         return Response("가입하지 않은 회원입니다")
 

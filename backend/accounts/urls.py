@@ -17,4 +17,5 @@ urlpatterns = [
     path('<str:username>/image/', views.image_update),
     path('duplicated/email/', views.email_duplicated),
     path('duplicated/username/', views.username_duplicated),
+    
 ]

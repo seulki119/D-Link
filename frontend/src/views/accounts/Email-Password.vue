@@ -14,48 +14,36 @@ export default {
   name : 'emailpw',
   data() {
       return {
+        token:"",
         templateParams: {
             from_name: "D_LINK",
             company_email: "d_link.com",
-            target_email: "",
-            message_html: `http://localhost:8000/api/password/change/` ,
+            target_email: "",  
+            message_html: `http://localhost:8080/emailpwchange/` ,
         },
-        token:""
+        
       }
   },
   methods: {
-    sendEmail: (e) => {
-      axios.get(`http://localhost:8000/api/accounts/${this.target_email}/emailpw/`)
-        .then(res => {
-            console.log(res.data);
-        })
-        .catch(err => {
-                console.log(err.response)
-            })
 
-
-      emailjs.sendForm('gmail', 'template_Bb6olUlG', e.target, 'user_M9vvPfnsBcPdxG5CdE1mQ')
-        .then((result) => {
-            console.log('SUCCESS!', result.status, result.text, e);
-        }, (error) => {
-            console.log('FAILED...', error);
-        });
-    },
     sendTest() {
 
-        console.log(this.templateParams)
+      console.log(this.templateParams)
 
-        axios.get(`http://127.0.0.1:8000/api/accounts/${this.templateParams.target_email}/emailpw/`)
-            .then(() => {
-                console.log('보내짐')
-            })
+      axios.get(`http://127.0.0.1:8000/api/accounts/${this.templateParams.target_email}/emailpw/`)
+        .then(res => {
+            console.log(res.data)
+            this.templateParams.message_html += res.data
+            emailjs.send('gmail', 'template_Bb6olUlG', this.templateParams, 'user_M9vvPfnsBcPdxG5CdE1mQ')
+              .then(function(response) {
+              console.log('SUCCESS!', response.status, response.text);
+              }, function(error) {
+              console.log('FAILED...', error);
+              });              
+        })
 
-        emailjs.send('gmail', 'template_Bb6olUlG', this.templateParams, 'user_M9vvPfnsBcPdxG5CdE1mQ')
-            .then(function(response) {
-            console.log('SUCCESS!', response.status, response.text);
-            }, function(error) {
-            console.log('FAILED...', error);
-            });        
+
+      
     }
   }
 }

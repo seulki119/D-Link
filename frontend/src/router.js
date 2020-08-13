@@ -105,10 +105,10 @@ const routes = [
       import(/* webpackChunkName: "article" */ "./views/accounts/Email-Password.vue"),
   }, 
   {
-    path: "/emailpw2",
-    name: "emailpw2",
+    path: "/emailpwchange/:user_token",
+    name: "emailpwchange",
     component: () =>
-      import(/* webpackChunkName: "article" */ "./views/accounts/Test.vue"),
+      import(/* webpackChunkName: "article" */ "./views/accounts/EmailChangePassword.vue"),
   },    
   {
     path: "/search",

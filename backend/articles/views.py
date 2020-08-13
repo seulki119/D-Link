@@ -16,7 +16,7 @@ from django.conf import settings
 def index(request):
     if request.method == 'PATCH':
         counter = request.data['counter']
-        articles = Article.objects.all()[counter:][:5]
+        articles = Article.objects.exclude(user=request.user).order_by('-pk')[counter:][:10]
         serializer = ArticleListSerializer(articles, many=True)
         return Response(serializer.data)
     else:

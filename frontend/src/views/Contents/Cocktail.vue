@@ -313,12 +313,13 @@ export default {
     },
     findCocktail(result) {
       // recipes에 결과값 추가하여 score로 정렬
-      let cocktails = this.recipes;
+      let cocktails = Object.assign([], this.recipes);
       const element = {
         name: null,
         score: result
       };
       cocktails.push(element);
+
       return this.sortedArray(cocktails);
     },
     clear() {

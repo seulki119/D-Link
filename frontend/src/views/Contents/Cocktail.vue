@@ -55,6 +55,7 @@
                 color="indigo lighten-1 white--text"
                 @click="moveNext(index)"
                 v-if="!valid"
+                :disabled="item.score === null"
               >다음</v-btn>
               <v-btn
                 block
@@ -83,7 +84,7 @@
 
           <hr />
           <v-btn color="indigo lighten-1 white--text" @click="clear">다시 검사하기</v-btn>
-          <v-btn color="indigo lighten-1 white--text" @click="goRecipes">전체 레시피 보러가기</v-btn>
+          <v-btn color="pink lighten-2 white--text" @click="goRecipes">전체 레시피 보러가기</v-btn>
         </v-card>
       </v-layout>
     </v-card>

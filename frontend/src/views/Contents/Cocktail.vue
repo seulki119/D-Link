@@ -267,15 +267,50 @@ export default {
       result = result.toFixed(2);
 
       // 결과 수치에 근사한 값의 레시피 출력.
-      // 근사치 계산 알고리즘 추가 필요하기!!
-      // 현재는 일치하는 값만 출력하도록 되어 있다.
-      for (let index = 0; index < this.recipes.length; index++) {
-        const element = this.recipes[index];
+      let arr = this.findCocktail(result);
+
+      for (let index = 0; index < arr.length; index++) {
+        const element = arr[index];
         if (element.score == result) {
-          this.cocktail = element.name;
-          break;
+          // result score와 일치하는 값이 있는 경우 : 해당 값 출력
+          if (element.name !== null) {
+            this.cocktail = element.name;
+            break;
+          } else {
+            // 없는 경우 : 가장 차이가 적은 값을 출력
+
+            let nearest = null;
+            if (index === 0) {
+              nearest = arr[1];
+            } else if (index === arr.length - 1) {
+              nearest = arr[index - 1];
+            } else {
+              let before = parseFloat(arr[index - 1].score);
+              let after = parseFloat(arr[index + 1].score);
+              nearest =
+                result - before < after - result
+                  ? arr[index - 1]
+                  : arr[index + 1];
+            }
+            this.cocktail = nearest.name;
+            break;
+          }
         }
       }
+    },
+    // recipes array sort by score
+    sortedArray(array) {
+      return array.sort((a, b) => a.score - b.score);
+    },
+    findCocktail(result) {
+      // recipes에 결과값 추가하여 score로 정렬
+      let cocktails = this.recipes;
+      const element = {
+        name: null,
+        score: result
+      };
+      cocktails.push(element);
+      return this.sortedArray(cocktails);
     }
   }
 };

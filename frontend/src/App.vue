@@ -27,7 +27,7 @@
 
       <v-btn icon class="mx-auto" router :to="{ name: 'notifications' }">
         <v-badge color="red" left overlap>
-          <span slot="badge">3</span>
+          <span slot="badge">{{alarms}}</span>
           <v-icon>mdi-mail</v-icon>
         </v-badge>
       </v-btn>
@@ -86,7 +86,8 @@ export default {
     isSearch: false
   }),
   computed: {
-    ...mapState(["isLogin"])
+    ...mapState(["isLogin"]),
+    ...mapState(["alarms"])
   },
   beforeUpdate() {
     this.canBack = true;

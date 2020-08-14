@@ -249,18 +249,15 @@ export default new Vuex.Store({
         .get(payload.url, config)
         .then((response) => {
           console.log(response);
-          // scrap처리 후 카운트 변경을 위해 데이터를 다시 받아온다.
           console.log(payload.url);
-          // if (payload.page == "articlelist") {
-          //   this.dispatch("getArticles", "/articles");
-          // } else if (payload.page == "article") {
-          this.dispatch("getArticle", `/articles/${payload.id}`);
-          // }
         })
         .catch((response) => {
           console.log(response);
           alert("에러가 발생했습니다.");
-        });
+        }).finally(() => {
+          this.dispatch("getArticle", `/articles/${payload.id}`);
+        })
+      this.dispatch("getArticle", `/articles/${payload.id}`);
     },
     googleLogin(context, authCode) {
       http
@@ -321,6 +318,10 @@ export default new Vuex.Store({
         .post(payload.url, body, config)
         .then((res) => {
           console.log(res);
+          return;
+        }).catch(err => {
+          console.log(err)
+          return;
         })
     },
     checkSocket({ dispatch, commit }, context) {

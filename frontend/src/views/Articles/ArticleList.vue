@@ -17,12 +17,10 @@
               {{ item.scrap.length }}
               <!-- scrap icon : scrap[]에 로그인된 id가 존재하는지 확인 -->
               <img
-                v-if="!item.scrap.includes(userId)"
                 class="scrapInfo"
-                @click="scrapAct(item.id, item.user.id, item.image)"
-                :src="(scrapSrc = scrapNo)"
+                @click="scrapAct(index, item.id, item.user.id, item.image)"
+                :src="scrap[index] ? scrapYes : scrapNo"
               />
-              <img v-else class="scrapInfo" @click="scrapAct(item.id)" :src="(scrapSrc = scrapYes)" />
             </div>
           </div>
         </div>
@@ -46,7 +44,8 @@ export default {
       scrapYes: "https://img.icons8.com/plasticine/24/000000/wine-glass.png",
       bottom: false,
       counter: 0,
-      items: []
+      items: [],
+      scrap: []
     };
   },
   computed: {
@@ -62,7 +61,9 @@ export default {
     showDetail(id) {
       this.$router.push(`article?id=${id}`);
     },
-    scrapAct(id, articleUserId, thumbnailPath) {
+
+    scrapAct(index, id, articleUserId, thumbnailPath) {
+      this.clicked = true;
       let token = localStorage.getItem("token");
 
       let config = {
@@ -70,19 +71,20 @@ export default {
           Authorization: `Token ${token}`
         }
       };
+      //db에 영향주는 함수
+
       http
         .get(`/articles/${id}/scrap`, config)
         .then(response => {
           console.log(response);
+          console.log(this.scrap[index]);
+          this.scrap[index] = !this.scrap[index];
+          console.log(this.scrap[index]);
         })
         .catch(response => {
           console.log(response);
           alert("에러가 발생했습니다.");
         });
-      // this.$store.dispatch("doScrap", {
-      //   url: `/articles/${id}/scrap`,
-      //   page: "articlelist"
-      // });
       if (articleUserId) {
         this.$store.dispatch("sendAlarm", {
           url: "/alarms/Share/",
@@ -116,6 +118,7 @@ export default {
           let data = response.data;
           for (let i = 0; i < data.length; i++) {
             this.items.push(data[i]);
+            this.scrap.push(data[i].scrap.includes(this.userId));
           }
           if (this.bottomVisible()) {
             this.addList();
@@ -132,6 +135,9 @@ export default {
       if (bottom) {
         this.addList();
       }
+    },
+    scrap() {
+      console.log(this.scrap);
     }
   }
 };

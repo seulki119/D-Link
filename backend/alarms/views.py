@@ -41,13 +41,18 @@ def ShareMe(request):
     )
     return HttpResponse()
 
-@api_view(['GET', 'DELETE'])
+@api_view(['GET', 'POST', 'DELETE'])
 def alarm(request, user_pk):
     if request.user.pk == user_pk:
         if request.method == 'GET':
-            alarm = Alarm.objects.filter(articleUserId=user_pk)
-            serializer = AlarmSerializser(alarm, many=True)
-            return Response(serializer.data)
+            alarms = Alarm.objects.filter(articleUserId=user_pk)
+            serializer = AlarmSerializser(alarms, many=True)
+        elif request.method == 'POST':
+            alarms = Alarm.objects.filter(articleUserId=user_pk)
+            for alarm in alarms:
+                alarm.isFetch = True
+                alarm.save()
+            serializer = AlarmSerializser(alarms, many=True)
         else:
             alarm = Alarm.objects.filter(articleUserId=user_pk)
             if len(alarm):
@@ -55,5 +60,6 @@ def alarm(request, user_pk):
                 return Response({'message': '정상적으로 삭제되었습니다.'})
             else:
                 return Response({'message': '남은 알림이 없습니다.'})
+        return Response(serializer.data)
     else:
         return Response({'message': '권한이 없습니다.'})

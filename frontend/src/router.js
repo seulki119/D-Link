@@ -160,6 +160,15 @@ const routes = [
       import(
         /* webpackChunkName: "search" */ "./views/Contents/VideoChat.vue"
       ),
+  },
+  {
+    path: "/username",
+    name: "username",
+    beforeEnter: onlyAuthUser,
+    component: () =>
+      import(
+        /* webpackChunkName: "search" */ "./views/accounts/Username.vue"
+      ),
   }
 ]
 

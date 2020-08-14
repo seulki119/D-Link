@@ -75,14 +75,17 @@ export default {
 
       http
         .get(`/articles/${id}/scrap`, config)
-        .then(response => {
-          console.log(response);
-          console.log(this.scrap[index]);
-          this.scrap[index] = !this.scrap[index];
-          console.log(this.scrap[index]);
+        .then(() => {
+          let list = [...this.scrap];
+          list.splice(index, 1, !this.scrap[index]);
+          if (!this.scrap[index]) {
+            this.items[index].scrap.length++;
+          } else {
+            this.items[index].scrap.length--;
+          }
+          this.scrap = list;
         })
-        .catch(response => {
-          console.log(response);
+        .catch(() => {
           alert("에러가 발생했습니다.");
         });
       if (articleUserId) {
@@ -136,7 +139,7 @@ export default {
         this.addList();
       }
     },
-    scrap() {
+    clicked() {
       console.log(this.scrap);
     }
   }

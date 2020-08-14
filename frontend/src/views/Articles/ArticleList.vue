@@ -134,7 +134,7 @@ export default {
   },
   watch: {
     bottom(bottom) {
-      console.log(bottom);
+      // console.log(bottom);
       if (bottom) {
         this.addList();
       }

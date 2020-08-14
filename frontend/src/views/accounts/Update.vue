@@ -52,7 +52,7 @@
               <v-icon right dark>mdi-cloud-upload</v-icon>
             </v-btn>
           </v-slide-x-transition>
-          <v-btn block color="black" class="ma-2 white--text" @click="passwordChange()">
+          <v-btn block color="black" class="ma-2 white--text" @click="ChangePassword()">
             <v-icon left dark>mdi-key-variant</v-icon>패스워드 변경
           </v-btn>
           <v-btn block color="black" class="ma-2 white--text" @click="logout()">
@@ -196,8 +196,8 @@ export default {
         // console.log(res);
       });
     },
-    passwordChange() {
-      this.$router.push("passwordChange");
+    ChangePassword() {
+      this.$router.push("changePassword");
     },
     dataURItoBlob(dataURI) {
       var byteString = atob(dataURI.split(",")[1]);

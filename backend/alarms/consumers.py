@@ -61,3 +61,45 @@ class UserTestConsumer(WebsocketConsumer):
             'alarmType': event['alarmType'],
             'username': event['username'],
         }))
+
+class UserChatConsumer(WebsocketConsumer):
+    def connect(self):
+        self.groupname = self.scope['path'].split('/')[3]
+        print(self.scope['path'].split('/')[3])
+        # self.groupname="shares"
+        self.accept()
+
+        async_to_sync(self.channel_layer.group_add)(
+            self.groupname,
+            self.channel_name
+        )
+
+    def disconnect(self, close_code):
+        async_to_sync(self.channel_layer.group_discard)(
+            self.groupname,
+            self.channel_name
+        )
+
+    def receive(self, text_data):
+        text_data_json = json.loads(text_data)
+
+        async_to_sync(self.channel_layer.group_send)(
+            self.groupname,
+            {
+                'type': 'share_chat_message',
+                'message': text_data_json['message'],
+                'userId': text_data_json['message'],
+                'username': text_data_json['username']
+            }
+        )
+
+    # Receive message from room group
+    def share_chat_message(self, event):
+        print("event={}".format(event))
+
+        # Send message to WebSocket
+        self.send(text_data=json.dumps({
+            'message': event['message'],
+            'userId': event['userId'],
+            'username': event['username']
+        }))

@@ -20,6 +20,7 @@ application = ProtocolTypeRouter({
     "websocket": TokenAuthMiddlewareStack(
         URLRouter([
             re_path(r'ws/test/', consumers.UserTestConsumer),
+            re_path(r'ws/chat/', consumers.UserChatConsumer),
         ])
     ),
 

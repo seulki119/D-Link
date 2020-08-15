@@ -64,9 +64,8 @@ class UserTestConsumer(WebsocketConsumer):
 
 class UserChatConsumer(WebsocketConsumer):
     def connect(self):
-        self.groupname = self.scope['path'].split('/')[3]
-        print(self.scope['path'].split('/')[3])
-        # self.groupname="shares"
+        self.groupname = self.scope['path'].split('/')[4]
+        print(self.scope['path'].split('/')[4])
         self.accept()
 
         async_to_sync(self.channel_layer.group_add)(

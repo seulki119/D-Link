@@ -137,6 +137,15 @@ export default {
     choice() {
       console.log(this.choice);
     }
+  },
+  beforeCreate() {
+    let room = "1"
+    let token = localStorage.getItem("token");
+    this.$store.dispatch("socketConnect", {
+      token: token,
+      room: room,
+      type: 1, 
+    });
   }
 };
 </script>

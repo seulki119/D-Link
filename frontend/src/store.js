@@ -94,7 +94,10 @@ export default new Vuex.Store({
           localStorage.setItem("token", token);
 
           this.dispatch("getUserInfo");
-          this.dispatch("socketConnect", token);
+          this.dispatch("socketConnect", {
+            token: token,
+            type: 0 // 알람 소켓
+          });
         })
         .catch((res) => {
           console.log(res);
@@ -272,7 +275,10 @@ export default new Vuex.Store({
           // 토큰을 로컬스토리지에 저장
           localStorage.setItem("token", token);
           this.dispatch("getUserInfo");
-          this.dispatch("socketConnect", token);
+          this.dispatch("socketConnect", {
+            token: token,
+            type: 0 // 알람 소켓
+          });
         })
         .catch((error) => {
           console.log(error);
@@ -291,7 +297,10 @@ export default new Vuex.Store({
           // 토큰을 로컬스토리지에 저장
           localStorage.setItem("token", token);
           this.dispatch("getUserInfo");
-          this.dispatch("socketConnect", token);
+          this.dispatch("socketConnect", {
+            token: token,
+            type: 0 // 알람 소켓
+          });
         })
         .catch((error) => {
           console.log(error);
@@ -329,16 +338,30 @@ export default new Vuex.Store({
       // 소켓 닫혀있는 경우
       if (socket == null) {
         let token = localStorage.getItem("token");
-        this.dispatch("socketConnect", token)
+        this.dispatch("socketConnect", {
+          token: token,
+          type: 0 // 알람 소켓
+        });
       }
     },
-    socketConnect({ commit, context }, token) {
-      let socket = new WebSocket(`wss://i3b307.p.ssafy.io/ws/test/${token}`);
-      // 데이터 수신
+    socketConnect({ commit, context }, payload) {
+      const SERVER_URL = "ws://127.0.0.1:8000"
+      // wss://127.0.0.1:8000
+      if (payload.type == 0) {
+        var socket = new WebSocket(`${SERVER_URL}/ws/test/${payload.token}`);
+      }
+      else {
+        var socket = new WebSocket(`${SERVER_URL}/ws/chat/${payload.token}/room_${payload.room}`);
+      }
       socket.onmessage = function (res) {
         var msg = JSON.parse(res.data);
         // console.log(msg)
-        commit("setAlarms", 1)
+        if (payload.type == 0) {
+          commit("setAlarms", 1)
+        }
+        else {
+          // 채팅
+        }
       };
 
       socket.onopen = function (e) {

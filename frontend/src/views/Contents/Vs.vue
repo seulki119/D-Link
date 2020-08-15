@@ -128,7 +128,7 @@ export default {
       };
       let data = new FormData();
       data.append("select", this.choice === 1 ? "A" : "B");
-      http.post(`/versus/${this.id}/vote`, data, config).then(res => {
+      http.post(`/versus/${this.id}/vote/`, data, config).then(res => {
         console.log(res);
       });
     }

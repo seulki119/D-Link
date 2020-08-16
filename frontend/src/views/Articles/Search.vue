@@ -71,6 +71,9 @@ export default {
     ...mapGetters(["userId"])
   },
   created() {
+    window.addEventListener("scroll", () => {
+      this.bottom = this.bottomVisible();
+    });
     let token = localStorage.getItem("token");
 
     let config = {

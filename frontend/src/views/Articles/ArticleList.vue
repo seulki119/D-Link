@@ -119,13 +119,16 @@ export default {
         .then(response => {
           this.counter += 10;
           let data = response.data;
+          if (data.length === 0) {
+            this.counter -= 10;
+          }
           for (let i = 0; i < data.length; i++) {
             this.items.push(data[i]);
             this.scrap.push(data[i].scrap.includes(this.userId));
           }
-          if (this.bottomVisible()) {
-            this.addList();
-          }
+          // if (this.bottomVisible()) {
+          //   this.addList();
+          // }
         })
         .catch(err => {
           console.log(err);

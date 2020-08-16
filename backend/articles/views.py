@@ -119,6 +119,7 @@ def hashtag(request):
 @permission_classes([IsAuthenticated])
 def search(request):
     hashtags = request.data.get('hashtags')
+    counter = request.data['counter']
     is_first = False
     for hashtag in hashtags.split('#'):
         if hashtag:
@@ -129,6 +130,8 @@ def search(request):
                 searched_articles = Article.objects.filter(hashtag=hashtag_id).distinct()
                 articles = (articles | searched_articles).distinct()
             is_first = True
+            
+    articles = articles.exclude(user=request.user).order_by('-pk')[counter:][:10]
     serializer = ArticleListSerializer(articles, many=True)
     return Response(serializer.data)
 

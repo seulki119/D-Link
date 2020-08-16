@@ -216,3 +216,5 @@ CACHES = {
         }
     }
 }
+
+FILE_UPLOAD_MAX_MEMORY_SIZE=10000000

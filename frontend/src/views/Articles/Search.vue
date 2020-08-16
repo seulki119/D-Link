@@ -85,9 +85,6 @@ export default {
       }
       this.tags = tmp;
     });
-    window.addEventListener("scroll", () => {
-      this.bottom = this.bottomVisible();
-    });
   },
   methods: {
     showDetail(id) {
@@ -107,24 +104,33 @@ export default {
       for (let t in this.tag) {
         searchWord += "#" + this.tag[t];
       }
-      const fd = new FormData();
-      fd.append("hashtags", searchWord);
-      fd.append("counter", this.counter);
+      // const fd = new FormData();
+      // fd.append("hashtags", searchWord);
+      // fd.append("counter", this.counter);
       http
-        .post("/articles/search/", fd, config)
+        .post(
+          "/articles/search/",
+          { hashtags: searchWord, counter: this.counter },
+          config
+        )
         .then(response => {
+          console.log(response);
           this.counter += 10;
           let data = response.data;
           for (let i = 0; i < data.length; i++) {
             this.searchList.push(data[i]);
           }
-          if (this.bottomVisible()) {
-            this.search();
-          }
         })
         .catch(err => {
           console.log(err);
         });
+    },
+    bottomVisible() {
+      const scrollY = window.scrollY;
+      const visible = document.documentElement.clientHeight;
+      const pageHeight = document.documentElement.scrollHeight;
+      const bottomOfPage = visible + scrollY >= pageHeight;
+      return bottomOfPage || pageHeight < visible;
     }
   },
   watch: {

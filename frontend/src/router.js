@@ -98,15 +98,15 @@ const routes = [
         /* webpackChunkName: "notifications" */ "./views/accounts/Notifications.vue"
       ),
   },
-  // {
-  //   path: "/passwordChange",
-  //   name: "passwordChange",
-  //   beforeEnter: onlyAuthUser,
-  //   component: () =>
-  //     import(
-  //       /* webpackChunkName: "passwordChange" */ "./views/accounts/PasswordChange.vue"
-  //     ),
-  // },
+  {
+    path: "/changePassword",
+    name: "changePassword",
+    beforeEnter: onlyAuthUser,
+    component: () =>
+      import(
+        /* webpackChunkName: "changePassword" */ "./views/accounts/ChangePassword.vue"
+      ),
+  },
   {
     path: "/search",
     name: "search",
@@ -159,6 +159,15 @@ const routes = [
     component: () =>
       import(
         /* webpackChunkName: "search" */ "./views/Contents/VideoChat.vue"
+      ),
+  },
+  {
+    path: "/username",
+    name: "username",
+    beforeEnter: onlyAuthUser,
+    component: () =>
+      import(
+        /* webpackChunkName: "search" */ "./views/accounts/Username.vue"
       ),
   }
 ]

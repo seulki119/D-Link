@@ -124,26 +124,34 @@ export default {
     username() {
       if (this.username.length === 0) {
         this.valid = false;
-        this.errors = this.previousUsernamevalid ? [] : ["required"];
+        this.errors = this.previousUsernamevalid ? [] : ["필수 입력칸입니다."];
       } else if (this.username.length > 10) {
         this.valid = false;
         this.errors = this.valid ? [] : ["Max 10 characters"];
       } else {
-        this.valid = true;
-        const fd = new FormData();
-        fd.append("username", this.username);
-        http.post("/accounts/duplicated/username/", fd).then(res => {
-          if (res.data.message === "이미 존재하는 닉네임입니다.") {
-            if (this.previousUsername === this.username) {
-              this.valid = true;
+        var re = /^([\wㄱ-ㅎ가-힣/./+/-]*)$/;
+        if (!re.test(this.username)) {
+          this.valid - false;
+          this.errorsName = this.valid
+            ? []
+            : ["닉네임은 문자, 숫자, +, -, _ 만 가능합니다."];
+        } else {
+          this.valid = true;
+          const fd = new FormData();
+          fd.append("username", this.username);
+          http.post("/accounts/duplicated/username/", fd).then(res => {
+            if (res.data.message === "이미 존재하는 닉네임입니다.") {
+              if (this.previousUsername === this.username) {
+                this.valid = true;
+              } else {
+                this.valid = false;
+              }
             } else {
-              this.valid = false;
+              this.valid = true;
             }
-          } else {
-            this.valid = true;
-          }
-          this.errors = this.valid ? [] : ["이미 존재하는 닉네임입니다."];
-        });
+            this.errors = this.valid ? [] : ["이미 존재하는 닉네임입니다."];
+          });
+        }
       }
     }
   },

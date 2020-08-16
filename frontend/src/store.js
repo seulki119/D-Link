@@ -163,7 +163,8 @@ export default new Vuex.Store({
           //여기서 나중에 userinfo에서 취향 여부를 확인하고 취향을 선택 안 했을경우,
           //taste로 가게 한다.!!
           commit("loginSuccess", userInfo);
-          if (userInfo.username === null) {
+          console.log(userInfo.username)
+          if (userInfo.username.includes("@")) {
             alert("소셜 로그인 가입 하신 분은 유저네임을 정해주세요!");
             router.push({ name: "username" })
           } else if (userInfo.taste1 === null || userInfo.taste2 === null) {
@@ -175,8 +176,6 @@ export default new Vuex.Store({
           } else {
             router.push("articlelist");
           }
-
-
         })
         .catch((response) => {
           console.log(response);

@@ -21,7 +21,7 @@
               <v-icon right dark>mdi-cloud-upload</v-icon>
             </v-btn>
           </v-slide-x-transition>
-          <v-btn block color="black" class="ma-2 white--text" @click="passwordChange()">
+          <v-btn block color="black" class="ma-2 white--text" @click="ChangePassword()">
             <v-icon left dark>mdi-key-variant</v-icon>패스워드 변경
           </v-btn>
         </v-flex>
@@ -75,26 +75,34 @@ export default {
     username() {
       if (this.username.length === 0) {
         this.valid = false;
-        this.errors = this.previousUsernamevalid ? [] : ["required"];
+        this.errors = this.previousUsernamevalid ? [] : ["필수 입력칸입니다."];
       } else if (this.username.length > 10) {
         this.valid = false;
         this.errors = this.valid ? [] : ["Max 10 characters"];
       } else {
-        this.valid = true;
-        const fd = new FormData();
-        fd.append("username", this.username);
-        http.post("/accounts/duplicated/username/", fd).then(res => {
-          if (res.data.message === "이미 존재하는 닉네임입니다.") {
-            if (this.previousUsername === this.username) {
-              this.valid = true;
+        var re = /^([\wㄱ-ㅎ가-힣/./+/-]*)$/;
+        if (!re.test(this.username)) {
+          this.valid - false;
+          this.errorsName = this.valid
+            ? []
+            : ["닉네임은 문자, 숫자, +, -, _ 만 가능합니다."];
+        } else {
+          this.valid = true;
+          const fd = new FormData();
+          fd.append("username", this.username);
+          http.post("/accounts/duplicated/username/", fd).then(res => {
+            if (res.data.message === "이미 존재하는 닉네임입니다.") {
+              if (this.previousUsername === this.username) {
+                this.valid = true;
+              } else {
+                this.valid = false;
+              }
             } else {
-              this.valid = false;
+              this.valid = true;
             }
-          } else {
-            this.valid = true;
-          }
-          this.errors = this.valid ? [] : ["이미 존재하는 닉네임입니다."];
-        });
+            this.errors = this.valid ? [] : ["이미 존재하는 닉네임입니다."];
+          });
+        }
       }
     }
   },
@@ -122,6 +130,24 @@ export default {
       http.put("/accounts/{username}/", fd, config).then(() => {
         // console.log(res);
       });
+    },
+    ChangePassword() {
+      this.$router.push("changePassword");
+    },
+    dataURItoBlob(dataURI) {
+      var byteString = atob(dataURI.split(",")[1]);
+      var mimeString = dataURI
+        .split(",")[0]
+        .split(":")[1]
+        .split(";")[0];
+      var ab = new ArrayBuffer(byteString.length);
+      var ia = new Uint8Array(ab);
+      for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+
+      var bb = new Blob([ab], { type: mimeString });
+      return bb;
     },
     passwordChange() {
       this.$router.push("passwordChange");

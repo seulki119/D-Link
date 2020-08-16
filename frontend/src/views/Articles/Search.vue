@@ -62,7 +62,9 @@ export default {
     return {
       tag: [],
       tags: [],
-      searchList: []
+      searchList: [],
+      counter: 0,
+      bottom: false
     };
   },
   computed: {
@@ -82,6 +84,9 @@ export default {
         tmp.push(res.data[t].tag);
       }
       this.tags = tmp;
+    });
+    window.addEventListener("scroll", () => {
+      this.bottom = this.bottomVisible();
     });
   },
   methods: {

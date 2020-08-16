@@ -109,7 +109,7 @@ export default {
       }
       const fd = new FormData();
       const canvas = this.$refs.clipper.clip(); //call component's clip method
-      this.resultURL = canvas.toDataURL("image/jpeg", 0.6);
+      this.resultURL = canvas.toDataURL("image/jpeg", 0.7);
       let blob = this.dataURItoBlob(this.resultURL);
       this.file = new File([blob], this.file.name);
       fd.append("image", this.file);

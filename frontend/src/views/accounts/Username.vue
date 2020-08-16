@@ -12,6 +12,7 @@
               label="닉네임"
               required
               maxlength="10"
+              @keydown.enter="saveInfo"
             ></v-text-field>
             <v-container fluid>
               <v-row align="center" justify="center">
@@ -47,14 +48,12 @@ export default {
   data: () => ({
     username: "",
     errorsName: [],
-    valid: false,
-    saving: false,
-    saved: false
+    valid: false
   }),
   watch: {
     username() {
       let valid = false;
-
+      console.log(this.username);
       if (this.username.length === 0) {
         valid = false;
         this.errorsName = valid ? [] : ["필수 입력칸입니다."];
@@ -83,12 +82,7 @@ export default {
     }
   },
   methods: {
-    updateInfo() {
-      this.saving = true;
-      setTimeout(() => this.saveInfo(), 1000);
-    },
     saveInfo() {
-      this.saving = false;
       this.valid = true;
       let token = localStorage.getItem("token");
       let config = {

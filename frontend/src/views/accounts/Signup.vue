@@ -289,12 +289,12 @@ export default {
         valid = false;
         this.errorsName = valid ? [] : ["Max 10 characters"];
       } else {
-        var re = /^([\wㄱ-ㅎ가-힣@/./+/-]*)$/;
+        var re = /^([\wㄱ-ㅎ가-힣/./+/-]*)$/;
         if (!re.test(this.name)) {
           valid - false;
           this.errorsName = valid
             ? []
-            : ["닉네임은 문자, 숫자, @ . + - _ 만 가능합니다."];
+            : ["닉네임은 문자, 숫자, ., +, -, _ 만 가능합니다."];
         } else {
           valid = true;
           const fd = new FormData();

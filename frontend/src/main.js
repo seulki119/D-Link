@@ -7,6 +7,7 @@ import GAuth from 'vue-google-oauth2'
 import VueResource from 'vue-resource';
 import VueCookie from 'vue-cookie';
 import VuejsClipper from 'vuejs-clipper';
+import VueApexCharts from 'vue-apexcharts'
 
 Vue.config.productionTip = false;
 // const gauthOption = {
@@ -24,7 +25,8 @@ Vue.use(VuejsClipper, {
     clipperFixed: true,
   }
 })
-
+Vue.use(VueApexCharts)
+Vue.component('apexchart', VueApexCharts)
 new Vue({
   router,
   store,

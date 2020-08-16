@@ -138,9 +138,6 @@ export default {
       if (bottom) {
         this.addList();
       }
-    },
-    clicked() {
-      console.log(this.scrap);
     }
   }
 };

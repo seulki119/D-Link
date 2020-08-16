@@ -8,10 +8,10 @@ from rest_framework import status
 from rest_framework import generics  
 from rest_framework.authtoken.models import Token
 from .serializers import ChangePasswordSerializer
-from .serializers import UserSerializer, UserTasteSerializer, UserUpdateSerializer, UserImageUpdateSerializer, UserSimpleSerializer
+from .serializers import UserSerializer, UserTasteSerializer, UserUpdateSerializer, UserImageUpdateSerializer, UserSimpleSerializer, UsernameSerializer
 from pprint import pprint
 import requests
-
+from .models import User as AUTH_USER
 # Create your views here.
 
 @api_view(['POST', 'PUT', 'DELETE'])
@@ -73,8 +73,6 @@ def taste(request):
         return Response({'message': '유효하지 않은 입력입니다.'})
 
 @api_view(['POST'])
-@authentication_classes([])
-@permission_classes([])
 def email_duplicated(request):
     User = get_user_model()
     try:
@@ -84,8 +82,6 @@ def email_duplicated(request):
         return Response({'message': '사용가능한 이메일입니다.'})
 
 @api_view(['POST'])
-@authentication_classes([])
-@permission_classes([])
 def username_duplicated(request):
     User = get_user_model()
     try:
@@ -119,13 +115,9 @@ def google_login(request):
     # pprint(profile_response_json)
 
     email = profile_response_json.get('email')
-    username = profile_response_json.get('name')
     last_name = profile_response_json.get('family_name')
     first_name = profile_response_json.get('given_name')
     User = get_user_model()
-    # username 유니크화
-    if User.objects.filter(username=username).exists():
-        username = email.split('@')[0]
 
     try:
         user_in_db = User.objects.get(email=email)
@@ -134,7 +126,7 @@ def google_login(request):
     except User.DoesNotExist:
         new_user_to_db = User.objects.create(
             email=email,
-            username=username,
+            username=email, # 임시 닉네임
             last_name=last_name,
             first_name=first_name,
         )
@@ -162,11 +154,7 @@ def kakao_login(request):
     # pprint(kakao_account_json)
 
     email = kakao_account_json.get('email')
-    username = kakao_account_json.get('profile').get('nickname')
     User = get_user_model()
-    # username 유니크화
-    if User.objects.filter(username=username).exists():
-        username = email.split('@')[0]
 
     try:
         user_in_db = User.objects.get(email=email)
@@ -175,7 +163,7 @@ def kakao_login(request):
     except User.DoesNotExist:
         new_user_to_db = User.objects.create(
             email=email,
-            username=username,
+            username=email, # 임시 닉네임
         )
         new_user_to_db.set_unusable_password()
         new_user_to_db.save()
@@ -199,3 +187,27 @@ def image_update(request, username):
 def user_info(request):
     serializer = UserSimpleSerializer(request.user)
     return Response(serializer.data)
+
+@api_view(['GET'])
+@authentication_classes([])
+@permission_classes([])
+def emailpw(request, email_value):
+    print(email_value)
+    
+    token_pk =- 1
+    if  AUTH_USER.objects.filter(email=email_value).exists():
+        token_pk = AUTH_USER.objects.filter(email=email_value)[0].id
+        token_user = Token.objects.filter(user_id=token_pk)[0].key
+        print(token_user)
+        return Response({"token_user":"{}".format(token_user)})
+    else :
+        return Response("가입하지 않은 회원입니다")
+
+@api_view(['POST'])
+def username(request):
+    serializer = UsernameSerializer(data=request.data, instance=request.user)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(request.data)
+
+   

@@ -12,10 +12,11 @@ from django.conf import settings
 
 # Create your views here.
 
-@api_view(['GET', 'POST'])
+@api_view(['PATCH', 'POST'])
 def index(request):
-    if request.method == 'GET':
-        articles = Article.objects.all()
+    if request.method == 'PATCH':
+        counter = request.data['counter']
+        articles = Article.objects.exclude(user=request.user).order_by('-pk')[counter:][:10]
         serializer = ArticleListSerializer(articles, many=True)
         return Response(serializer.data)
     else:

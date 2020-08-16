@@ -56,7 +56,7 @@ def detail(request, topic_pk):
         return Response({'message': '권한이 없습니다.'})
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def vote(request, topic_pk):
     select = request.data.get('select')

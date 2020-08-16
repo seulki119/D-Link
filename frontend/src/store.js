@@ -55,7 +55,11 @@ export default new Vuex.Store({
     },
     // item list
     setItems(state, payload) {
-      state.items = payload;
+      if (state.items.length != 0) {
+        state.items.push(payload);
+      } else {
+        state.items = payload;
+      }
     },
     // item 한개
     setItem(state, payload) {
@@ -183,17 +187,37 @@ export default new Vuex.Store({
         headers: {
           Authorization: `Token ${token}`,
         },
-      };
+      }
+      console.log(payload.addr)
       http
-        .get(payload, config)
+        .patch(payload.addr, { counter: payload.counter }, config)
         .then((response) => {
-          // console.log(response);
+          console.log(response);
           context.commit("setItems", response.data);
         })
         .catch(() => {
           alert("에러가 발생했습니다.");
         });
     },
+    // getArticles(context, payload) {
+    //   let token = localStorage.getItem("token");
+
+    //   let config = {
+    //     headers: {
+    //       Authorization: `Token ${token}`,
+    //       counter: 0
+    //     },
+    //   }
+    //   http
+    //     .get(payload, config)
+    //     .then((response) => {
+    //       console.log(response);
+    //       context.commit("setItems", response.data);
+    //     })
+    //     .catch(() => {
+    //       alert("에러가 발생했습니다.");
+    //     });
+    // },
     getArticle(context, payload) {
       let token = localStorage.getItem("token");
 
@@ -225,18 +249,15 @@ export default new Vuex.Store({
         .get(payload.url, config)
         .then((response) => {
           console.log(response);
-          // scrap처리 후 카운트 변경을 위해 데이터를 다시 받아온다.
           console.log(payload.url);
-          if (payload.page == "articlelist") {
-            this.dispatch("getArticles", "/articles");
-          } else if (payload.page == "article") {
-            this.dispatch("getArticle", `/articles/${payload.id}`);
-          }
         })
         .catch((response) => {
           console.log(response);
           alert("에러가 발생했습니다.");
-        });
+        }).finally(() => {
+          this.dispatch("getArticle", `/articles/${payload.id}`);
+        })
+      this.dispatch("getArticle", `/articles/${payload.id}`);
     },
     googleLogin(context, authCode) {
       http
@@ -297,6 +318,10 @@ export default new Vuex.Store({
         .post(payload.url, body, config)
         .then((res) => {
           console.log(res);
+          return;
+        }).catch(err => {
+          console.log(err)
+          return;
         })
     },
     checkSocket({ dispatch, commit }, context) {
@@ -308,7 +333,7 @@ export default new Vuex.Store({
       }
     },
     socketConnect({ commit, context }, token) {
-      let socket = new WebSocket(`wss://i3b307.p.ssafy.io/ws/test/${token}`);
+      let socket = new WebSocket(`ws://127.0.0.1:8000/ws/test/${token}`);
       // 데이터 수신
       socket.onmessage = function (res) {
         var msg = JSON.parse(res.data);

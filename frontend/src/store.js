@@ -163,8 +163,11 @@ export default new Vuex.Store({
           //여기서 나중에 userinfo에서 취향 여부를 확인하고 취향을 선택 안 했을경우,
           //taste로 가게 한다.!!
           commit("loginSuccess", userInfo);
-
-          if (userInfo.taste1 === null || userInfo.taste2 === null) {
+          console.log(userInfo.username)
+          if (userInfo.username.includes("@")) {
+            alert("소셜 로그인 가입 하신 분은 유저네임을 정해주세요!");
+            router.push({ name: "username" })
+          } else if (userInfo.taste1 === null || userInfo.taste2 === null) {
             alert("주류 취향을 선택하고 d-link를 이용해주세요!");
             router.push({
               name: "taste",
@@ -173,8 +176,6 @@ export default new Vuex.Store({
           } else {
             router.push("articlelist");
           }
-
-
         })
         .catch((response) => {
           console.log(response);
@@ -333,7 +334,7 @@ export default new Vuex.Store({
       }
     },
     socketConnect({ commit, context }, token) {
-      let socket = new WebSocket(`ws://127.0.0.1:8000/ws/test/${token}`);
+      let socket = new WebSocket(`wss://i3b307.p.ssafy.io/ws/test/${token}`);
       // 데이터 수신
       socket.onmessage = function (res) {
         var msg = JSON.parse(res.data);

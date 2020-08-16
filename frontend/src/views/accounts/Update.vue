@@ -1,39 +1,8 @@
 <template>
   <v-container max-width="600" min-width="300">
     <v-card class="mx-auto pa-5" max-width="600">
-      <!-- <v-row class="pa-5" no-gutters> -->
       <v-layout row wrap class="pa-5">
-        <v-flex xs12 sm6 md4 lg3 x12>
-          <image-input v-model="avatar">
-            <div slot="activator">
-              <v-avatar size="136px" v-ripple v-if="!previous && !avatar" class="grey lighten-3">
-                <span>Click to add avatar</span>
-              </v-avatar>
-              <v-avatar size="136px" v-ripple v-else-if="!avatar">
-                <img :src="`//i3b307.p.ssafy.io/${previous}`" alt />
-              </v-avatar>
-              <v-avatar size="136px" v-ripple v-else>
-                <img :src="avatar.imageURL" alt="avatar" />
-              </v-avatar>
-            </div>
-          </image-input>
-          <v-slide-x-transition>
-            <clipper-fixed
-              class="my-clipper"
-              ref="clipper"
-              v-if="avatar && !saved"
-              :src="avatar.imageURL"
-              rotate
-              round
-            ></clipper-fixed>
-          </v-slide-x-transition>
-          <v-slide-x-transition>
-            <div v-if="avatar && saved == false">
-              <v-btn class="primary" @click="uploadImage" :loading="saving">Save Avatar</v-btn>
-            </div>
-          </v-slide-x-transition>
-        </v-flex>
-        <v-flex xs12 sm6 md4 lg3 x12>
+        <v-flex>
           <v-container v-model="info">
             <v-text-field v-model="username" label="Username" :error-messages="errors"></v-text-field>
             <v-text-field v-model="email" label="Email" disabled></v-text-field>
@@ -55,28 +24,20 @@
           <v-btn block color="black" class="ma-2 white--text" @click="passwordChange()">
             <v-icon left dark>mdi-key-variant</v-icon>패스워드 변경
           </v-btn>
-          <v-btn block color="black" class="ma-2 white--text" @click="logout()">
-            <v-icon left dark>mdi-logout</v-icon>로그아웃
-          </v-btn>
         </v-flex>
       </v-layout>
-      <!-- </v-row> -->
     </v-card>
   </v-container>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
-import ImageInput from "./ImageInput.vue";
 import http from "@/util/http-common";
 export default {
   name: "app",
   data() {
     return {
       info: null,
-      avatar: null,
-      previous: null,
-      image: null,
       saving: false,
       saved: false,
       updated: true,
@@ -91,9 +52,6 @@ export default {
   computed: {
     ...mapState(["userInfo"])
   },
-  components: {
-    ImageInput: ImageInput
-  },
   beforeCreate() {
     let token = localStorage.getItem("token");
     let config = {
@@ -102,7 +60,6 @@ export default {
       }
     };
     http.post("/accounts/{temp}/", "", config).then(res => {
-      this.previous = res.data.image;
       this.intro = res.data.intro;
       this.username = res.data.username;
       this.previousUsername = res.data.username;
@@ -110,12 +67,6 @@ export default {
     });
   },
   watch: {
-    avatar: {
-      handler: function() {
-        this.saved = false;
-      },
-      deep: true
-    },
     info: {
       handler: function() {
         this.updated = false;
@@ -149,31 +100,7 @@ export default {
   },
   methods: {
     ...mapActions(["logout"]),
-    uploadImage() {
-      this.saving = true;
-      setTimeout(() => this.savedAvatar(), 1000);
-    },
-    savedAvatar() {
-      this.saving = false;
-      this.saved = true;
-      let token = localStorage.getItem("token");
-      let config = {
-        headers: {
-          Authorization: `Token ${token}`
-        }
-      };
-      const fd = new FormData();
-      let file = this.avatar.formData.get("file");
-      const canvas = this.$refs.clipper.clip();
-      let resultURL = canvas.toDataURL("image/jpeg", 1);
-      let blob = this.dataURItoBlob(resultURL);
-      this.image = new File([blob], file.name);
-      fd.append("image", this.image);
-      http.put("/accounts/min/image/", fd, config).then(res => {
-        this.previous = res.data.image;
-        this.avatar = null;
-      });
-    },
+
     updateInfo() {
       this.saving = true;
       setTimeout(() => this.saveInfo(), 1000);
@@ -198,21 +125,6 @@ export default {
     },
     passwordChange() {
       this.$router.push("passwordChange");
-    },
-    dataURItoBlob(dataURI) {
-      var byteString = atob(dataURI.split(",")[1]);
-      var mimeString = dataURI
-        .split(",")[0]
-        .split(":")[1]
-        .split(";")[0];
-      var ab = new ArrayBuffer(byteString.length);
-      var ia = new Uint8Array(ab);
-      for (var i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-      }
-
-      var bb = new Blob([ab], { type: mimeString });
-      return bb;
     }
   }
 };

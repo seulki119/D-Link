@@ -202,12 +202,3 @@ def emailpw(request, email_value):
         return Response({"token_user":"{}".format(token_user)})
     else :
         return Response("가입하지 않은 회원입니다")
-
-@api_view(['POST'])
-def username(request):
-    serializer = UsernameSerializer(data=request.data, instance=request.user)
-    if serializer.is_valid():
-        serializer.save()
-    return Response(request.data)
-
-   

@@ -176,6 +176,15 @@
           <v-btn color="primary" :disabled="!valid" class="mr-4" @click="submit">다음</v-btn>
         </v-form>
       </ValidationObserver>
+      <!--  -->
+      <v-alert
+        v-model="alert"
+        type="error"
+        dense
+        outlined
+        dismissible
+        class="ma-5"
+      >{{ errorsCommonPwd }}</v-alert>
     </v-row>
   </v-container>
 </template>
@@ -237,9 +246,14 @@ export default {
     errorsEmail: [],
     errorsName: [],
     valid: false,
-    dialog: false
+    dialog: false,
+    errorsCommonPwd: "유추하기 쉬운 비밀번호입니다.",
+    alert: false
   }),
   watch: {
+    password() {
+      this.alert = false;
+    },
     email() {
       let valid = false;
 
@@ -316,8 +330,13 @@ export default {
               params: { username: this.name }
             });
           })
-          .catch(response => {
-            console.log(response);
+          .catch(error => {
+            var message = error.message;
+
+            if (message.includes("status code 400")) {
+              this.alert = true;
+              this.valid = false;
+            }
           });
       }
     }

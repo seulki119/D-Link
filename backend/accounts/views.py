@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework import generics  
 from rest_framework.authtoken.models import Token
 from .serializers import ChangePasswordSerializer
-from .serializers import UserSerializer, UserTasteSerializer, UserUpdateSerializer, UserImageUpdateSerializer, UserSimpleSerializer, UsernameSerializer
+from .serializers import UserSerializer, UserTasteSerializer, UserUpdateSerializer, UserImageUpdateSerializer, UserSimpleSerializer
 from pprint import pprint
 import requests
 from .models import User as AUTH_USER

@@ -15,6 +15,7 @@ export default new Vuex.Store({
     item: {},
     alarms: 0, //알람 숫자 기록용
     socket: null,
+    chatSocket: null,
   },
   getters: {
     userId(state) {
@@ -67,6 +68,9 @@ export default new Vuex.Store({
     },
     setSocket(state, socket) {
       state.socket = socket;
+    },
+    setChatSocket(state, socket) {
+      state.chatSocket = socket;
     },
     removeSocket(state) {
       state.socket = null;
@@ -362,6 +366,7 @@ export default new Vuex.Store({
         }
         else {
           // 채팅
+          console.log(msg)
         }
       };
 
@@ -374,7 +379,12 @@ export default new Vuex.Store({
       };
 
       if (socket.readyState < 2) {
-        this.commit("setSocket", socket)
+        if (payload.type == 0) {
+          this.commit("setSocket", socket)
+        }
+        else {
+          this.commit("setChatSocket", socket)
+        }
       }
     },
     alarmReset({ commit }) {

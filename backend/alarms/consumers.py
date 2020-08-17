@@ -81,20 +81,20 @@ class UserChatConsumer(WebsocketConsumer):
 
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
-
+        print(text_data_json)
         async_to_sync(self.channel_layer.group_send)(
             self.groupname,
             {
                 'type': 'share_chat_message',
                 'message': text_data_json['message'],
-                'userId': text_data_json['message'],
+                'userId': text_data_json['userId'],
                 'username': text_data_json['username']
             }
         )
 
     # Receive message from room group
     def share_chat_message(self, event):
-        print("event={}".format(event))
+        # print("event={}".format(event))
 
         # Send message to WebSocket
         self.send(text_data=json.dumps({

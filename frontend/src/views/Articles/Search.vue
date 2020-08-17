@@ -33,11 +33,7 @@
       <v-card class="mx-auto pa-5" max-width="600">
         <StackGrid :columnWidth="210" :gutterX="20" :gutterY="20">
           <!-- you component like this -->
-          <div
-            class="stack-item"
-            v-for="(item, index) in searchList.slice().reverse()"
-            :key="index"
-          >
+          <div class="stack-item" v-for="(item, index) in searchList" :key="index">
             <!-- some thing have fixed height-->
             <div v-if="item.user.id != userId" class="stack-item stack-item-6">
               <img
@@ -66,13 +62,18 @@ export default {
     return {
       tag: [],
       tags: [],
-      searchList: []
+      searchList: [],
+      counter: 0,
+      bottom: false
     };
   },
   computed: {
     ...mapGetters(["userId"])
   },
   created() {
+    window.addEventListener("scroll", () => {
+      this.bottom = this.bottomVisible();
+    });
     let token = localStorage.getItem("token");
 
     let config = {
@@ -101,30 +102,49 @@ export default {
           Authorization: `Token ${token}`
         }
       };
-
       let searchWord = "";
 
       for (let t in this.tag) {
         searchWord += "#" + this.tag[t];
       }
-      const fd = new FormData();
-      console.log(searchWord);
-      fd.append("hashtags", searchWord);
+      // const fd = new FormData();
+      // fd.append("hashtags", searchWord);
+      // fd.append("counter", this.counter);
       http
-        .post("/articles/search/", fd, config)
-        .then(res => {
-          console.log(res);
-          this.searchList = res.data;
+        .post(
+          "/articles/search/",
+          { hashtags: searchWord, counter: this.counter },
+          config
+        )
+        .then(response => {
+          console.log(response);
+          this.counter += 10;
+          let data = response.data;
+          for (let i = 0; i < data.length; i++) {
+            this.searchList.push(data[i]);
+          }
         })
         .catch(err => {
-          console.log(err.response);
+          console.log(err);
         });
+    },
+    bottomVisible() {
+      const scrollY = window.scrollY;
+      const visible = document.documentElement.clientHeight;
+      const pageHeight = document.documentElement.scrollHeight;
+      const bottomOfPage = visible + scrollY >= pageHeight;
+      return bottomOfPage || pageHeight < visible;
     }
   },
   watch: {
     tag(val) {
       if (val.length > 3) {
         this.$nextTick(() => this.tag.pop());
+      }
+    },
+    bottom(bottom) {
+      if (bottom) {
+        this.search();
       }
     }
   }

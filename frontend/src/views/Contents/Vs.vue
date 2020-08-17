@@ -29,10 +29,10 @@
         </v-toolbar>
         <v-row class="justify-center mx-auto">
           <v-layout row class="align-end">
-            <v-flex column>
+            <v-flex column xs12 sm6 md6 lg6 x6 class="ma-5">
               <v-img :src="`//i3b307.p.ssafy.io/${image[last]}`" class="grey lighten-2 ma-3"></v-img>
             </v-flex>
-            <v-flex column>
+            <v-flex column xs12 sm6 md6 lg6 x6 class="ma-5">
               <div class="align-center">
                 <apexchart type="donut" :options="chartOptions" :series="series"></apexchart>
               </div>
@@ -76,7 +76,7 @@ export default {
           pie: {
             donut: {
               labels: {
-                show: true,
+                show: false,
                 total: {
                   showAlways: true,
                   show: true,

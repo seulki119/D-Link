@@ -185,7 +185,7 @@
             :items="items"
             label="태그 입력하세요"
             :maxlength="max"
-            @keypress="isNotSpecail"
+            @keypress="isNotSpecial"
             multiple
             chips
             dense
@@ -277,18 +277,20 @@ export default {
         setTimeout(() => {
           let array = this.item.commentSet;
           if (array !== undefined) {
-            for (let index = 0; index < array.length; index++) {
+            for (let index = array.length - 1; index >= 0; index--) {
+              if (index == array.length - 1) {
+                this.repComment.id = array[index].id;
+                this.repComment.userName = array[index].user.username;
+                this.repComment.content = array[index].content;
+                this.repComment.userImage = array[index].user.image;
+              }
+
               if (array[index].user.id === this.userId) {
                 this.repComment.id = array[index].id;
                 this.repComment.userName = array[index].user.username;
                 this.repComment.content = array[index].content;
                 this.repComment.userImage = array[index].user.image;
                 break;
-              } else if (index == array.length - 1) {
-                this.repComment.id = array[index].id;
-                this.repComment.userName = array[index].user.username;
-                this.repComment.content = array[index].content;
-                this.repComment.userImage = array[index].user.image;
               }
             }
           }
@@ -356,6 +358,18 @@ export default {
             "getArticle",
             `/articles/${this.$route.query.id}`
           );
+
+          if (this.repComment === null) {
+            this.repComment.userName = this.userId;
+            this.repComment.content = this.myComment;
+            this.repComment.userImage = this.userImage;
+            //
+            // this.repComment.id = array[index].id;
+            //     this.repComment.userName = array[index].user.username;
+            //     this.repComment.content = array[index].content;
+            //     this.repComment.userImage = array[index].user.image;
+          }
+          console.log("THIS.REPCOMM : " + this.repComment);
           this.myComment = "";
         })
         .catch(err => {
@@ -442,22 +456,19 @@ export default {
       const fd = new FormData();
       // fd.append("image", this.item.image);
       fd.append("content", this.content);
-      fd.append("hashtag", tags);
-
-      console.log(fd);
-      console.log(config);
+      fd.append("hashtags", tags);
 
       http
         .put(`/articles/${this.item.id}/`, fd, config)
         .then(res => {
           console.log(res);
-          this.$router.push(`article?id=${this.item.id}`);
+          this.modeUpdate = !this.modeUpdate;
         })
         .catch(err => {
           console.log(err.response);
         });
     },
-    isNotSpecail($event) {
+    isNotSpecial($event) {
       let keyCode = $event.keyCode ? $event.keyCode : $event.which;
       if (
         (keyCode >= 123 && keyCode <= 130) ||
@@ -470,7 +481,15 @@ export default {
     },
     //대댓글 생성
     createRecomment() {
-      console.log(this.comm.id + " " + this.comm.username);
+      // console.log(this.comm);
+      this.$store.dispatch("sendAlarm", {
+        url: "/alarms/Share/",
+        articleUserId: `${this.comm.userid}`,
+        articleId: `${this.item.id}`,
+        thumbnailPath: `${this.item.image}`,
+        message: this.myComment,
+        alarmType: 2 // 대댓글
+      });
       //
       let token = localStorage.getItem("token");
       let config = {

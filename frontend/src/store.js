@@ -361,12 +361,13 @@ export default new Vuex.Store({
       }
       socket.onmessage = function (res) {
         var msg = JSON.parse(res.data);
-        // console.log(msg)
+        console.log(msg)
         if (payload.type == 0) {
           commit("setAlarms", 1)
         }
         else {
           // 채팅
+          document.querySelector('#chat-log').value += (msg.username + ': ' + msg.message + '\n');
           console.log(msg)
         }
       };

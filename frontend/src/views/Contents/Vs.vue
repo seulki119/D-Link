@@ -21,24 +21,30 @@
         </v-row>
         <v-divider></v-divider>
         <v-btn block color="indigo lighten-1 white--text" @click="vote()">{{topic[choice]}}에 투표하기</v-btn>
-        <button @click="sendChatMessage()">소켓메시지 테스트</button>
       </div>
-
       <div v-else>
         <v-toolbar dark flat>
           <v-toolbar-title>당신의 선택은 {{topic[last]}}였습니다.</v-toolbar-title>
         </v-toolbar>
         <v-row class="justify-center mx-auto">
           <v-layout row class="align-end">
-            <v-flex column xs12 sm6 md6 lg6 x6 class="ma-5">
+            <v-flex column xs12 sm6 md6 lg6 x6>
               <v-img :src="`//i3b307.p.ssafy.io/${image[last]}`" class="grey lighten-2 ma-3"></v-img>
             </v-flex>
-            <v-flex column xs12 sm6 md6 lg6 x6 class="ma-5">
+            <v-flex column xs12 sm6 md6 lg6 x6>
               <div class="align-center">
                 <apexchart type="donut" :options="chartOptions" :series="series"></apexchart>
               </div>
             </v-flex>
           </v-layout>
+        </v-row>
+        <v-toolbar dark flat>
+          <v-toolbar-title>{{topic[0]}} vs {{topic[1]}}</v-toolbar-title>
+        </v-toolbar>
+        <v-row>
+          <textarea id="chat-log" cols="100" rows="20"></textarea>
+          <v-text-field v-model="mymessage" label="메시지" @keyup.enter="sendChatMessage()"></v-text-field>
+          <v-btn color="blue-grey" class="ma-2 white--text" @click="sendChatMessage()">전송</v-btn>
         </v-row>
       </div>
     </v-card>
@@ -50,6 +56,8 @@ import http from "@/util/http-common";
 export default {
   data() {
     return {
+      mymessage: "",
+      othersmessage: "",
       id: [],
       image: [],
       topic: [],
@@ -114,7 +122,6 @@ export default {
         this.image.push(data.image_B);
         this.topic.push(data.topic_A);
         this.topic.push(data.topic_B);
-        console.log(this.image_A);
         this.chartOptions.labels.push(data.topic_A);
         this.chartOptions.labels.push(data.topic_B);
         this.series.push(data.select_A.length);
@@ -181,10 +188,11 @@ export default {
       let socket = this.$store.state.chatSocket;
       // 임시데이터
       let data = {
-        "message": "채팅메세지",
-        "username": "null",
-      }
-      socket.send(JSON.stringify(data))
+        message: this.mymessage,
+        username: this.$store.getters.userName
+      };
+      socket.send(JSON.stringify(data));
+      this.mymessage = "";
     }
   },
   watch: {
@@ -193,12 +201,12 @@ export default {
     }
   },
   beforeCreate() {
-    let room = "1"
+    let room = "1";
     let token = localStorage.getItem("token");
     this.$store.dispatch("socketConnect", {
       token: token,
       room: room,
-      type: 1, 
+      type: 1
     });
   }
 };

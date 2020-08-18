@@ -1,11 +1,11 @@
 from django.views.generic import TemplateView
-from .models import Alarm
+from .models import Alarm, Chat
 import json
 from django.shortcuts import HttpResponse
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from .consumers import UserTestConsumer
-from .serializers import AlarmSerializser
+from .serializers import AlarmSerializser, ChatSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
@@ -63,3 +63,10 @@ def alarm(request, user_pk):
         return Response(serializer.data)
     else:
         return Response({'message': '권한이 없습니다.'})
+
+@api_view(['GET'])
+def chat(requset, room_pk):
+    chats = Chat.objects.all()[:100]
+    serializer = ChatSerializer(chats, many=True)
+    return Response(serializer.data)
+    

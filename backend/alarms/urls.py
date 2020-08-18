@@ -9,4 +9,5 @@ app_name = 'alarms'
 urlpatterns = [
     path('Share/', csrf_exempt(views.ShareMe)),
     path('<int:user_pk>/', views.alarm),
+    path('room/<int:room_pk>/', views.chat),
 ]

@@ -21,6 +21,7 @@
         </v-row>
         <v-divider></v-divider>
         <v-btn block color="indigo lighten-1 white--text" @click="vote()">{{topic[choice]}}에 투표하기</v-btn>
+        <button @click="sendChatMessage()">소켓메시지 테스트</button>
       </div>
 
       <div v-else>
@@ -175,12 +176,30 @@ export default {
       http.post(`/versus/${this.id}/vote/`, data, config).then(res => {
         console.log(res);
       });
+    },
+    sendChatMessage() {
+      let socket = this.$store.state.chatSocket;
+      // 임시데이터
+      let data = {
+        "message": "채팅메세지",
+        "username": "null",
+      }
+      socket.send(JSON.stringify(data))
     }
   },
   watch: {
     choice() {
       console.log(this.choice);
     }
+  },
+  beforeCreate() {
+    let room = "1"
+    let token = localStorage.getItem("token");
+    this.$store.dispatch("socketConnect", {
+      token: token,
+      room: room,
+      type: 1, 
+    });
   }
 };
 </script>

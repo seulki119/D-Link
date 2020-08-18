@@ -349,33 +349,36 @@ export default new Vuex.Store({
           var socket = new WebSocket(`${SERVER_URL}/ws/chat/${payload.token}/room_${payload.room}`);
         }
       }
-      socket.onmessage = function (res) {
-        console.log(res)
-        var msg = JSON.parse(res.data);
-        if (payload.type == 0) {
-          commit("setAlarms", 1)
-        }
-        else {
-          // 채팅
-          document.querySelector('#chat-log').value += (msg.username + ': ' + msg.message + '\n');
-          console.log(msg)
-        }
-      };
 
-      socket.onopen = function (e) {
-        console.log(e);
-      };
-
-      socket.onclose = function (e) {
-        console.log(e);
-      };
-
-      if (socket.readyState < 2) {
-        if (payload.type == 0) {
-          this.commit("setSocket", socket)
-        }
-        else {
-          this.commit("setChatSocket", socket)
+      if (socket) {
+        socket.onmessage = function (res) {
+          console.log(res)
+          var msg = JSON.parse(res.data);
+          if (payload.type == 0) {
+            commit("setAlarms", 1)
+          }
+          else {
+            // 채팅
+            document.querySelector('#chat-log').value += (msg.username + ': ' + msg.message + '\n');
+            console.log(msg)
+          }
+        };
+  
+        socket.onopen = function (e) {
+          console.log(e);
+        };
+  
+        socket.onclose = function (e) {
+          console.log(e);
+        };
+  
+        if (socket.readyState < 2) {
+          if (payload.type == 0) {
+            this.commit("setSocket", socket)
+          }
+          else {
+            this.commit("setChatSocket", socket)
+          }
         }
       }
     },

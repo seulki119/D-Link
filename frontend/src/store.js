@@ -360,6 +360,7 @@ export default new Vuex.Store({
           else {
             // 채팅
             document.querySelector('#chat-log').value += (msg.username + ': ' + msg.message + '\n');
+            document.querySelector('#chat-log').scrollTop = document.querySelector('#chat-log').scrollHeight
             // console.log(msg)
           }
         };

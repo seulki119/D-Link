@@ -161,6 +161,7 @@
             :placeholder="`${userName} 님의 댓글`"
             :modeComment="modeComment"
             append-icon="mdi-comment"
+            @click:append="modeComment ?  createComment() : createRecomment()"
             @keydown.enter="modeComment ?  createComment() : createRecomment()"
             maxlength="80"
             counter="80"

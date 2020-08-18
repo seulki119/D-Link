@@ -8,6 +8,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    messages: [],
     userInfo: null,
     isLogin: false,
     isLoginError: false,
@@ -33,6 +34,9 @@ export default new Vuex.Store({
     alarms(state) {
       return state.alarms;
     },
+    messages(state) {
+      return state.messages;
+    }
   },
   //차후 Taste는 로그인이 되어있을때만 갈 수 있게;
   mutations: {
@@ -85,6 +89,20 @@ export default new Vuex.Store({
     resetAlarms(state) {
       state.alarms = 0;
       localStorage.setItem("alarmCount", 0);
+    },
+    //다시 리로드시 DB에 있는 배열을 그대로 넣는 문제 때문에
+    //payload.length라는 값을 가지고 있다면 배열이므로 
+    //그때가 아니면 넣게 함 .. 더 좋은 아이디어?
+    setMessages(state, payload) {
+      if (state.messages.length != 0) {
+        console.log(payload)
+        if (payload.length === undefined) {
+          state.messages.push(payload);
+        }
+      } else {
+        console.log(payload)
+        state.messages = payload;
+      }
     }
   },
   actions: {
@@ -210,6 +228,24 @@ export default new Vuex.Store({
         .then((response) => {
           console.log(response);
           context.commit("setItems", response.data);
+        })
+        .catch(() => {
+          alert("에러가 발생했습니다.");
+        });
+    },
+    getMessages(context) {
+      let token = localStorage.getItem("token");
+
+      let config = {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      }
+      http
+        .get("/alarms/room/1/", config)
+        .then((response) => {
+          console.log(response.data);
+          context.commit("setMessages", response.data);
         })
         .catch(() => {
           alert("에러가 발생했습니다.");
@@ -359,8 +395,10 @@ export default new Vuex.Store({
           }
           else {
             // 채팅
-            document.querySelector('#chat-log').value += (msg.username + ': ' + msg.message + '\n');
-            document.querySelector('#chat-log').scrollTop = document.querySelector('#chat-log').scrollHeight
+            commit("setMessages", msg);
+            // document.querySelector('#chat-log').value += (msg.username + ': ' + msg.message + '\n');
+            document.querySelector('#chat-area').scrollTop = document.querySelector('#chat-area').scrollHeight;
+            // document.querySelector('#chat-log').scrollTop = document.querySelector('#chat-log').scrollHeight;
             // console.log(msg)
           }
         };

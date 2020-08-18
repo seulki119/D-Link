@@ -42,7 +42,15 @@
           <v-toolbar-title>{{topic[0]}} vs {{topic[1]}}</v-toolbar-title>
         </v-toolbar>
         <v-row>
-          <textarea id="chat-log" cols="100" rows="20" disabled v-auto-scroll-bottom></textarea>
+          <section ref="chatArea" class="chat-area" id="chat-area" v-auto-scroll-bottom>
+            <p
+              v-for="(item, index) in messages"
+              :key="index"
+              class="message"
+              :class="{ 'message-out': item.username === userName, 'message-in': item.username !== userName }"
+            >{{item.username + ": " + item.message}}</p>
+          </section>
+          <!-- <textarea id="chat-log" cols="100" rows="20" disabled v-auto-scroll-bottom></textarea> -->
           <v-text-field v-model="mymessage" label="메시지" @keyup.enter="sendChatMessage()"></v-text-field>
           <v-btn color="blue-grey" class="ma-2 white--text" @click="sendChatMessage()">전송</v-btn>
         </v-row>
@@ -52,12 +60,12 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import http from "@/util/http-common";
 export default {
   data() {
     return {
       mymessage: "",
-      messages: [],
       id: [],
       image: [],
       topic: [],
@@ -105,24 +113,9 @@ export default {
       }
     };
   },
-  mounted() {
-    let token = localStorage.getItem("token");
-    let config = {
-      headers: {
-        Authorization: `Token ${token}`
-      }
-    };
-    http
-      .get(`/alarms/room/1/`, config)
-      .then(res => {
-        for (let msg in res.data) {
-          document.querySelector("#chat-log").value +=
-            res.data[msg].username + ": " + res.data[msg].message + "\n";
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  computed: {
+    ...mapGetters(["messages"]),
+    ...mapGetters(["userName"])
   },
   created() {
     let token = localStorage.getItem("token");
@@ -211,6 +204,8 @@ export default {
         username: this.$store.getters.userName
       };
       // console.log(data);
+      console.log(this.$store.state.messages);
+
       socket.send(JSON.stringify(data));
       this.mymessage = "";
     }
@@ -228,6 +223,7 @@ export default {
       room: room,
       type: 1
     });
+    this.$store.dispatch("getMessages");
   }
 };
 </script>
@@ -236,5 +232,31 @@ export default {
 .v-radio {
   text-align: center;
   display: block;
+}
+.chat-area {
+  /*   border: 1px solid #ccc; */
+  background: white;
+  height: 50vh;
+  padding: 1em 1em;
+  overflow: auto;
+  max-width: 350px;
+  margin: 0 auto 2em auto;
+  box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.3);
+}
+.message {
+  width: 45%;
+  border-radius: 10px;
+  padding: 0.5em;
+  /*   margin-bottom: .5em; */
+  font-size: 0.8em;
+}
+.message-out {
+  background: #407fff;
+  color: white;
+  margin-left: 50%;
+}
+.message-in {
+  background: #f1f0f0;
+  color: black;
 }
 </style>

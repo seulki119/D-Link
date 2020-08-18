@@ -75,6 +75,9 @@ export default new Vuex.Store({
     removeSocket(state) {
       state.socket = null;
     },
+    removeChatSocket(state) {
+      state.chatSocket = null;
+    },
     setAlarms(state, payload) {
       state.alarms = parseInt(localStorage.getItem("alarmCount")) + payload;
       localStorage.setItem("alarmCount", state.alarms)
@@ -113,9 +116,14 @@ export default new Vuex.Store({
       commit("logout");
       // 소켓이 연결되어있는 경우 연결해제
       let socket = this.state.socket
+      let chatSocket = this.state.chatSocket
       if (socket) {
         socket.close();
         commit("removeSocket")
+      }
+      if (chatSocket) {
+        chatSocket.close();
+        commit("removeChatSocket")
       }
       router.push({ name: "home" }).catch((error) => {
         if (error.name != "NavigationDuplicated") {
@@ -207,25 +215,7 @@ export default new Vuex.Store({
           alert("에러가 발생했습니다.");
         });
     },
-    // getArticles(context, payload) {
-    //   let token = localStorage.getItem("token");
 
-    //   let config = {
-    //     headers: {
-    //       Authorization: `Token ${token}`,
-    //       counter: 0
-    //     },
-    //   }
-    //   http
-    //     .get(payload, config)
-    //     .then((response) => {
-    //       console.log(response);
-    //       context.commit("setItems", response.data);
-    //     })
-    //     .catch(() => {
-    //       alert("에러가 발생했습니다.");
-    //     });
-    // },
     getArticle(context, payload) {
       let token = localStorage.getItem("token");
 
@@ -245,7 +235,6 @@ export default new Vuex.Store({
         });
     },
     doScrap(context, payload) {
-      // 로컬 스토리지에 저장된 토큰 불러오기
       let token = localStorage.getItem("token");
 
       let config = {
@@ -276,8 +265,6 @@ export default new Vuex.Store({
         .then((res) => {
           console.log(res);
           let token = res.data.key;
-
-          // 토큰을 로컬스토리지에 저장
           localStorage.setItem("token", token);
           this.dispatch("getUserInfo");
           this.dispatch("socketConnect", {
@@ -296,10 +283,7 @@ export default new Vuex.Store({
           redirect_uri: "http://127.0.0.1:8000/accounts/kakao/callback/",
         })
         .then((res) => {
-          // console.log(res);
           let token = res.data.key;
-
-          // 토큰을 로컬스토리지에 저장
           localStorage.setItem("token", token);
           this.dispatch("getUserInfo");
           this.dispatch("socketConnect", {
@@ -313,7 +297,6 @@ export default new Vuex.Store({
     },
     sendAlarm(context, payload) {
       let token = localStorage.getItem("token");
-
       let config = {
         headers: {
           "X-CSRFToken": "token",
@@ -357,34 +340,45 @@ export default new Vuex.Store({
         var socket = new WebSocket(`${SERVER_URL}/ws/test/${payload.token}`);
       }
       else {
-        var socket = new WebSocket(`${SERVER_URL}/ws/chat/${payload.token}/room_${payload.room}`);
+        var chatSocket = this.state.chatSocket;
+        if (chatSocket == null) {
+          var socket = new WebSocket(`${SERVER_URL}/ws/chat/${payload.token}/room_${payload.room}`);
+        }
+        else if (chatSocket.url.split('/')[6] != `room_${payload.room}`) {
+          chatSocket.close()
+          var socket = new WebSocket(`${SERVER_URL}/ws/chat/${payload.token}/room_${payload.room}`);
+        }
       }
-      socket.onmessage = function (res) {
-        var msg = JSON.parse(res.data);
-        // console.log(msg)
-        if (payload.type == 0) {
-          commit("setAlarms", 1)
-        }
-        else {
-          // 채팅
-          console.log(msg)
-        }
-      };
 
-      socket.onopen = function (e) {
-        console.log(e);
-      };
-
-      socket.onclose = function (e) {
-        console.log(e);
-      };
-
-      if (socket.readyState < 2) {
-        if (payload.type == 0) {
-          this.commit("setSocket", socket)
-        }
-        else {
-          this.commit("setChatSocket", socket)
+      if (socket) {
+        socket.onmessage = function (res) {
+          console.log(res)
+          var msg = JSON.parse(res.data);
+          if (payload.type == 0) {
+            commit("setAlarms", 1)
+          }
+          else {
+            // 채팅
+            document.querySelector('#chat-log').value += (msg.username + ': ' + msg.message + '\n');
+            console.log(msg)
+          }
+        };
+  
+        socket.onopen = function (e) {
+          console.log(e);
+        };
+  
+        socket.onclose = function (e) {
+          console.log(e);
+        };
+  
+        if (socket.readyState < 2) {
+          if (payload.type == 0) {
+            this.commit("setSocket", socket)
+          }
+          else {
+            this.commit("setChatSocket", socket)
+          }
         }
       }
     },

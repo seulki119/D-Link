@@ -8,11 +8,11 @@
         <v-row class="justify-center mx-auto">
           <v-radio-group v-model="choice" mandatory>
             <v-layout row class="align-end">
-              <v-flex column>
+              <v-flex column xs12 sm6 md6 lg6 x6>
                 <v-img :src="`//i3b307.p.ssafy.io/${image[0]}`" class="grey lighten-2 ma-3"></v-img>
                 <v-radio value="0"></v-radio>
               </v-flex>
-              <v-flex column>
+              <v-flex column xs12 sm6 md6 lg6 x6>
                 <v-img :src="`//i3b307.p.ssafy.io/${image[1]}`" class="grey lighten-2 ma-3"></v-img>
                 <v-radio value="1"></v-radio>
               </v-flex>
@@ -23,19 +23,23 @@
         <v-btn block color="indigo lighten-1 white--text" @click="vote()">{{topic[choice]}}에 투표하기</v-btn>
         <button @click="sendChatMessage()">소켓메시지 테스트</button>
       </div>
+
       <div v-else>
         <v-toolbar dark flat>
           <v-toolbar-title>당신의 선택은 {{topic[last]}}였습니다.</v-toolbar-title>
         </v-toolbar>
         <v-row class="justify-center mx-auto">
           <v-layout row class="align-end">
-            <v-flex column>
+            <v-flex column xs12 sm6 md6 lg6 x6 class="ma-5">
               <v-img :src="`//i3b307.p.ssafy.io/${image[last]}`" class="grey lighten-2 ma-3"></v-img>
+            </v-flex>
+            <v-flex column xs12 sm6 md6 lg6 x6 class="ma-5">
+              <div class="align-center">
+                <apexchart type="donut" :options="chartOptions" :series="series"></apexchart>
+              </div>
             </v-flex>
           </v-layout>
         </v-row>
-        <v-diver></v-diver>
-        <span>대충 결과 관련 내용 출력</span>
       </div>
     </v-card>
   </v-container>
@@ -54,7 +58,43 @@ export default {
       select_B: [],
       choice: "",
       selected: false,
-      last: ""
+      last: "",
+      series: [],
+      chartOptions: {
+        dataLabels: {
+          enabled: true,
+          formatter: function(v, { seriesIndex, w }) {
+            return w.config.labels[seriesIndex] + " : " + Math.round(v) + "%";
+          },
+          style: {
+            colors: ["dark", "dark"]
+          }
+        },
+        chart: {
+          type: "donut"
+        },
+        plotOptions: {
+          pie: {
+            donut: {
+              labels: {
+                show: false,
+                total: {
+                  showAlways: true,
+                  show: true,
+                  label: "총 투표수"
+                }
+              }
+            },
+            name: {
+              show: true
+            }
+          }
+        },
+        labels: [],
+        legend: {
+          show: false
+        }
+      }
     };
   },
   created() {
@@ -75,6 +115,10 @@ export default {
         this.topic.push(data.topic_A);
         this.topic.push(data.topic_B);
         console.log(this.image_A);
+        this.chartOptions.labels.push(data.topic_A);
+        this.chartOptions.labels.push(data.topic_B);
+        this.series.push(data.select_A.length);
+        this.series.push(data.select_B.length);
         let userId = this.$store.getters.userId;
         if (data.select_A.includes(userId)) {
           this.selected = true;

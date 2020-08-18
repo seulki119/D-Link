@@ -75,14 +75,11 @@
           <v-spacer></v-spacer>
         </v-card-actions>
         <!-- 본인댓글이나 최신댓글 1개 보여주기 -->
-        <v-slide-y-transition v-if="item.commentSet.length > 0 && repComment!= null">
+        <v-slide-y-transition v-if="item.commentSet.length > 0 || repComment.id !== '' ">
           <v-card-text v-show="!show">
             <v-list-item>
-              <v-list-item-avatar color="grey">
-                <v-img
-                  v-if="repComment.userImage != null"
-                  :src="`//i3b307.p.ssafy.io/${repComment.userImage}`"
-                ></v-img>
+              <v-list-item-avatar color="grey" v-if="repComment.userImage != ''">
+                <v-img :src="`//i3b307.p.ssafy.io/${repComment.userImage}`"></v-img>
               </v-list-item-avatar>
 
               <v-list-item-content>
@@ -360,17 +357,14 @@ export default {
             `/articles/${this.$route.query.id}`
           );
 
-          if (this.repComment === null) {
-            this.repComment.userName = this.userId;
-            this.repComment.content = this.myComment;
-            this.repComment.userImage = this.userImage;
-            //
-            // this.repComment.id = array[index].id;
-            //     this.repComment.userName = array[index].user.username;
-            //     this.repComment.content = array[index].content;
-            //     this.repComment.userImage = array[index].user.image;
-          }
-          console.log("THIS.REPCOMM : " + this.repComment);
+          // 대표 댓글은 본인의 가장 최신 댓글(현재 등록한 댓글)로 갱신
+          // if (this.repComment.id === "") {
+          this.repComment.id = response.data.id;
+          this.repComment.userName = this.userName;
+          this.repComment.content = response.data.content;
+          this.repComment.userImage = response.data.user.image;
+          // }
+
           this.myComment = "";
         })
         .catch(err => {
@@ -400,7 +394,10 @@ export default {
 
           // this.comments.splice(index, 1);
           if (this.repComment.id == commId) {
-            this.repComment = null;
+            this.repComment.id = "";
+            this.repComment.userName = "";
+            this.repComment.content = "";
+            this.repComment.userImage = "";
           }
           // if(commId)
         })

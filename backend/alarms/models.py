@@ -10,3 +10,8 @@ class Alarm(models.Model):
     thumbnailPath=models.TextField()
     alarmType=models.IntegerField()
     isFetch=models.BooleanField(default=False)
+
+class Chat(models.Model):
+    message=models.TextField()
+    username=models.CharField(max_length=30)
+    roomId=models.IntegerField()

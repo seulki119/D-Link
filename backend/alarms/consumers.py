@@ -4,7 +4,7 @@ from asgiref.sync import async_to_sync
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from channels.layers import get_channel_layer
-from .models import Alarm
+from .models import Chat
 
 # @receiver(post_save, sender=Alarm)
 # def announce_likes(sender, instance, created, **kwargs):
@@ -81,14 +81,19 @@ class UserChatConsumer(WebsocketConsumer):
 
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        print(text_data_json)
+        message = text_data_json['message']
+        username = text_data_json['username']
+        roomId = self.groupname.split('_')[1]
+
+        chat = Chat(message=message, username=username, roomId=roomId)
+        chat.save()
+        
         async_to_sync(self.channel_layer.group_send)(
             self.groupname,
             {
                 'type': 'share_chat_message',
-                'message': text_data_json['message'],
-                'userId': text_data_json['userId'],
-                'username': text_data_json['username']
+                'message': message,
+                'username': username
             }
         )
 
@@ -99,6 +104,5 @@ class UserChatConsumer(WebsocketConsumer):
         # Send message to WebSocket
         self.send(text_data=json.dumps({
             'message': event['message'],
-            'userId': event['userId'],
             'username': event['username']
         }))

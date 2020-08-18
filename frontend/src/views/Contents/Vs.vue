@@ -138,7 +138,6 @@ export default {
       // 임시데이터
       let data = {
         "message": "채팅메세지",
-        "userId": "null",
         "username": "null",
       }
       socket.send(JSON.stringify(data))

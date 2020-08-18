@@ -388,7 +388,6 @@ export default new Vuex.Store({
 
       if (socket) {
         socket.onmessage = function (res) {
-          // console.log(res)
           var msg = JSON.parse(res.data);
           if (payload.type == 0) {
             commit("setAlarms", 1)
@@ -396,10 +395,6 @@ export default new Vuex.Store({
           else {
             // 채팅
             commit("setMessages", msg);
-            // document.querySelector('#chat-log').value += (msg.username + ': ' + msg.message + '\n');
-            document.querySelector('#chat-area').scrollTop = document.querySelector('#chat-area').scrollHeight;
-            // document.querySelector('#chat-log').scrollTop = document.querySelector('#chat-log').scrollHeight;
-            // console.log(msg)
           }
         };
 

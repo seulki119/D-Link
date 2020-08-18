@@ -152,6 +152,7 @@ export default {
       });
   },
   methods: {
+    scrolled() {},
     getData() {
       let token = localStorage.getItem("token");
       let config = {
@@ -202,20 +203,13 @@ export default {
         message: this.mymessage,
         username: this.$store.getters.userName
       };
-      // console.log(data);
       if (data.message != "") {
-        // console.log(this.$store.state.messages);
-
         socket.send(JSON.stringify(data));
         this.mymessage = "";
       }
     }
   },
-  watch: {
-    choice() {
-      // console.log(this.choice);
-    }
-  },
+
   beforeCreate() {
     let room = "1";
     let token = localStorage.getItem("token");
@@ -237,9 +231,9 @@ export default {
 .chat-area {
   background: white;
   height: 50vh;
-  padding: 3em 1em;
+  padding: 1em 1em;
   margin: 1em;
-  overflow: auto;
+  overflow-y: scroll;
   box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.3);
 }
 .message {

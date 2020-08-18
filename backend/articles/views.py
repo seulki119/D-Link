@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-
+from accounts.models import User as AUTH_USER
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -9,7 +9,7 @@ from .serializers import ArticleSerializer, ArticleListSerializer, ArticleCreate
 from .serializers import CommentSerializer, RecommentSerializer, HashtagSerializser
 import os
 from django.conf import settings
-
+from django.db.models import Q
 # Create your views here.
 
 @api_view(['PATCH', 'POST'])
@@ -135,6 +135,17 @@ def search(request):
     serializer = ArticleListSerializer(articles, many=True)
     return Response(serializer.data)
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def curation(request):
+    user = get_object_or_404(AUTH_USER, pk=request.user.id)
+    taste1 = user.taste1
+    taste2 = user.taste1
+    articles =  Article.objects.all()
+    curation_data = articles.objects.filter(Q(hashtag=taste1) | Q(hashtag=taste2))
+    return Response({'curation':curation_data})
+
 @api_view(['POST'])
 def recomment_create(request, comment_pk):
     serializer = RecommentSerializer(data=request.data)
@@ -159,3 +170,4 @@ def recomment_ud(request, comment_pk, recomment_pk):
         return Response({'message': "성공적으로 삭제되었습니다"})
     else:
         return Response({'message': '권한이 없습니다.'})
+

@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-card class="mx-auto pa-5" max-width="600">
-      <div v-if="!selected">
+      <div v-show="!selected">
         <v-toolbar dark flat>
           <v-toolbar-title>당신의 선택은?</v-toolbar-title>
         </v-toolbar>
@@ -22,7 +22,7 @@
         <v-divider></v-divider>
         <v-btn block color="indigo lighten-1 white--text" @click="vote()">{{topic[choice]}}에 투표하기</v-btn>
       </div>
-      <div v-else>
+      <div v-show="selected">
         <v-toolbar dark flat>
           <v-toolbar-title>당신의 선택은 {{topic[last]}}였습니다.</v-toolbar-title>
         </v-toolbar>
@@ -42,7 +42,7 @@
           <v-toolbar-title>{{topic[0]}} vs {{topic[1]}}</v-toolbar-title>
         </v-toolbar>
         <v-row>
-          <textarea id="chat-log" cols="100" rows="20"></textarea>
+          <textarea id="chat-log" cols="100" rows="20" disabled v-auto-scroll-bottom></textarea>
           <v-text-field v-model="mymessage" label="메시지" @keyup.enter="sendChatMessage()"></v-text-field>
           <v-btn color="blue-grey" class="ma-2 white--text" @click="sendChatMessage()">전송</v-btn>
         </v-row>
@@ -57,6 +57,7 @@ export default {
   data() {
     return {
       mymessage: "",
+      messages: [],
       id: [],
       image: [],
       topic: [],
@@ -103,6 +104,25 @@ export default {
         }
       }
     };
+  },
+  mounted() {
+    let token = localStorage.getItem("token");
+    let config = {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    };
+    http
+      .get(`/alarms/room/1/`, config)
+      .then(res => {
+        for (let msg in res.data) {
+          document.querySelector("#chat-log").value +=
+            res.data[msg].username + ": " + res.data[msg].message + "\n";
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
   },
   created() {
     let token = localStorage.getItem("token");
@@ -201,7 +221,7 @@ export default {
     }
   },
   beforeCreate() {
-    let room = "2";
+    let room = "1";
     let token = localStorage.getItem("token");
     this.$store.dispatch("socketConnect", {
       token: token,

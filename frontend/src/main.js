@@ -8,6 +8,7 @@ import VueResource from 'vue-resource';
 import VueCookie from 'vue-cookie';
 import VuejsClipper from 'vuejs-clipper';
 import VueApexCharts from 'vue-apexcharts'
+import Directives from './plugins/directives'
 
 Vue.config.productionTip = false;
 // const gauthOption = {
@@ -26,6 +27,7 @@ Vue.use(VuejsClipper, {
   }
 })
 Vue.use(VueApexCharts)
+Vue.use(Directives)
 Vue.component('apexchart', VueApexCharts)
 new Vue({
   router,

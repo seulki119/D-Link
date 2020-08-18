@@ -360,18 +360,18 @@ export default new Vuex.Store({
           else {
             // 채팅
             document.querySelector('#chat-log').value += (msg.username + ': ' + msg.message + '\n');
-            console.log(msg)
+            // console.log(msg)
           }
         };
-  
+
         socket.onopen = function (e) {
           console.log(e);
         };
-  
+
         socket.onclose = function (e) {
           console.log(e);
         };
-  
+
         if (socket.readyState < 2) {
           if (payload.type == 0) {
             this.commit("setSocket", socket)

@@ -3,12 +3,13 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from django.contrib import admin
-from .models import Article, Comment, Recomment
+from .models import Article, Comment, Recomment, Hashtag
 # from .serializers import UserSerializer
 # Register your models here.
 
 admin.site.register(Comment)
 admin.site.register(Recomment)
+admin.site.register(Hashtag)
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):

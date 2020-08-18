@@ -2,9 +2,9 @@
   <!-- <div class="container"> -->
   <v-container max-width="600" min-width="300">
     <v-card class="mx-auto pa-5" max-width="600">
-      <stack :column-min-width="210" :gutter-width="20" :gutter-height="20" monitor-images-loaded>
+      <StackGrid :columnWidth="210" :gutterX="20" :gutterY="20">
         <!-- you component like this -->
-        <stack-item v-for="(item, index) in items" :key="index" style="transition: transform 300ms">
+        <div class="stack-item" v-for="(item, index) in items" :key="index">
           <!-- some thing have fixed height-->
           <div v-if="item.user.id != userId" class="stack-item stack-item-6">
             <img
@@ -23,20 +23,19 @@
               />
             </div>
           </div>
-        </stack-item>
-      </stack>
+        </div>
+      </StackGrid>
     </v-card>
   </v-container>
   <!-- </div> -->
 </template>
 <script>
-import { Stack, StackItem } from "vue-stack-grid";
+import StackGrid from "vue-stack-grid-component";
 import { mapGetters } from "vuex";
 import http from "@/util/http-common";
 export default {
   components: {
-    Stack,
-    StackItem
+    StackGrid
   },
   data() {
     return {
@@ -128,7 +127,7 @@ export default {
             this.scrap.push(data[i].scrap.includes(this.userId));
           }
           if (this.bottomVisible()) {
-            // this.addList();
+            this.addList();
           }
         })
         .catch(err => {
@@ -140,7 +139,7 @@ export default {
     bottom(bottom) {
       // console.log(bottom);
       if (bottom) {
-        // this.addList();
+        this.addList();
       }
     }
   }

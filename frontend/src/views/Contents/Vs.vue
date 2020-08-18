@@ -190,7 +190,7 @@ export default {
         message: this.mymessage,
         username: this.$store.getters.userName
       };
-      console.log(data);
+      // console.log(data);
       socket.send(JSON.stringify(data));
       this.mymessage = "";
     }

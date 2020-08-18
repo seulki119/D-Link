@@ -75,6 +75,9 @@ export default new Vuex.Store({
     removeSocket(state) {
       state.socket = null;
     },
+    removeChatSocket(state) {
+      state.chatSocket = null;
+    },
     setAlarms(state, payload) {
       state.alarms = parseInt(localStorage.getItem("alarmCount")) + payload;
       localStorage.setItem("alarmCount", state.alarms)
@@ -113,9 +116,14 @@ export default new Vuex.Store({
       commit("logout");
       // 소켓이 연결되어있는 경우 연결해제
       let socket = this.state.socket
+      let chatSocket = this.state.chatSocket
       if (socket) {
         socket.close();
         commit("removeSocket")
+      }
+      if (chatSocket) {
+        chatSocket.close();
+        commit("removeChatSocket")
       }
       router.push({ name: "home" }).catch((error) => {
         if (error.name != "NavigationDuplicated") {
@@ -325,7 +333,6 @@ export default new Vuex.Store({
       }
     },
     socketConnect({ commit, context }, payload) {
-      console.log("dfdfdf")
       const SERVER_URL = "wss://i3b307.p.ssafy.io"
       // ws://127.0.0.1:8000
       // wss://i3b307.p.ssafy.io
@@ -333,7 +340,14 @@ export default new Vuex.Store({
         var socket = new WebSocket(`${SERVER_URL}/ws/test/${payload.token}`);
       }
       else {
-        var socket = new WebSocket(`${SERVER_URL}/ws/chat/${payload.token}/room_${payload.room}`);
+        var chatSocket = this.state.chatSocket;
+        if (chatSocket == null) {
+          var socket = new WebSocket(`${SERVER_URL}/ws/chat/${payload.token}/room_${payload.room}`);
+        }
+        else if (chatSocket.url.split('/')[6] != `room_${payload.room}`) {
+          chatSocket.close()
+          var socket = new WebSocket(`${SERVER_URL}/ws/chat/${payload.token}/room_${payload.room}`);
+        }
       }
       socket.onmessage = function (res) {
         console.log(res)

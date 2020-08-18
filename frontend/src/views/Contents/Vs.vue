@@ -198,21 +198,22 @@ export default {
     },
     sendChatMessage() {
       let socket = this.$store.state.chatSocket;
-      // 임시데이터
       let data = {
         message: this.mymessage,
         username: this.$store.getters.userName
       };
       // console.log(data);
-      console.log(this.$store.state.messages);
+      if (data.message != "") {
+        // console.log(this.$store.state.messages);
 
-      socket.send(JSON.stringify(data));
-      this.mymessage = "";
+        socket.send(JSON.stringify(data));
+        this.mymessage = "";
+      }
     }
   },
   watch: {
     choice() {
-      console.log(this.choice);
+      // console.log(this.choice);
     }
   },
   beforeCreate() {

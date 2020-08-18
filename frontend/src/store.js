@@ -95,12 +95,12 @@ export default new Vuex.Store({
     //그때가 아니면 넣게 함 .. 더 좋은 아이디어?
     setMessages(state, payload) {
       if (state.messages.length != 0) {
-        console.log(payload)
+        // console.log(payload)
         if (payload.length === undefined) {
           state.messages.push(payload);
         }
       } else {
-        console.log(payload)
+        // console.log(payload)
         state.messages = payload;
       }
     }
@@ -244,7 +244,7 @@ export default new Vuex.Store({
       http
         .get("/alarms/room/1/", config)
         .then((response) => {
-          console.log(response.data);
+          // console.log(response.data);
           context.commit("setMessages", response.data);
         })
         .catch(() => {
@@ -388,7 +388,7 @@ export default new Vuex.Store({
 
       if (socket) {
         socket.onmessage = function (res) {
-          console.log(res)
+          // console.log(res)
           var msg = JSON.parse(res.data);
           if (payload.type == 0) {
             commit("setAlarms", 1)

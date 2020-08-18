@@ -299,32 +299,13 @@ export default {
 
           let tagArray = this.item.hashtag;
           let tmp = [];
-          console.log(this.item);
           for (let index = 0; index < tagArray.length; index++) {
             tmp.push(tagArray[index].tag);
           }
           this.hashtags = tmp;
           this.loading = false;
-        }, 600);
+        }, 400);
       });
-    // console.log(this.hashtags);
-    // let token = localStorage.getItem("token");
-    // this.socket = new WebSocket(`ws://127.0.0.1:8000/ws/test/${token}`);
-    // // 데이터 수신
-    // this.socket.onmessage = function(e) {
-    //     console.log(e);
-    //     var data = JSON.parse(e.data);
-    //     var message = data['message'];
-    //     console.log(message)
-    // };
-
-    // this.socket.onopen = function(e) {
-    //   console.log(e);
-    // };
-
-    // this.socket.onclose = function(e) {
-    //   console.log(e);
-    // };
   },
 
   methods: {
@@ -336,13 +317,13 @@ export default {
       });
       if (articleUserId) {
         this.$store.dispatch("sendAlarm", {
-          url: "/alarms/Share/",
+          url: '/alarms/Share/',
           articleUserId: `${articleUserId}`,
           articleId: `${id}`,
           thumbnailPath: `${thumbnailPath}`,
           message: "",
-          alarmType: 0 // 스크랩
-        });
+          alarmType: 0 // 스크랩 
+        })
       }
     },
     activateReadMore() {

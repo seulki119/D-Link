@@ -128,7 +128,7 @@ export default {
             this.scrap.push(data[i].scrap.includes(this.userId));
           }
           if (this.bottomVisible()) {
-            this.addList();
+            // this.addList();
           }
         })
         .catch(err => {
@@ -140,7 +140,7 @@ export default {
     bottom(bottom) {
       // console.log(bottom);
       if (bottom) {
-        this.addList();
+        // this.addList();
       }
     }
   }

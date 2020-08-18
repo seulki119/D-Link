@@ -317,13 +317,13 @@ export default {
       });
       if (articleUserId) {
         this.$store.dispatch("sendAlarm", {
-          url: '/alarms/Share/',
+          url: "/alarms/Share/",
           articleUserId: `${articleUserId}`,
           articleId: `${id}`,
           thumbnailPath: `${thumbnailPath}`,
           message: "",
-          alarmType: 0 // 스크랩 
-        })
+          alarmType: 0 // 스크랩
+        });
       }
     },
     activateReadMore() {
@@ -463,6 +463,7 @@ export default {
         .then(res => {
           console.log(res);
           this.modeUpdate = !this.modeUpdate;
+          this.item.content = this.content;
         })
         .catch(err => {
           console.log(err.response);

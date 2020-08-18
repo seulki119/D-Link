@@ -350,8 +350,9 @@ export default new Vuex.Store({
       }
     },
     socketConnect({ commit, context }, payload) {
-      const SERVER_URL = "ws://127.0.0.1:8000"
-      // wss://127.0.0.1:8000
+      const SERVER_URL = "wss://i3b307.p.ssafy.io"
+      // ws://127.0.0.1:8000
+      // wss://i3b307.p.ssafy.io
       if (payload.type == 0) {
         var socket = new WebSocket(`${SERVER_URL}/ws/test/${payload.token}`);
       }

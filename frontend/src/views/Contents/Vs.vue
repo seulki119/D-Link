@@ -41,8 +41,8 @@
         <v-toolbar dark flat>
           <v-toolbar-title>{{topic[0]}} vs {{topic[1]}}</v-toolbar-title>
         </v-toolbar>
-        <v-row>
-          <section ref="chatArea" class="chat-area" id="chat-area" v-auto-scroll-bottom>
+        <v-row class="justify-center mx-auto">
+          <section class="chat-area" id="chat-area" v-auto-scroll-bottom>
             <p
               v-for="(item, index) in messages"
               :key="index"
@@ -234,13 +234,11 @@ export default {
   display: block;
 }
 .chat-area {
-  /*   border: 1px solid #ccc; */
   background: white;
   height: 50vh;
-  padding: 1em 1em;
+  padding: 3em 1em;
+  margin: 1em;
   overflow: auto;
-  max-width: 350px;
-  margin: 0 auto 2em auto;
   box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.3);
 }
 .message {

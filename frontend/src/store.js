@@ -207,25 +207,7 @@ export default new Vuex.Store({
           alert("에러가 발생했습니다.");
         });
     },
-    // getArticles(context, payload) {
-    //   let token = localStorage.getItem("token");
 
-    //   let config = {
-    //     headers: {
-    //       Authorization: `Token ${token}`,
-    //       counter: 0
-    //     },
-    //   }
-    //   http
-    //     .get(payload, config)
-    //     .then((response) => {
-    //       console.log(response);
-    //       context.commit("setItems", response.data);
-    //     })
-    //     .catch(() => {
-    //       alert("에러가 발생했습니다.");
-    //     });
-    // },
     getArticle(context, payload) {
       let token = localStorage.getItem("token");
 
@@ -245,7 +227,6 @@ export default new Vuex.Store({
         });
     },
     doScrap(context, payload) {
-      // 로컬 스토리지에 저장된 토큰 불러오기
       let token = localStorage.getItem("token");
 
       let config = {
@@ -276,8 +257,6 @@ export default new Vuex.Store({
         .then((res) => {
           console.log(res);
           let token = res.data.key;
-
-          // 토큰을 로컬스토리지에 저장
           localStorage.setItem("token", token);
           this.dispatch("getUserInfo");
           this.dispatch("socketConnect", {
@@ -296,10 +275,7 @@ export default new Vuex.Store({
           redirect_uri: "http://127.0.0.1:8000/accounts/kakao/callback/",
         })
         .then((res) => {
-          // console.log(res);
           let token = res.data.key;
-
-          // 토큰을 로컬스토리지에 저장
           localStorage.setItem("token", token);
           this.dispatch("getUserInfo");
           this.dispatch("socketConnect", {
@@ -313,7 +289,6 @@ export default new Vuex.Store({
     },
     sendAlarm(context, payload) {
       let token = localStorage.getItem("token");
-
       let config = {
         headers: {
           "X-CSRFToken": "token",
@@ -350,6 +325,7 @@ export default new Vuex.Store({
       }
     },
     socketConnect({ commit, context }, payload) {
+      console.log("dfdfdf")
       const SERVER_URL = "wss://i3b307.p.ssafy.io"
       // ws://127.0.0.1:8000
       // wss://i3b307.p.ssafy.io
@@ -360,8 +336,8 @@ export default new Vuex.Store({
         var socket = new WebSocket(`${SERVER_URL}/ws/chat/${payload.token}/room_${payload.room}`);
       }
       socket.onmessage = function (res) {
+        console.log(res)
         var msg = JSON.parse(res.data);
-        console.log(msg)
         if (payload.type == 0) {
           commit("setAlarms", 1)
         }

@@ -57,7 +57,6 @@ export default {
   data() {
     return {
       mymessage: "",
-      othersmessage: "",
       id: [],
       image: [],
       topic: [],
@@ -191,6 +190,7 @@ export default {
         message: this.mymessage,
         username: this.$store.getters.userName
       };
+      console.log(data);
       socket.send(JSON.stringify(data));
       this.mymessage = "";
     }
@@ -201,7 +201,7 @@ export default {
     }
   },
   beforeCreate() {
-    let room = "1";
+    let room = "2";
     let token = localStorage.getItem("token");
     this.$store.dispatch("socketConnect", {
       token: token,

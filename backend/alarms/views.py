@@ -66,7 +66,7 @@ def alarm(request, user_pk):
 
 @api_view(['GET'])
 def chat(requset, room_pk):
-    chats = Chat.objects.all()[:100]
+    chats = Chat.objects.filter(roomId=room_pk)[:100]
     serializer = ChatSerializer(chats, many=True)
     return Response(serializer.data)
     

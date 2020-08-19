@@ -152,38 +152,6 @@ export default {
       });
   },
   methods: {
-    scrolled() {},
-    getData() {
-      let token = localStorage.getItem("token");
-      let config = {
-        headers: {
-          Authorization: `Token ${token}`
-        }
-      };
-      http
-        .get("versus", config)
-        .then(res => {
-          let data = res.data[0];
-          this.createdAt = data.createdAt;
-          this.image_A = data.image_A;
-          this.image_B = data.image_B;
-          console.log(this.image_A);
-          let userId = this.$store.getters.userId;
-          if (
-            data.select_A.includes(userId) ||
-            data.select_B.includes(userId)
-          ) {
-            this.selected = true;
-            console.log("이미 선택함");
-          } else {
-            console.log(userId);
-            console.log("아직 선택안함");
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
     vote() {
       let token = localStorage.getItem("token");
       let config = {
@@ -192,8 +160,13 @@ export default {
         }
       };
       let data = new FormData();
-      data.append("select", this.choice === 1 ? "A" : "B");
+      data.append("select", this.choice == 0 ? "A" : "B");
       http.post(`/versus/${this.id}/vote/`, data, config).then(res => {
+        this.last = this.choice;
+        this.selected = true;
+        this.series.length = 0;
+        this.series.push(res.data.select_A.length);
+        this.series.push(res.data.select_B.length);
         console.log(res);
       });
     },

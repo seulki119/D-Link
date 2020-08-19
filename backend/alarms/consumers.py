@@ -86,7 +86,7 @@ class UserChatConsumer(WebsocketConsumer):
         profileImage = text_data_json['profileImage']
         roomId = self.groupname.split('_')[1]
 
-        chat = Chat(message=message, username=username, roomId=roomId)
+        chat = Chat(message=message, username=username, roomId=roomId, profileImage=profileImage)
         chat.save()
         
         async_to_sync(self.channel_layer.group_send)(

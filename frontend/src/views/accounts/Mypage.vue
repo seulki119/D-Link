@@ -193,6 +193,7 @@ export default {
       http.put("/accounts/min/image/", fd, config).then(res => {
         this.previous = res.data.image;
         this.avatar = null;
+        this.$store.dispatch("getUserInfo");
       });
     },
     dataURItoBlob(dataURI) {

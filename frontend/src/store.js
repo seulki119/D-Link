@@ -56,7 +56,7 @@ export default new Vuex.Store({
       return state.snackbarMessage
     },
     profileImage(state) {
-      return state.profileImage
+      return state.userInfo.profileImage
     }
   },
   //차후 Taste는 로그인이 되어있을때만 갈 수 있게;
@@ -420,6 +420,7 @@ export default new Vuex.Store({
           }
           else {
             // 채팅
+            console.log(msg)
             commit("setMessages", msg);
           }
         };

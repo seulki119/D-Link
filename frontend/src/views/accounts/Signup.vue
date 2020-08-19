@@ -1,6 +1,25 @@
 <template>
   <v-container class="fill-height" fluid>
-    <v-row align="center" justify="center">
+    <v-snackbar
+      v-model="snackbar"
+      :color="color"
+      :top="y === 'top'"
+      :timeout="timeout"
+    >
+      {{ snackbarMessage }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          dark
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+    <v-row align="center" justify="center" style="position:relative">
       <ValidationObserver ref="observer">
         <v-form v-model="valid">
           <!-- <ValidationProvider v-slot="{ errors }" name="email" rules="required|email"> -->
@@ -177,14 +196,6 @@
         </v-form>
       </ValidationObserver>
       <!--  -->
-      <v-alert
-        v-model="alert"
-        type="error"
-        dense
-        outlined
-        dismissible
-        class="ma-5"
-      >{{ errorsCommonPwd }}</v-alert>
     </v-row>
   </v-container>
 </template>
@@ -248,11 +259,15 @@ export default {
     valid: false,
     dialog: false,
     errorsCommonPwd: "유추하기 쉬운 비밀번호입니다.",
-    alert: false
+    snackbar: false,
+    snackbarMessage: "",
+    y: 'top',
+    color: '',
+    timeout: 1500,
   }),
   watch: {
     password() {
-      this.alert = false;
+      this.snackbar = false;
     },
     email() {
       let valid = false;
@@ -307,7 +322,7 @@ export default {
           });
         }
       }
-    }
+    },
   },
   methods: {
     async submit() {
@@ -324,6 +339,9 @@ export default {
             console.log(response);
             let token = response.data.key;
             localStorage.setItem("token", token);
+            this.snackbarMessage = "정상적으로 가입되었습니다."
+            this.color = "success"
+            this.snackbar = true;
 
             this.$router.push({
               name: "taste",
@@ -334,7 +352,9 @@ export default {
             var message = error.message;
 
             if (message.includes("status code 400")) {
-              this.alert = true;
+              this.snackbarMessage = "유추하기 쉬운 비밀번호입니다."
+              this.color = "error"
+              this.snackbar = true;
               this.valid = false;
             }
           });

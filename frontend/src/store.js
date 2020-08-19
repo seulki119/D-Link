@@ -17,6 +17,8 @@ export default new Vuex.Store({
     alarms: 0, //알람 숫자 기록용
     socket: null,
     chatSocket: null,
+    confirm: false,
+    error: false,
   },
   getters: {
     userId(state) {
@@ -36,6 +38,12 @@ export default new Vuex.Store({
     },
     messages(state) {
       return state.messages;
+    },
+    confirm(state) {
+      return state.confirm;
+    },
+    error(state) {
+      return state.error;
     }
   },
   //차후 Taste는 로그인이 되어있을때만 갈 수 있게;

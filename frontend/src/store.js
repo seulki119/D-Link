@@ -58,6 +58,7 @@ export default new Vuex.Store({
     loginError(state) {
       state.isLogin = false;
       state.isLoginError = true;
+      setTimeout(() => { state.isLoginError = false }, 1000)
     },
     //로그아웃
     logout(state) {
@@ -122,19 +123,17 @@ export default new Vuex.Store({
         .then((res) => {
           // 로그인 성공시, token을 헤더에 포함시킴
           let token = res.data.key;
-
           // 토큰을 로컬스토리지에 저장
           localStorage.setItem("token", token);
-
           this.dispatch("getUserInfo");
           this.dispatch("socketConnect", {
             token: token,
             type: 0 // 알람 소켓
           });
+
         })
-        .catch((res) => {
-          console.log(res);
-          alert("이메일과 비밀번호를 확인하세요.");
+        .catch(() => {
+          commit("loginError");
         });
 
     },

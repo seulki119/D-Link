@@ -1,10 +1,29 @@
 <template>
   <!-- <div class="container"> -->
   <v-container max-width="600" min-width="300">
+    <v-snackbar
+      v-model="snackbar"
+      :color="color"
+      :top="y === 'top'"
+      :timeout="timeout"
+    >
+      {{ snackbarMessage }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          dark
+          text
+          v-bind="attrs"
+          @click="this.$store.state.snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
     <v-card class="mx-auto pa-5" max-width="600">
-      <StackGrid :columnWidth="210" :gutterX="20" :gutterY="20">
+      <stack :column-min-width="210" :gutter-width="20" :gutter-height="20" monitor-images-loaded>
         <!-- you component like this -->
-        <div class="stack-item" v-for="(item, index) in items" :key="index">
+        <stack-item v-for="(item, index) in items" :key="index" style="transition: transform 300ms">
           <!-- some thing have fixed height-->
           <div v-if="item.user.id != userId" class="stack-item stack-item-6">
             <img
@@ -23,19 +42,20 @@
               />
             </div>
           </div>
-        </div>
-      </StackGrid>
+        </stack-item>
+      </stack>
     </v-card>
   </v-container>
   <!-- </div> -->
 </template>
 <script>
-import StackGrid from "vue-stack-grid-component";
+import { Stack, StackItem } from "vue-stack-grid";
 import { mapGetters } from "vuex";
 import http from "@/util/http-common";
 export default {
   components: {
-    StackGrid
+    Stack,
+    StackItem
   },
   data() {
     return {
@@ -45,11 +65,16 @@ export default {
       bottom: false,
       counter: 0,
       items: [],
-      scrap: []
+      scrap: [],
+      timeout: 2000,
+      y: 'top',
     };
   },
   computed: {
-    ...mapGetters(["userId"])
+    ...mapGetters(["userId"]),
+    ...mapGetters(["color"]),
+    ...mapGetters(["snackbar"]),
+    ...mapGetters(["snackbarMessage"]),
   },
   created() {
     window.addEventListener("scroll", () => {
@@ -141,6 +166,13 @@ export default {
       if (bottom) {
         this.addList();
       }
+    }
+  },
+  beforeCreate() {
+    if (this.$store.state.snackbar) {
+      setTimeout(() => {
+        this.$store.state.snackbar = false;
+      }, 2000)
     }
   }
 };

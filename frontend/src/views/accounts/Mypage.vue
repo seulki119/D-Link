@@ -1,6 +1,25 @@
 <!-- eslint-disable -->
 <template>
   <v-container max-width="600" min-width="300">
+    <v-snackbar
+      v-model="snackbar"
+      :color="color"
+      :top="y === 'top'"
+      :timeout="timeout"
+    >
+      {{ snackbarMessage }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          dark
+          text
+          v-bind="attrs"
+          @click="this.$store.state.snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
     <v-card class="mx-auto pa-5" max-width="600">
       <v-layout row wrap class="pa-5">
         <v-flex xs12 sm6 md4 lg3 x12>
@@ -51,9 +70,6 @@
       <v-btn block color="black" class="ma-2 white--text" @click="update()">
         <v-icon left dark>mdi-account</v-icon>프로필 수정
       </v-btn>
-      <v-btn block color="black" class="ma-2 white--text" @click="logout()">
-        <v-icon left dark>mdi-logout</v-icon>테스트용 로그아웃(진짜 로그아웃은 숨겨둠)
-      </v-btn>
     </v-card>
     <v-card class="mx-auto pa-5" max-width="600">
       <v-tabs centered icons-and-text background-color="white" color="deep-purple accent-4">
@@ -93,7 +109,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapGetters } from "vuex";
 import ImageInput from "./ImageInput.vue";
 import http from "@/util/http-common";
 export default {
@@ -109,7 +125,9 @@ export default {
       previous: null,
       image: null,
       saving: false,
-      saved: false
+      saved: false,
+      timeout: 2000,
+      y: 'top',
     };
   },
   components: {
@@ -132,9 +150,17 @@ export default {
       this.email = this.userInfo.email;
       console.log(res);
     });
+    if (this.$store.state.snackbar) {
+      setTimeout(() => {
+        this.$store.state.snackbar = false;
+      }, 2000)
+    }
   },
   computed: {
-    ...mapState(["userInfo"])
+    ...mapState(["userInfo"]),
+    ...mapGetters(["color"]),
+    ...mapGetters(["snackbar"]),
+    ...mapGetters(["snackbarMessage"]),
   },
   methods: {
     ...mapActions(["logout"]),
@@ -189,6 +215,6 @@ export default {
       this.saved = false;
     },
     deep: true
-  }
+  },
 };
 </script>

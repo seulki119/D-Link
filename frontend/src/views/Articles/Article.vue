@@ -269,7 +269,7 @@ export default {
       snackbarMessage: "",
       y: 'top',
       color: '',
-      timeout: 6000,
+      timeout: 2000,
     };
   },
   watch: {
@@ -416,7 +416,9 @@ export default {
         .delete(`/articles/${this.item.id}/comment/${commId}/`, config)
         .then(() => {
           // console.log(response);
-
+          this.color = 'success'
+          this.snackbarMessage = "정상적으로 삭제되었습니다."
+          this.snackbar = true;
           this.$store.dispatch(
             "getArticle",
             `/articles/${this.$route.query.id}`
@@ -452,9 +454,15 @@ export default {
       if (menu === "삭제") {
         http
           .delete(`/articles/${this.item.id}`, config)
-          .then(response => {
-            alert(response.data.message);
+          .then(() => {
+            let snackbarData = {
+              color: 'success',
+              snackbarMessage: "정상적으로 삭제되었습니다.",
+              snackbar: true,
+            }
+            this.$store.commit("setSnackbar", snackbarData)
             this.$router.push("mypage");
+            // console.log("asdfasdfsdf")
           })
           .catch(response => {
             alert(response.data.message);
@@ -498,6 +506,9 @@ export default {
           console.log(res);
           this.modeUpdate = !this.modeUpdate;
           this.item.content = this.content;
+          this.color = 'success'
+          this.snackbarMessage = "정상적으로 수정되었습니다."
+          this.snackbar = true;
         })
         .catch(err => {
           console.log(err.response);

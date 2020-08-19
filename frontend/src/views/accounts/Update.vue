@@ -4,7 +4,12 @@
       <v-layout row wrap class="pa-5">
         <v-flex>
           <v-container v-model="info">
-            <v-text-field v-model="username" label="Username" :error-messages="errors"></v-text-field>
+            <v-text-field
+              v-model="username"
+              @keypress="isNotSpecail"
+              label="Username"
+              :error-messages="errors"
+            ></v-text-field>
             <v-text-field v-model="email" label="Email" disabled></v-text-field>
             <v-textarea v-model="intro" label="Intro"></v-textarea>
           </v-container>
@@ -82,10 +87,9 @@ export default {
       } else {
         var re = /^([\wㄱ-ㅎ가-힣/./+/-]*)$/;
         if (!re.test(this.username)) {
-          this.valid - false;
-          this.errorsName = this.valid
-            ? []
-            : ["닉네임은 문자, 숫자, +, -, _ 만 가능합니다."];
+          console.log("Dfdf");
+          this.valid = false;
+          this.errors = this.valid ? [] : ["닉네임은 문자, 숫자만 가능합니다."];
         } else {
           this.valid = true;
           const fd = new FormData();
@@ -151,6 +155,18 @@ export default {
     },
     passwordChange() {
       this.$router.push("passwordChange");
+    },
+    isNotSpecail($event) {
+      let keyCode = $event.keyCode ? $event.keyCode : $event.which;
+      if (
+        (keyCode >= 123 && keyCode <= 130) ||
+        (keyCode >= 32 && keyCode <= 47) ||
+        (keyCode >= 58 && keyCode <= 64) ||
+        (keyCode >= 91 && keyCode <= 96)
+      ) {
+        this.errors = ["닉네임은 문자, 숫자만 가능합니다."];
+        $event.preventDefault();
+      }
     }
   }
 };

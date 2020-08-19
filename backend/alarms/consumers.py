@@ -83,6 +83,7 @@ class UserChatConsumer(WebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
         username = text_data_json['username']
+        profileImage = text_data_json['profileImage']
         roomId = self.groupname.split('_')[1]
 
         chat = Chat(message=message, username=username, roomId=roomId)
@@ -93,7 +94,8 @@ class UserChatConsumer(WebsocketConsumer):
             {
                 'type': 'share_chat_message',
                 'message': message,
-                'username': username
+                'username': username,
+                'profileImage': profileImage
             }
         )
 
@@ -104,5 +106,6 @@ class UserChatConsumer(WebsocketConsumer):
         # Send message to WebSocket
         self.send(text_data=json.dumps({
             'message': event['message'],
-            'username': event['username']
+            'username': event['username'],
+            'profileImage': event['profileImage']
         }))

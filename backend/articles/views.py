@@ -141,10 +141,10 @@ def search(request):
 def curation(request):
     user = get_object_or_404(AUTH_USER, pk=request.user.id)
     taste1 = user.taste1
-    taste2 = user.taste1
-    articles =  Article.objects.all()
-    curation_data = articles.objects.filter(Q(hashtag=taste1) | Q(hashtag=taste2))
-    return Response({'curation':curation_data})
+    taste2 = user.taste2
+    print(taste1,taste2,type(taste1))
+    curation_data = Article.objects.filter(Q(hashtag=taste1) | Q(hashtag=taste2))
+    return Response({'curation':curation_data, 'taste':{'taste1':taste1,'taste2':taste2}})
 
 @api_view(['POST'])
 def recomment_create(request, comment_pk):

@@ -70,9 +70,6 @@
       <v-btn block color="black" class="ma-2 white--text" @click="update()">
         <v-icon left dark>mdi-account</v-icon>프로필 수정
       </v-btn>
-      <v-btn block color="black" class="ma-2 white--text" @click="logout()">
-        <v-icon left dark>mdi-logout</v-icon>테스트용 로그아웃(진짜 로그아웃은 숨겨둠)
-      </v-btn>
     </v-card>
     <v-card class="mx-auto pa-5" max-width="600">
       <v-tabs centered icons-and-text background-color="white" color="deep-purple accent-4">

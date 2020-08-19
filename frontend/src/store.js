@@ -17,8 +17,9 @@ export default new Vuex.Store({
     alarms: 0, //알람 숫자 기록용
     socket: null,
     chatSocket: null,
-    confirm: false,
-    error: false,
+    color: null,
+    snackbar: null,
+    snackbarMessage: null,
   },
   getters: {
     userId(state) {
@@ -44,6 +45,15 @@ export default new Vuex.Store({
     },
     error(state) {
       return state.error;
+    },
+    color(state) {
+      return state.color;
+    },
+    snackbar(state) {
+      return state.snackbar;
+    },
+    snackbarMessage(state) {
+      return state.snackbarMessage
     }
   },
   //차후 Taste는 로그인이 되어있을때만 갈 수 있게;
@@ -111,6 +121,11 @@ export default new Vuex.Store({
         // console.log(payload)
         state.messages = payload;
       }
+    },
+    setSnackbar(state, payload) {
+      state.color = payload.color;
+      state.snackbar = payload.snackbar;
+      state.snackbarMessage = payload.snackbarMessage;
     }
   },
   actions: {

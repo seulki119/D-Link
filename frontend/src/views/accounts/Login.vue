@@ -3,8 +3,6 @@
   <v-container class="fill-height" style="max-width:450px">
     <v-row align-center row wrap>
       <v-flex xs12>
-        <v-alert class="mb-3" :value="isLoginError" type="error">이메일과 비밀번호를 확인해주세요.</v-alert>
-        <v-alert :value="isLogin" type="success">로그인에 성공하였습니다.</v-alert>
         <v-card>
           <v-toolbar flat justify-space-between>
             <v-toolbar-title>로그인</v-toolbar-title>
@@ -53,7 +51,6 @@ export default {
     ...mapState(["isLogin", "isLoginError"])
   },
   mounted() {
-    console.log(document.getElementById("kakao-login-btn").firstChild);
     document.getElementById("kakao-login-btn").firstChild.src =
       "/static/img/kakao_login_button_round.55b2ddfe.png";
     document.getElementById("kakao-login-btn").firstChild.style.width = "30px";
@@ -74,8 +71,6 @@ export default {
         });
     },
     onSuccess(data) {
-      console.log(data);
-      console.log("success");
       this.$store.dispatch("kakaoLogin", data.access_token);
     },
     onFailure(data) {

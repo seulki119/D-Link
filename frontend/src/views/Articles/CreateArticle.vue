@@ -119,6 +119,12 @@ export default {
         .post("/articles/", fd, config)
         .then(res => {
           console.log(res);
+          let snackbarData = {
+            color: 'success',
+            snackbarMessage: "정상적으로 생성되었습니다.",
+            snackbar: true,
+          }
+          this.$store.commit("setSnackbar", snackbarData)
           this.$router.push("articlelist");
         })
         .catch(err => {

@@ -1,6 +1,25 @@
 <template>
   <!-- <div class="container"> -->
   <v-container max-width="600" min-width="300">
+    <v-snackbar
+      v-model="snackbar"
+      :color="color"
+      :top="y === 'top'"
+      :timeout="timeout"
+    >
+      {{ snackbarMessage }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          dark
+          text
+          v-bind="attrs"
+          @click="this.$store.state.snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
     <v-card class="mx-auto pa-5" max-width="600">
       <stack :column-min-width="210" :gutter-width="20" :gutter-height="20" monitor-images-loaded>
         <!-- you component like this -->
@@ -46,11 +65,16 @@ export default {
       bottom: false,
       counter: 0,
       items: [],
-      scrap: []
+      scrap: [],
+      timeout: 2000,
+      y: 'top',
     };
   },
   computed: {
-    ...mapGetters(["userId"])
+    ...mapGetters(["userId"]),
+    ...mapGetters(["color"]),
+    ...mapGetters(["snackbar"]),
+    ...mapGetters(["snackbarMessage"]),
   },
   created() {
     window.addEventListener("scroll", () => {
@@ -142,6 +166,13 @@ export default {
       if (bottom) {
         this.addList();
       }
+    }
+  },
+  beforeCreate() {
+    if (this.$store.state.snackbar) {
+      setTimeout(() => {
+        this.$store.state.snackbar = false;
+      }, 2000)
     }
   }
 };

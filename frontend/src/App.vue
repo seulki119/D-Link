@@ -102,8 +102,6 @@ export default {
       "passwordChange",
       "search"
     ];
-    // console.log(this.$router.options.routes);
-    // console.log(this.$router.history.current.name);
     if ("search" === this.$router.history.current.name) {
       this.isSearch = true;
     } else {

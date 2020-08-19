@@ -1,5 +1,24 @@
 <template>
   <div v-if="!loading">
+    <v-snackbar
+      v-model="snackbar"
+      :color="color"
+      :top="y === 'top'"
+      :timeout="timeout"
+    >
+      {{ snackbarMessage }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          dark
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
     <v-card class="mx-auto pa-5" max-width="600">
       <v-list-item>
         <v-list-item-avatar color="grey">
@@ -245,7 +264,12 @@ export default {
       content: "",
       items: [],
       max: 20,
-      comments: []
+      comments: [],
+      snackbar: false,
+      snackbarMessage: "",
+      y: 'top',
+      color: '',
+      timeout: 2000,
     };
   },
   watch: {
@@ -253,7 +277,7 @@ export default {
       if (this.myComment == "") {
         this.modeComment = true;
       }
-    }
+    },
   },
   created() {
     // article id로 게시물정보 가져오기.
@@ -356,6 +380,9 @@ export default {
             "getArticle",
             `/articles/${this.$route.query.id}`
           );
+          this.color = 'success'
+          this.snackbarMessage = "성공적으로 생성되었습니다."
+          this.snackbar = true;
 
           // 대표 댓글은 본인의 가장 최신 댓글(현재 등록한 댓글)로 갱신
           // if (this.repComment.id === "") {
@@ -369,6 +396,9 @@ export default {
         })
         .catch(err => {
           console.log(err);
+          this.color = 'error'
+          this.snackbarMessage = "에러가 발생했습니다."
+          this.snackbar = true;
         });
     },
     //댓글삭제
@@ -386,7 +416,9 @@ export default {
         .delete(`/articles/${this.item.id}/comment/${commId}/`, config)
         .then(() => {
           // console.log(response);
-
+          this.color = 'success'
+          this.snackbarMessage = "정상적으로 삭제되었습니다."
+          this.snackbar = true;
           this.$store.dispatch(
             "getArticle",
             `/articles/${this.$route.query.id}`
@@ -400,9 +432,15 @@ export default {
             this.repComment.userImage = "";
           }
           // if(commId)
+          this.color = "success"
+          this.snackbarMessage = "성공적으로 삭제되었습니다."
+          this.snackbar = true;
         })
         .catch(err => {
           console.log(err.response);
+          this.color = 'error'
+          this.snackbarMessage = "에러가 발생했습니다."
+          this.snackbar = true;
         });
     },
     clickMenu(menu) {
@@ -416,9 +454,15 @@ export default {
       if (menu === "삭제") {
         http
           .delete(`/articles/${this.item.id}`, config)
-          .then(response => {
-            alert(response.data.message);
+          .then(() => {
+            let snackbarData = {
+              color: 'success',
+              snackbarMessage: "정상적으로 삭제되었습니다.",
+              snackbar: true,
+            }
+            this.$store.commit("setSnackbar", snackbarData)
             this.$router.push("mypage");
+            // console.log("asdfasdfsdf")
           })
           .catch(response => {
             alert(response.data.message);
@@ -462,9 +506,15 @@ export default {
           console.log(res);
           this.modeUpdate = !this.modeUpdate;
           this.item.content = this.content;
+          this.color = 'success'
+          this.snackbarMessage = "정상적으로 수정되었습니다."
+          this.snackbar = true;
         })
         .catch(err => {
           console.log(err.response);
+          this.color = 'error'
+          this.snackbarMessage = "에러가 발생했습니다."
+          this.snackbar = true;
         });
     },
     isNotSpecial($event) {
@@ -510,6 +560,9 @@ export default {
             `/articles/${this.$route.query.id}`
           );
           this.myComment = "";
+          this.color = 'success'
+          this.snackbarMessage = "성공적으로 생성되었습니다."
+          this.snackbar = true;
         })
         .catch(response => {
           console.log(response.data);

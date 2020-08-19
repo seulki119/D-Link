@@ -6,9 +6,10 @@
         <v-row align="center" justify="center">
           <v-col cols="12" sm="8" md="4">
             <v-card class="elevation-12">
-              <v-toolbar color="primary" dark flat>
+              <v-toolbar v-if="!isLoginError" color="primary" dark flat>
                 <v-toolbar-title>DLINK에 오신걸 환영합니다</v-toolbar-title>
               </v-toolbar>
+              <v-alert class="mb-3" v-else type="error">이메일과 비밀번호를 확인해주세요.</v-alert>
               <v-card-actions>
                 <v-tabs
                   centered
@@ -43,7 +44,7 @@ export default {
     source: String
   },
   computed: {
-    ...mapState(["isLogin"])
+    ...mapState(["isLogin", "isLoginError"])
   },
   components: {
     Login: Login,

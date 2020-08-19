@@ -17,6 +17,9 @@ export default new Vuex.Store({
     alarms: 0, //알람 숫자 기록용
     socket: null,
     chatSocket: null,
+    color: null,
+    snackbar: null,
+    snackbarMessage: null,
   },
   getters: {
     userId(state) {
@@ -36,6 +39,21 @@ export default new Vuex.Store({
     },
     messages(state) {
       return state.messages;
+    },
+    confirm(state) {
+      return state.confirm;
+    },
+    error(state) {
+      return state.error;
+    },
+    color(state) {
+      return state.color;
+    },
+    snackbar(state) {
+      return state.snackbar;
+    },
+    snackbarMessage(state) {
+      return state.snackbarMessage
     }
   },
   //차후 Taste는 로그인이 되어있을때만 갈 수 있게;
@@ -50,6 +68,7 @@ export default new Vuex.Store({
     loginError(state) {
       state.isLogin = false;
       state.isLoginError = true;
+      setTimeout(() => { state.isLoginError = false }, 1000)
     },
     //로그아웃
     logout(state) {
@@ -103,6 +122,11 @@ export default new Vuex.Store({
         // console.log(payload)
         state.messages = payload;
       }
+    },
+    setSnackbar(state, payload) {
+      state.color = payload.color;
+      state.snackbar = payload.snackbar;
+      state.snackbarMessage = payload.snackbarMessage;
     }
   },
   actions: {
@@ -114,19 +138,17 @@ export default new Vuex.Store({
         .then((res) => {
           // 로그인 성공시, token을 헤더에 포함시킴
           let token = res.data.key;
-
           // 토큰을 로컬스토리지에 저장
           localStorage.setItem("token", token);
-
           this.dispatch("getUserInfo");
           this.dispatch("socketConnect", {
             token: token,
             type: 0 // 알람 소켓
           });
+
         })
-        .catch((res) => {
-          console.log(res);
-          alert("이메일과 비밀번호를 확인하세요.");
+        .catch(() => {
+          commit("loginError");
         });
 
     },

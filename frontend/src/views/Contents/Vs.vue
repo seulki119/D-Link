@@ -50,9 +50,13 @@
               :class="{ 'message-out': item.username === userName, 'message-in': item.username !== userName }"
             >{{item.username + ": " + item.message}}</p>
           </section>
-          <!-- <textarea id="chat-log" cols="100" rows="20" disabled v-auto-scroll-bottom></textarea> -->
           <v-text-field v-model="mymessage" label="메시지" @keyup.enter="sendChatMessage()"></v-text-field>
-          <v-btn color="blue-grey" class="ma-2 white--text" @click="sendChatMessage()">전송</v-btn>
+          <v-btn
+            color="blue-grey"
+            class="ma-2 white--text"
+            :disabled="canSend"
+            @click="sendChatMessage()"
+          >전송</v-btn>
         </v-row>
       </div>
     </v-card>
@@ -65,6 +69,7 @@ import http from "@/util/http-common";
 export default {
   data() {
     return {
+      canSend: false,
       mymessage: "",
       id: [],
       image: [],
@@ -198,18 +203,23 @@ export default {
       });
     },
     sendChatMessage() {
-      let socket = this.$store.state.chatSocket;
-      let data = {
-        message: this.mymessage,
-        username: this.$store.getters.userName
-      };
-      if (data.message != "") {
+      let trimed = this.mymessage.trim();
+      if (trimed != "") {
+        let socket = this.$store.state.chatSocket;
+        let data = {
+          message: trimed,
+          username: this.$store.getters.userName
+        };
         socket.send(JSON.stringify(data));
         this.mymessage = "";
       }
     }
   },
-
+  watch: {
+    mymessage() {
+      this.canSend = this.mymessage.trim() != "" ? false : true;
+    }
+  },
   beforeCreate() {
     let room = "1";
     let token = localStorage.getItem("token");

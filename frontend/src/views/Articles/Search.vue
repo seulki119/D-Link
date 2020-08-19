@@ -68,7 +68,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["userId"])
+    ...mapGetters(["userInfo", "userId"])
   },
   created() {
     window.addEventListener("scroll", () => {
@@ -83,10 +83,19 @@ export default {
     };
     http.post("/articles/hashtag/", "", config).then(res => {
       let tmp = [];
+      let taste1 = this.$store.state.userInfo.taste1;
+      let taste2 = this.$store.state.userInfo.taste2;
       for (let t in res.data) {
         tmp.push(res.data[t].tag);
       }
       this.tags = tmp;
+      if (this.tags.includes(taste1)) {
+        this.tag.push(taste1);
+      }
+      if (this.tags.includes(taste2)) {
+        this.tag.push(taste2);
+      }
+      this.search();
     });
   },
   methods: {
@@ -107,9 +116,6 @@ export default {
       for (let t in this.tag) {
         searchWord += "#" + this.tag[t];
       }
-      // const fd = new FormData();
-      // fd.append("hashtags", searchWord);
-      // fd.append("counter", this.counter);
       http
         .post(
           "/articles/search/",
@@ -151,4 +157,5 @@ export default {
 };
 </script>
 <style>
+/* https://codepen.io/yuhomyan/details/OJMejWJ */
 </style>

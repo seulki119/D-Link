@@ -71,6 +71,7 @@ export default {
     });
     this.addList();
   },
+
   methods: {
     showDetail(id) {
       this.$router.push(`article?id=${id}`);
@@ -120,7 +121,6 @@ export default {
     },
     addList() {
       let token = localStorage.getItem("token");
-
       let config = {
         headers: {
           Authorization: `Token ${token}`

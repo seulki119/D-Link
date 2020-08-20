@@ -378,8 +378,8 @@ export default new Vuex.Store({
       }
       http
         .post(payload.url, body, config)
-        .then((res) => {
-          console.log(res);
+        .then(() => {
+          this.commit("setAlarms", 1)
           return;
         }).catch(err => {
           console.log(err)

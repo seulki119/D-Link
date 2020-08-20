@@ -15,3 +15,5 @@ class Chat(models.Model):
     message=models.TextField()
     username=models.CharField(max_length=30)
     roomId=models.IntegerField()
+    profileImage=models.TextField(null=True)
+    choice=models.CharField(max_length=100)

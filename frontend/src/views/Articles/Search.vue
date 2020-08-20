@@ -58,7 +58,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["userId"])
+    ...mapGetters(["userInfo", "userId"])
   },
   created() {
     window.addEventListener("scroll", () => {
@@ -73,10 +73,19 @@ export default {
     };
     http.post("/articles/hashtag/", "", config).then(res => {
       let tmp = [];
+      let taste1 = this.$store.state.userInfo.taste1;
+      let taste2 = this.$store.state.userInfo.taste2;
       for (let t in res.data) {
         tmp.push(res.data[t].tag);
       }
       this.tags = tmp;
+      if (this.tags.includes(taste1)) {
+        this.tag.push(taste1);
+      }
+      if (this.tags.includes(taste2)) {
+        this.tag.push(taste2);
+      }
+      this.search();
     });
   },
   methods: {
@@ -136,4 +145,3 @@ export default {
     }
   }
 };
-</script>

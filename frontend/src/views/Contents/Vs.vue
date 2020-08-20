@@ -115,7 +115,8 @@ export default {
   },
   computed: {
     ...mapGetters(["messages"]),
-    ...mapGetters(["userName"])
+    ...mapGetters(["userName"]),
+    ...mapGetters(["profileImage"])
   },
   created() {
     let token = localStorage.getItem("token");
@@ -176,7 +177,9 @@ export default {
         let socket = this.$store.state.chatSocket;
         let data = {
           message: trimed,
-          username: this.$store.getters.userName
+          username: this.$store.getters.userName,
+          profileImage: this.$store.getters.profileImage,
+          choice: this.topic[this.last]
         };
         socket.send(JSON.stringify(data));
         this.mymessage = "";

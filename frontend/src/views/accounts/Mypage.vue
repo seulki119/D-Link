@@ -57,6 +57,9 @@
       <v-btn block class="ma-2" @click="update()">
         <v-icon left>mdi-account</v-icon>프로필 수정
       </v-btn>
+      <v-btn block color="black" class="ma-2 white--text" @click="logout()">
+        <v-icon left dark>mdi-logout</v-icon>로그아웃
+      </v-btn>
     </v-card>
     <v-card class="mx-auto pa-5" max-width="600">
       <v-tabs centered icons-and-text>
@@ -180,6 +183,7 @@ export default {
       http.put("/accounts/min/image/", fd, config).then(res => {
         this.previous = res.data.image;
         this.avatar = null;
+        this.$store.dispatch("getUserInfo");
       });
     },
     dataURItoBlob(dataURI) {

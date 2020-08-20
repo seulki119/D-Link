@@ -1,25 +1,18 @@
 <template>
   <v-container fill-height>
     <v-card class="mx-auto" width="100%" max-width="600">
-      <v-layout column justify-space-between class="pa-10 text-center indigo lighten-2 white--text">
+      <v-layout column justify-space-between class="pa-10 text-center">
         <p style="font-size:x-large" class="mb-0">d-link 칵테일 레시피</p>
       </v-layout>
       <hr />
-      <!-- 검색 -->
       <v-col cols="12" sm="6" md="4">
-        <v-text-field
-          placeholder="칵테일 이름으로 검색"
-          outlined
-          dense
-          @keydown.enter="search"
-          v-model="keyword"
-        ></v-text-field>
+        <v-text-field placeholder="칵테일 이름으로 검색" @keydown.enter="search" v-model="keyword"></v-text-field>
       </v-col>
       <!-- 레시피 출력 -->
       <v-layout
         column
         justify-space-between
-        class="pa-5 text-center indigo lighten-2 white--text"
+        class="pa-5 text-center"
         style="font-size:large;"
         v-for="item in items"
         :key="item.score"
@@ -27,12 +20,12 @@
         <v-card>
           <v-img
             :src="require(`@/assets/cocktail/${item.name}.png`)"
-            class="grey lighten-2 pa-10"
+            class="pa-10"
             max-width="100%"
           >
             <template v-slot:placeholder>
               <v-row class="fill-height ma-0" align="center" justify="center">
-                <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                <v-progress-circular indeterminate></v-progress-circular>
               </v-row>
             </template>
           </v-img>
@@ -68,6 +61,3 @@ export default {
   }
 };
 </script>
-
-<style>
-</style>

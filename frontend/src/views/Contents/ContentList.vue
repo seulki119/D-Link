@@ -11,7 +11,6 @@
               max-width="600"
               fill-height
               router
-              flat
               :to="{ name: 'cocktail' }"
             >
               <div id="container">
@@ -24,7 +23,7 @@
               <v-expand-transition>
                 <div
                   v-if="hover"
-                  class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-3 white--text"
+                  class="d-flex transition-fast-in-fast-out v-card--reveal display-3"
                   style="height: 100%;"
                 >칵테일</div>
               </v-expand-transition>
@@ -55,7 +54,7 @@
               <v-expand-transition>
                 <div
                   v-if="hover"
-                  class="d-flex transition-fast-in-fast-out blue darken-2 v-card--reveal display-3 white--text"
+                  class="d-flex transition-fast-in-fast-out v-card--reveal display-3"
                   style="height: 100%;"
                 >VS</div>
               </v-expand-transition>
@@ -68,7 +67,7 @@
 </template>
 
 <script>
-window.onload = function cock() {
+function cock() {
   function beerRise() {
     document.querySelector(".beer").classList.add("fill");
     document.querySelector(".head").classList.add("active");
@@ -89,15 +88,15 @@ window.onload = function cock() {
   setTimeout(() => {
     pourBeer();
   }, 1000);
-};
+}
 
 export default {
   data: () => ({
     overlay: false
   }),
-  // mounted() {
-  //   cock();
-  // },
+  created() {
+    cock();
+  },
   methods: {
     moveCocktail() {
       this.$router.push("cocktail");
@@ -116,7 +115,7 @@ export default {
   z-index: 100;
 }
 body {
-  background: #68a0b7;
+  /* background: #68a0b7; */
 }
 #container {
   width: 100px;

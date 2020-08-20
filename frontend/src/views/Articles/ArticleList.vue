@@ -1,52 +1,40 @@
 <template>
-  <!-- <div class="container"> -->
   <v-container max-width="600" min-width="300">
-    <v-snackbar
-      v-model="snackbar"
-      :color="color"
-      :top="y === 'top'"
-      :timeout="timeout"
-    >
+    <v-snackbar v-model="snackbar" :color="color" :top="y === 'top'" :timeout="timeout">
       {{ snackbarMessage }}
-
       <template v-slot:action="{ attrs }">
-        <v-btn
-          dark
-          text
-          v-bind="attrs"
-          @click="this.$store.state.snackbar = false"
-        >
-          Close
-        </v-btn>
+        <v-btn dark text v-bind="attrs" @click="this.$store.state.snackbar = false">Close</v-btn>
       </template>
     </v-snackbar>
     <v-card class="mx-auto pa-5" max-width="600">
-      <stack :column-min-width="210" :gutter-width="20" :gutter-height="20" monitor-images-loaded>
-        <!-- you component like this -->
-        <stack-item v-for="(item, index) in items" :key="index" style="transition: transform 300ms">
-          <!-- some thing have fixed height-->
-          <div v-if="item.user.id != userId" class="stack-item stack-item-6">
-            <img
-              :src="`//i3b307.p.ssafy.io/${item.image}`"
-              alt
-              @click="showDetail(item.id)"
-              style="cursor: pointer;width:200px;"
-            />
-            <div class="scrapInfo">
-              {{ item.scrap.length }}
-              <!-- scrap icon : scrap[]에 로그인된 id가 존재하는지 확인 -->
-              <img
-                class="scrapInfo"
-                @click="scrapAct(index, item.id, item.user.id, item.image)"
-                :src="scrap[index] ? scrapYes : scrapNo"
-              />
-            </div>
+      <stack :gutter-width="20" :gutter-height="20" :column-min-width="210" monitor-images-loaded>
+        <stack-item v-for="(item, index) in items" :key="index" style="transition: transform 500ms">
+          <div v-if="item.user.id != userId">
+            <v-hover>
+              <template v-slot:default="{ hover }">
+                <v-card :elevation="hover ? 24 : 0" class="mx-auto" outlined min-height="320">
+                  <v-img
+                    class="ma-5 align-center"
+                    :src="`//i3b307.p.ssafy.io/${item.image}`"
+                    @click="showDetail(item.id)"
+                    style="cursor: pointer;"
+                  />
+                  <div class="ma-5">
+                    <span style="vertical-align:top;">{{ item.scrap.length }}</span>
+                    <img
+                      style="cursor: pointer;"
+                      @click="scrapAct(index, item.id, item.user.id, item.image)"
+                      :src="scrap[index] ? scrapYes : scrapNo"
+                    />
+                  </div>
+                </v-card>
+              </template>
+            </v-hover>
           </div>
         </stack-item>
       </stack>
     </v-card>
   </v-container>
-  <!-- </div> -->
 </template>
 <script>
 import { Stack, StackItem } from "vue-stack-grid";
@@ -67,14 +55,15 @@ export default {
       items: [],
       scrap: [],
       timeout: 2000,
-      y: 'top',
+      y: "top",
+      hover: false
     };
   },
   computed: {
     ...mapGetters(["userId"]),
     ...mapGetters(["color"]),
     ...mapGetters(["snackbar"]),
-    ...mapGetters(["snackbarMessage"]),
+    ...mapGetters(["snackbarMessage"])
   },
   created() {
     window.addEventListener("scroll", () => {
@@ -96,8 +85,6 @@ export default {
           Authorization: `Token ${token}`
         }
       };
-      //db에 영향주는 함수
-
       http
         .get(`/articles/${id}/scrap`, config)
         .then(() => {
@@ -162,7 +149,6 @@ export default {
   },
   watch: {
     bottom(bottom) {
-      // console.log(bottom);
       if (bottom) {
         this.addList();
       }
@@ -172,17 +158,8 @@ export default {
     if (this.$store.state.snackbar) {
       setTimeout(() => {
         this.$store.state.snackbar = false;
-      }, 2000)
+      }, 2000);
     }
   }
 };
 </script>
-<style>
-.scrapInfo {
-  right: 100%;
-  /* float: right; */
-}
-.scrapInfo img {
-  cursor: pointer;
-}
-</style>

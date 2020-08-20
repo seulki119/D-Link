@@ -16,7 +16,7 @@
             ></v-text-field>
             <v-container fluid>
               <v-row align="center" justify="center">
-                <v-btn color="primary" :disabled="!valid" @click="updateInfo">유저네임 저장</v-btn>
+                <v-btn :disabled="!valid" @click="updateInfo">유저네임 저장</v-btn>
               </v-row>
             </v-container>
           </v-form>
@@ -104,6 +104,3 @@ export default {
   }
 };
 </script>
-
-<style>
-</style>

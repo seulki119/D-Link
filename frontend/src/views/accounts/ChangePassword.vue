@@ -37,9 +37,9 @@
               required
             ></v-text-field>
           </ValidationProvider>
-          <v-btn color="primary" :disabled="!valid" class="mr-4" @click="submit">비밀번호 변경</v-btn>
-          <v-btn block color="black" class="ma-2 white--text" @click="unsubscribe()">
-            <v-icon left dark>mdi-delete</v-icon>탈퇴하기
+          <v-btn :disabled="!valid" class="mr-4" @click="submit">비밀번호 변경</v-btn>
+          <v-btn block class="ma-2" @click="unsubscribe()">
+            <v-icon left>mdi-delete</v-icon>탈퇴하기
           </v-btn>
         </v-form>
       </ValidationObserver>

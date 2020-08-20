@@ -1,26 +1,22 @@
 <template>
   <div>
-    <!-- 댓글 모두보기 -->
     <v-slide-y-transition v-if="comments !== undefined && comments.length > 0">
       <v-card-text>
-        <!--  -->
         <v-list-item v-for="(comment, index) in comments" :key="index">
-          <v-list-item-avatar color="grey" v-if="comment.content != null && comment.content != ' '">
+          <v-list-item-avatar v-if="comment.content != null && comment.content != ' '">
             <v-img
               v-if="comment.user.image != null"
               :src="`//i3b307.p.ssafy.io/${comment.user.image}`"
             ></v-img>
           </v-list-item-avatar>
-
           <v-list-item-content v-if="comment.content != null && comment.content != ' '">
             <v-list-item-title>{{ comment.user.username }}</v-list-item-title>
             {{ comment.content }}
           </v-list-item-content>
-          <!-- 댓글 삭제 - 권한 : 1)댓글 작성자 2)글 작성자  -->
           <span
             v-show="itemUserId == userId || comment.user.id == userId"
             @click="deleteComment(comment.id);"
-            class="grey--text text--lighten-1 commentMenu"
+            class="commentMenu"
           >삭제</span>
         </v-list-item>
       </v-card-text>
@@ -51,24 +47,15 @@ export default {
       }
     };
   },
-  created() {
-    // console.log(this.comments);
-  },
-  beforeUpdate() {
-    // console.log("up");
-  },
-  methods: {
-    //댓글삭제
-    deleteComment(commId, index) {
-      // console.log(commId);
 
+  methods: {
+    deleteComment(commId, index) {
       let token = localStorage.getItem("token");
       let config = {
         headers: {
           Authorization: `Token ${token}`
         }
       };
-
       http
         .delete(
           `/articles/comment/${this.commentId}/recomment/${commId}/`,

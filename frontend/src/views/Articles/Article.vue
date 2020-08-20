@@ -1,27 +1,14 @@
 <template>
   <div v-if="!loading">
-    <v-snackbar
-      v-model="snackbar"
-      :color="color"
-      :top="y === 'top'"
-      :timeout="timeout"
-    >
+    <v-snackbar v-model="snackbar" :color="color" :top="y === 'top'" :timeout="timeout">
       {{ snackbarMessage }}
-
       <template v-slot:action="{ attrs }">
-        <v-btn
-          dark
-          text
-          v-bind="attrs"
-          @click="snackbar = false"
-        >
-          Close
-        </v-btn>
+        <v-btn text v-bind="attrs" @click="snackbar = false">Close</v-btn>
       </template>
     </v-snackbar>
     <v-card class="mx-auto pa-5" max-width="600">
       <v-list-item>
-        <v-list-item-avatar color="grey">
+        <v-list-item-avatar>
           <v-img v-if="item.user.image != null" :src="`//i3b307.p.ssafy.io/${item.user.image}`"></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
@@ -42,17 +29,15 @@
             </v-list-item>
           </v-list>
         </v-menu>
-        <!-- article menu -->
       </v-list-item>
       <v-img :src="`//i3b307.p.ssafy.io/${item.image}`" class="max-small"></v-img>
 
-      <!-- 이미지 아래 부분 -->
       <div v-if="!modeUpdate">
-        <!-- scrap field -->
         <v-card-text>
           <div class="scrapInfo">
-            {{ item.scrap.length }}
+            <span style="vertical-align:top; font-size:1.3em">{{ item.scrap.length }}</span>
             <img
+              style="cursor: pointer;"
               v-if="!item.scrap.includes(userId)"
               class="scrapInfo"
               @click="scrapAct(item.id, item.user.id, item.image)"
@@ -61,46 +46,32 @@
             <img v-else class="scrapInfo" @click="scrapAct(item.id)" :src="(scrapSrc = scrapYes)" />
           </div>
         </v-card-text>
-        <!-- scrap field -->
-
-        <!-- content는 45자까지만 보여주고, 더보기 클릭시 전체 보여줌 -->
-        <v-card-text style="color:black">
+        <v-card-text>
           <span v-if="!readMoreActivated">{{ item.content.slice(0, 45) }}</span>
           <a
-            style="color:gray;"
             class
             v-if="item.content.length>45 && !readMoreActivated"
             @click="activateReadMore"
           >...더보기</a>
           <span v-if="readMoreActivated" v-html="item.content"></span>
         </v-card-text>
-
-        <!-- 해쉬태그 출력 -->
         <v-card-text>
           <v-combobox class="pt-6" v-model="hashtags" multiple chips disabled></v-combobox>
         </v-card-text>
-        <!-- 댓글 접기/펼치기 버튼 -->
         <v-card-actions>
-          <v-btn
-            text
-            color="deep-purple accent-4"
-            @click.native="show = !show"
-            v-if="item.commentSet.length > 0"
-          >
+          <v-btn text @click.native="show = !show" v-if="item.commentSet.length > 0">
             {{
             show ? "댓글 접기" : `댓글 ${item.commentSet.length}개 모두 보기`
             }}
           </v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
-        <!-- 본인댓글이나 최신댓글 1개 보여주기 -->
         <v-slide-y-transition v-if="item.commentSet.length > 0 || repComment.id !== '' ">
           <v-card-text v-show="!show">
             <v-list-item>
-              <v-list-item-avatar color="grey" v-if="repComment.userImage != ''">
+              <v-list-item-avatar v-if="repComment.userImage != ''">
                 <v-img :src="`//i3b307.p.ssafy.io/${repComment.userImage}`"></v-img>
               </v-list-item-avatar>
-
               <v-list-item-content>
                 <v-list-item-title>{{ repComment.userName }}</v-list-item-title>
                 <v-list-item-subtitle>
@@ -112,48 +83,37 @@
             </v-list-item>
           </v-card-text>
         </v-slide-y-transition>
-        <!-- 댓글 모두보기 -->
         <v-slide-y-transition v-if="item.commentSet !== undefined && item.commentSet.length > 0">
           <v-card-text v-show="show">
-            <!-- 8/4 18:00 v-list-item에서 v-list-group으로 수정. https://vuetifyjs.com/en/components/lists/#lists -->
             <v-list-group v-for="(comment, index) in item.commentSet" :key="index">
               <template v-slot:activator>
-                <v-list-item-avatar color="grey">
+                <v-list-item-avatar>
                   <v-img
                     v-if="comment.user.image != null"
                     :src="`//i3b307.p.ssafy.io/${comment.user.image}`"
                   ></v-img>
                 </v-list-item-avatar>
-
                 <v-list-item-content>
                   <v-list-item-title>{{ comment.user.username }}</v-list-item-title>
                   {{ comment.content }}
                 </v-list-item-content>
               </template>
-
-              <!-- 대댓글달기, 삭제 버튼 ////START//// 
-               댓글 삭제 - 권한 : 1)댓글 작성자 2)글 작성자
-              -->
               <v-list-item>
                 <v-list-item-content>
                   <div>
                     <span
                       @click="myComment = `@${comment.user.username} `; modeComment=false; comm={id:comment.id,username:comment.user.username,userid:comment.user.id}"
-                      class="grey--text text--lighten-1 commentMenu"
+                      class="commentMenu"
                     >답글달기</span>
                     <span
                       v-show="item.user.id == userId || comment.user.id == userId"
                       @click="deleteComment(comment.id);"
-                      class="grey--text text--lighten-1 commentMenu"
+                      class="commentMenu"
                     >삭제</span>
                   </div>
                 </v-list-item-content>
               </v-list-item>
-              <!-- 대댓글달기, 삭제 버튼 ////END//// -->
-
-              <!-- 대댓글 Form ////START//// -->
               <div v-if="comment.recommentSet !== undefined">
-                <!-- props 전달 -->
                 <comment-form
                   :comments="comment.recommentSet"
                   :itemUserId="item.user.id"
@@ -161,11 +121,9 @@
                   :commentId="comment.id"
                 />
               </div>
-              <!-- 대댓글 Form ////END//// -->
             </v-list-group>
           </v-card-text>
         </v-slide-y-transition>
-        <!-- 댓글 등록하기 -->
         <v-card-actions>
           <v-textarea
             v-model="myComment"
@@ -184,17 +142,11 @@
           ></v-textarea>
         </v-card-actions>
       </div>
-      <!-- 이미지 아래 부분 -->
-
-      <!-- 이미지 아래 부분 : 글 수정 모드 -->
       <div v-else>
-        <!-- 글 내용 -->
-        <v-card-text class="text--primary">
+        <v-card-text>
           <v-textarea v-model="content" label="내용" counter maxlength="120" full-width single-line></v-textarea>
         </v-card-text>
         <v-divider></v-divider>
-
-        <!-- 해쉬태그 -->
         <v-card-text>
           <v-combobox
             class="pt-6"
@@ -209,19 +161,14 @@
           ></v-combobox>
         </v-card-text>
         <v-divider></v-divider>
-        <v-btn
-          color="blue-grey"
-          class="ma-2 white--text"
-          @click="modeUpdate = !modeUpdate; content = item.content"
-        >
-          <v-icon left dark>mdi-arrow-left</v-icon>back
+        <v-btn class="ma-2" @click="modeUpdate = !modeUpdate; content = item.content">
+          <v-icon left>mdi-arrow-left</v-icon>back
         </v-btn>
-        <v-btn color="blue-grey" style="float:right" class="ma-2 white--text" @click="actUpdate()">
+        <v-btn style="float:right" class="ma-2" @click="actUpdate()">
           upload
-          <v-icon right dark>mdi-cloud-upload</v-icon>
+          <v-icon right>mdi-cloud-upload</v-icon>
         </v-btn>
       </div>
-      <!-- 이미지 아래 부분 : 글 수정 모드 -->
     </v-card>
   </div>
   <div class="overlay" v-else>로딩중</div>
@@ -267,9 +214,9 @@ export default {
       comments: [],
       snackbar: false,
       snackbarMessage: "",
-      y: 'top',
-      color: '',
-      timeout: 2000,
+      y: "top",
+      color: "",
+      timeout: 2000
     };
   },
   watch: {
@@ -277,17 +224,15 @@ export default {
       if (this.myComment == "") {
         this.modeComment = true;
       }
-    },
+    }
   },
   created() {
-    // article id로 게시물정보 가져오기.
     this.loading = true;
 
     this.$store
       .dispatch("getArticle", `/articles/${this.$route.query.id}`)
       .then(res => {
         console.log(res);
-        //res가 undefined면 오류 뜨는게 문제여서 안번더 실행시켜서 해결
         if (res === undefined) {
           this.$store.dispatch(
             "getArticle",
@@ -351,7 +296,6 @@ export default {
     activateReadMore() {
       this.readMoreActivated = true;
     },
-    // 댓글 등록
     createComment() {
       this.$store.dispatch("sendAlarm", {
         url: "/alarms/Share/",
@@ -361,7 +305,6 @@ export default {
         message: this.myComment,
         alarmType: 1 // 댓글
       });
-      // alert(this.myComment);
       let token = localStorage.getItem("token");
       let config = {
         headers: {
@@ -380,12 +323,10 @@ export default {
             "getArticle",
             `/articles/${this.$route.query.id}`
           );
-          this.color = 'success'
-          this.snackbarMessage = "성공적으로 생성되었습니다."
+          this.color = "success";
+          this.snackbarMessage = "성공적으로 생성되었습니다.";
           this.snackbar = true;
 
-          // 대표 댓글은 본인의 가장 최신 댓글(현재 등록한 댓글)로 갱신
-          // if (this.repComment.id === "") {
           this.repComment.id = response.data.id;
           this.repComment.userName = this.userName;
           this.repComment.content = response.data.content;
@@ -396,12 +337,11 @@ export default {
         })
         .catch(err => {
           console.log(err);
-          this.color = 'error'
-          this.snackbarMessage = "에러가 발생했습니다."
+          this.color = "error";
+          this.snackbarMessage = "에러가 발생했습니다.";
           this.snackbar = true;
         });
     },
-    //댓글삭제
     deleteComment(commId) {
       console.log(commId);
 
@@ -415,16 +355,14 @@ export default {
       http
         .delete(`/articles/${this.item.id}/comment/${commId}/`, config)
         .then(() => {
-          // console.log(response);
-          this.color = 'success'
-          this.snackbarMessage = "정상적으로 삭제되었습니다."
+          this.color = "success";
+          this.snackbarMessage = "정상적으로 삭제되었습니다.";
           this.snackbar = true;
           this.$store.dispatch(
             "getArticle",
             `/articles/${this.$route.query.id}`
           );
 
-          // this.comments.splice(index, 1);
           if (this.repComment.id == commId) {
             this.repComment.id = "";
             this.repComment.userName = "";
@@ -432,14 +370,14 @@ export default {
             this.repComment.userImage = "";
           }
           // if(commId)
-          this.color = "success"
-          this.snackbarMessage = "성공적으로 삭제되었습니다."
+          this.color = "success";
+          this.snackbarMessage = "성공적으로 삭제되었습니다.";
           this.snackbar = true;
         })
         .catch(err => {
           console.log(err.response);
-          this.color = 'error'
-          this.snackbarMessage = "에러가 발생했습니다."
+          this.color = "error";
+          this.snackbarMessage = "에러가 발생했습니다.";
           this.snackbar = true;
         });
     },
@@ -456,19 +394,17 @@ export default {
           .delete(`/articles/${this.item.id}`, config)
           .then(() => {
             let snackbarData = {
-              color: 'success',
+              color: "success",
               snackbarMessage: "정상적으로 삭제되었습니다.",
-              snackbar: true,
-            }
-            this.$store.commit("setSnackbar", snackbarData)
+              snackbar: true
+            };
+            this.$store.commit("setSnackbar", snackbarData);
             this.$router.push("mypage");
-            // console.log("asdfasdfsdf")
           })
           .catch(response => {
             alert(response.data.message);
           });
       } else {
-        // 수정 : content, hashtag만 가능.
         this.modeUpdate = true;
         http.post("/articles/hashtag/", "", config).then(res => {
           let tmp = [];
@@ -480,7 +416,6 @@ export default {
         });
       }
     },
-    // 피드 업데이트
     actUpdate() {
       let token = localStorage.getItem("token");
       let config = {
@@ -496,7 +431,6 @@ export default {
       }
 
       const fd = new FormData();
-      // fd.append("image", this.item.image);
       fd.append("content", this.content);
       fd.append("hashtags", tags);
 
@@ -506,14 +440,14 @@ export default {
           console.log(res);
           this.modeUpdate = !this.modeUpdate;
           this.item.content = this.content;
-          this.color = 'success'
-          this.snackbarMessage = "정상적으로 수정되었습니다."
+          this.color = "success";
+          this.snackbarMessage = "정상적으로 수정되었습니다.";
           this.snackbar = true;
         })
         .catch(err => {
           console.log(err.response);
-          this.color = 'error'
-          this.snackbarMessage = "에러가 발생했습니다."
+          this.color = "error";
+          this.snackbarMessage = "에러가 발생했습니다.";
           this.snackbar = true;
         });
     },
@@ -530,7 +464,6 @@ export default {
     },
     //대댓글 생성
     createRecomment() {
-      // console.log(this.comm);
       this.$store.dispatch("sendAlarm", {
         url: "/alarms/Share/",
         articleUserId: `${this.comm.userid}`,
@@ -560,8 +493,8 @@ export default {
             `/articles/${this.$route.query.id}`
           );
           this.myComment = "";
-          this.color = 'success'
-          this.snackbarMessage = "성공적으로 생성되었습니다."
+          this.color = "success";
+          this.snackbarMessage = "성공적으로 생성되었습니다.";
           this.snackbar = true;
         })
         .catch(response => {
@@ -580,7 +513,7 @@ export default {
   align-items: center;
   justify-content: center;
   z-index: 10;
-  color: #ffffff;
+  /* color: #ffffff; */
 }
 .commentMenu {
   float: right;

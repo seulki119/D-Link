@@ -14,12 +14,13 @@
               <template v-slot:default="{ hover }">
             <v-card :elevation="hover ? 24 : 0" class="mx-auto" outlined min-height="320">-->
             <v-img
-              class="ma-5 align-center"
+              class="mx-auto align-center"
               :src="`//i3b307.p.ssafy.io/${item.image}`"
               @click="showDetail(item.id)"
               style="cursor: pointer;"
+              min-height="265"
             />
-            <div class="ma-5">
+            <div class="ml-5">
               <img
                 style="cursor: pointer;float:right"
                 @click="scrapAct(index, item.id, item.user.id, item.image)"

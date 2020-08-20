@@ -84,9 +84,10 @@ class UserChatConsumer(WebsocketConsumer):
         message = text_data_json['message']
         username = text_data_json['username']
         profileImage = text_data_json['profileImage']
+        choice = text_data_json['choice']
         roomId = self.groupname.split('_')[1]
 
-        chat = Chat(message=message, username=username, roomId=roomId, profileImage=profileImage)
+        chat = Chat(message=message, username=username, roomId=roomId, profileImage=profileImage, choice=choice)
         chat.save()
         
         async_to_sync(self.channel_layer.group_send)(
@@ -95,7 +96,8 @@ class UserChatConsumer(WebsocketConsumer):
                 'type': 'share_chat_message',
                 'message': message,
                 'username': username,
-                'profileImage': profileImage
+                'profileImage': profileImage,
+                'choice': choice
             }
         )
 
@@ -107,5 +109,6 @@ class UserChatConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps({
             'message': event['message'],
             'username': event['username'],
-            'profileImage': event['profileImage']
+            'profileImage': event['profileImage'],
+            'choice': event['choice']
         }))

@@ -54,6 +54,9 @@ export default new Vuex.Store({
     },
     snackbarMessage(state) {
       return state.snackbarMessage
+    },
+    profileImage(state) {
+      return state.userInfo.profileImage
     }
   },
   //차후 Taste는 로그인이 되어있을때만 갈 수 있게;
@@ -197,6 +200,7 @@ export default new Vuex.Store({
             last_name: response.data.last_name,
             taste1: response.data.taste1,
             taste2: response.data.taste2,
+            profileImage: response.data.image,
           };
           //안 읽은 알람 카운트 갯수 가져오는 용
           http
@@ -416,6 +420,7 @@ export default new Vuex.Store({
           }
           else {
             // 채팅
+            console.log(msg)
             commit("setMessages", msg);
           }
         };

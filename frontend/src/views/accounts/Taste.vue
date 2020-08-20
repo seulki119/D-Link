@@ -16,7 +16,7 @@
                   <v-card flat tile>
                     <v-img
                       :src="
-                        `https://picsum.photos/500/300?image=${index * 5 + 10}`
+                        require(`@/assets/taste/D_${n.name}.jpg`)
                       "
                       :lazy-src="
                         `https://picsum.photos/10/6?image=${index * 5 + 10}`
@@ -56,7 +56,7 @@ import http from "@/util/http-common";
 export default {
   data: () => ({
     items: [
-      { name: "맥주", isIn: "" },
+      { name: "맥주", isIn: "", src: "/static/img/kakao_login_button_round.55b2ddfe.png" },
       { name: "소주", isIn: "" },
       { name: "사케", isIn: "" },
       { name: "막걸리", isIn: "" },

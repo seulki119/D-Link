@@ -1,7 +1,11 @@
 <template>
   <v-card class="mx-auto pa-5" max-width="600">
-    <v-btn @click="remove">삭제</v-btn>
-    <v-list>
+    <span class="grey--text headline">알림 센터</span>
+    <v-btn style="float:right;" icon @click="remove">
+      <v-icon>mdi-delete</v-icon>
+    </v-btn>
+
+    <v-list :elevation="2">
       <template v-if="logs">
         <template v-for="(alarm,index) in logs.slice().reverse()">
           <v-list-item :key="index" router :to="(`article?id=${alarm.articleId}`)">
@@ -19,7 +23,9 @@
         </template>
       </template>
       <template v-else>
-        <span>알람이 없습니다.</span>
+        <v-card-title>
+          <span class="grey--text headline mx-auto">알림이 없습니다.</span>
+        </v-card-title>
       </template>
     </v-list>
   </v-card>

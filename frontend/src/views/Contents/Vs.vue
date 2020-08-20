@@ -130,7 +130,7 @@ export default {
         legend: {
           show: false
         },
-        colors: ["#a1be95", "#ed5752"]
+        colors: ["#F5B041", "#3498DB"]
       }
     };
   },
@@ -265,9 +265,9 @@ export default {
   border-radius: 10px;
 }
 .first {
-  background: #407fff;
+  background: #f5b041;
 }
 .second {
-  background: red;
+  background: #3498db;
 }
 </style>

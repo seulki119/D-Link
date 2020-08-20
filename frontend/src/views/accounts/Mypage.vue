@@ -81,12 +81,12 @@
         </v-tab-item>
         <v-tab-item>
           <v-container fluid>
-            <v-data-table
+            <!-- <v-data-table
               :items="scrapSet.slice().reverse()"
               :items-per-page="9"
               class="elevation-1"
-            >
-              <!-- <v-row>
+            > -->
+              <v-row>
               <v-col v-for="n in scrapSet.slice().reverse()" :key="n.image" cols="4">
                 <v-img
                   :src="`//i3b307.p.ssafy.io/${n.image}`"
@@ -95,8 +95,8 @@
                   @click="showDetail(n.id)"
                 ></v-img>
               </v-col>
-              </v-row>-->
-            </v-data-table>
+              </v-row>
+            <!-- </v-data-table> -->
           </v-container>
         </v-tab-item>
       </v-tabs>

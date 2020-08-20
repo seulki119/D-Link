@@ -50,18 +50,22 @@
               :class="{ 'message-out': item.username === userName, 'message-in': item.username !== userName }"
             >
               <v-row>
-                <v-col cols="3" class="mr-3">
-                  <v-avatar>
-                    <v-img
-                      v-if="item.profileImage != null"
-                      :src="`//i3b307.p.ssafy.io/${item.profileImage}`"
-                      alt
+                <!-- <v-avatar>
+                  <v-img
+                    v-if="item.profileImage != null"
+                    :src="`//i3b307.p.ssafy.io/${item.profileImage}`"
+                    alt
+                  />
+                </v-avatar>-->
+                <v-col cols="auto" class="pl-6">
+                  <p class="font-weight-bold mb-0 text-subtitle-1">
+                    <v-avatar
+                      :class="{'first':item.choice===0,'second':item.choice===1}"
+                      size="10"
                     />
-                  </v-avatar>
-                </v-col>
-                <v-col cols="8">
-                  <p>{{item.username}}</p>
-                  <p class="real pa-3">{{item.message}}</p>
+                    {{item.username}}
+                  </p>
+                  <p class="real pa-3 mb-0">{{item.message}}</p>
                 </v-col>
               </v-row>
             </div>
@@ -102,7 +106,7 @@ export default {
             return w.config.labels[seriesIndex] + " : " + Math.round(v) + "%";
           },
           style: {
-            colors: ["dark"]
+            colors: ["white"]
           }
         },
         chart: {
@@ -128,7 +132,8 @@ export default {
         labels: [],
         legend: {
           show: false
-        }
+        },
+        colors: ["#F5B041", "#3498DB"]
       }
     };
   },
@@ -241,29 +246,43 @@ export default {
   /* background: white; */
   height: 50vh;
   padding: 1em 1em;
-  margin: 1em;
+  /* margin: 1em; */
   overflow-y: scroll;
   box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.3);
 }
 .message {
   width: 45%;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   padding: 0.5em;
-  margin-bottom: 0.5em;
+  /* margin-bottom: 0.5em; */
   font-size: 0.8em;
 }
 .message-out {
   /* background: #407fff; */
-  color: white;
+  color: black;
   margin-left: 50%;
+
+  /* padding: 0; */
 }
 .message-out .real {
   background: #407fff;
   color: white;
+  border-radius: 10px;
   /* margin-left: 50%; */
 }
-.message-in {
+
+.message-in .real {
   background: #f1f0f0;
   color: black;
+  border-radius: 10px;
+}
+.first {
+  background: #f5b041;
+}
+.second {
+  background: #3498db;
+}
+.pl-6 {
+  padding: 0px 0px 0px 6px !important;
 }
 </style>

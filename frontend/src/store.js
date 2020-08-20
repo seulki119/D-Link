@@ -379,7 +379,9 @@ export default new Vuex.Store({
       http
         .post(payload.url, body, config)
         .then(() => {
-
+          if (body.articleUserId === this.getters.userId) {
+            this.commit("setAlarms", 1);
+          }
           return;
         }).catch(err => {
           console.log(err)
@@ -417,10 +419,10 @@ export default new Vuex.Store({
       }
 
       if (socket) {
+
         socket.onmessage = function (res) {
           var msg = JSON.parse(res.data);
           if (payload.type == 0) {
-            console.log("dfdf")
             commit("setAlarms", 1)
           }
           else {

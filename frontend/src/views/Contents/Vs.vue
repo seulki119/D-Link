@@ -69,6 +69,7 @@ import http from "@/util/http-common";
 export default {
   data() {
     return {
+      no: this.$route.params.no,
       canSend: false,
       mymessage: "",
       id: [],
@@ -133,7 +134,7 @@ export default {
     http
       .get("versus", config)
       .then(res => {
-        let data = res.data[0];
+        let data = res.data[this.no];
         this.id = data.id;
         this.createdAt = data.createdAt;
         this.image.push(data.image_A);
@@ -197,7 +198,7 @@ export default {
     }
   },
   beforeCreate() {
-    let room = "1";
+    let room = this.no;
     let token = localStorage.getItem("token");
     this.$store.dispatch("socketConnect", {
       token: token,

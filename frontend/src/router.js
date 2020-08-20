@@ -153,6 +153,15 @@ const routes = [
       ),
   },
   {
+    path: "/vslist",
+    name: "vslist",
+    beforeEnter: onlyAuthUser,
+    component: () =>
+      import(
+        /* webpackChunkName: "search" */ "./views/Contents/VsList.vue"
+      ),
+  },
+  {
     path: "/username",
     name: "username",
     beforeEnter: onlyAuthUser,

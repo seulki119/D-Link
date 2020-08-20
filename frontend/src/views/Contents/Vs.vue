@@ -80,6 +80,9 @@ import http from "@/util/http-common";
 export default {
   data() {
     return {
+      // roomId: this.$route.params.id,
+      no: this.$route.params.no,
+
       canSend: false,
       mymessage: "",
       id: [],
@@ -135,6 +138,8 @@ export default {
     ...mapGetters(["profileImage"])
   },
   created() {
+    this.$store.dispatch("getMessages");
+
     let token = localStorage.getItem("token");
     let config = {
       headers: {
@@ -144,7 +149,7 @@ export default {
     http
       .get("versus", config)
       .then(res => {
-        let data = res.data[0];
+        let data = res.data[this.no];
         this.id = data.id;
         this.createdAt = data.createdAt;
         this.image.push(data.image_A);
@@ -167,6 +172,14 @@ export default {
       .catch(err => {
         console.log(err);
       });
+
+    // let room = this.roomId;
+    // this.$store.dispatch("socketConnect", {
+    //   token: token,
+    //   room: room,
+    //   type: 1
+    // });
+    // this.$store.dispatch("getMessages", room);
   },
   methods: {
     vote() {
@@ -208,14 +221,13 @@ export default {
     }
   },
   beforeCreate() {
-    let room = "1";
+    let room = this.$store.state.roomId;
     let token = localStorage.getItem("token");
     this.$store.dispatch("socketConnect", {
       token: token,
       room: room,
       type: 1
     });
-    this.$store.dispatch("getMessages");
   }
 };
 </script>

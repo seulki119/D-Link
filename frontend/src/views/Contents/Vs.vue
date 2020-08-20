@@ -2,34 +2,34 @@
   <v-container>
     <v-card class="mx-auto pa-5" max-width="600">
       <div v-show="!selected">
-        <v-toolbar dark flat>
+        <v-toolbar>
           <v-toolbar-title>당신의 선택은?</v-toolbar-title>
         </v-toolbar>
         <v-row class="justify-center mx-auto">
           <v-radio-group v-model="choice" mandatory>
             <v-layout row class="align-end">
               <v-flex column xs12 sm6 md6 lg6 x6>
-                <v-img :src="`//i3b307.p.ssafy.io/${image[0]}`" class="grey lighten-2 ma-3"></v-img>
+                <v-img :src="`//i3b307.p.ssafy.io/${image[0]}`" class="ma-3"></v-img>
                 <v-radio value="0"></v-radio>
               </v-flex>
               <v-flex column xs12 sm6 md6 lg6 x6>
-                <v-img :src="`//i3b307.p.ssafy.io/${image[1]}`" class="grey lighten-2 ma-3"></v-img>
+                <v-img :src="`//i3b307.p.ssafy.io/${image[1]}`" class="ma-3"></v-img>
                 <v-radio value="1"></v-radio>
               </v-flex>
             </v-layout>
           </v-radio-group>
         </v-row>
         <v-divider></v-divider>
-        <v-btn block color="indigo lighten-1 white--text" @click="vote()">{{topic[choice]}}에 투표하기</v-btn>
+        <v-btn block @click="vote()">{{topic[choice]}}에 투표하기</v-btn>
       </div>
       <div v-show="selected">
-        <v-toolbar dark flat>
+        <v-toolbar>
           <v-toolbar-title>당신의 선택은 {{topic[last]}}였습니다.</v-toolbar-title>
         </v-toolbar>
         <v-row class="justify-center mx-auto">
           <v-layout row class="align-end">
             <v-flex column xs12 sm6 md6 lg6 x6>
-              <v-img :src="`//i3b307.p.ssafy.io/${image[last]}`" class="grey lighten-2 ma-3"></v-img>
+              <v-img :src="`//i3b307.p.ssafy.io/${image[last]}`" class="ma-3"></v-img>
             </v-flex>
             <v-flex column xs12 sm6 md6 lg6 x6>
               <div class="align-center">
@@ -38,7 +38,7 @@
             </v-flex>
           </v-layout>
         </v-row>
-        <v-toolbar dark flat>
+        <v-toolbar>
           <v-toolbar-title>{{topic[0]}} vs {{topic[1]}}</v-toolbar-title>
         </v-toolbar>
         <v-row class="justify-center mx-auto">
@@ -51,12 +51,7 @@
             >{{item.username + ": " + item.message}}</p>
           </section>
           <v-text-field v-model="mymessage" label="메시지" @keyup.enter="sendChatMessage()"></v-text-field>
-          <v-btn
-            color="blue-grey"
-            class="ma-2 white--text"
-            :disabled="canSend"
-            @click="sendChatMessage()"
-          >전송</v-btn>
+          <v-btn class="ma-2" :disabled="canSend" @click="sendChatMessage()">전송</v-btn>
         </v-row>
       </div>
     </v-card>
@@ -88,7 +83,7 @@ export default {
             return w.config.labels[seriesIndex] + " : " + Math.round(v) + "%";
           },
           style: {
-            colors: ["dark", "dark"]
+            colors: ["dark"]
           }
         },
         chart: {
@@ -206,18 +201,18 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .v-radio {
   text-align: center;
   display: block;
 }
 .chat-area {
-  background: white;
+  /* background: white; */
   height: 50vh;
   padding: 1em 1em;
   margin: 1em;
   overflow-y: scroll;
-  box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.3);
+  /* box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.3); */
 }
 .message {
   width: 45%;
@@ -227,12 +222,12 @@ export default {
   font-size: 0.8em;
 }
 .message-out {
-  background: #407fff;
-  color: white;
+  /* background: #407fff;
+  color: white; */
   margin-left: 50%;
 }
 .message-in {
-  background: #f1f0f0;
-  color: black;
+  /* background: #f1f0f0;
+  color: black; */
 }
 </style>

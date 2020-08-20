@@ -25,8 +25,7 @@
               @keypress.enter="login({email,password})"
               label="비밀번호를 입력하세요"
             ></v-text-field>
-            <v-btn color="primary" depressed block large @click="login({email,password})">로그인</v-btn>
-            <hr style="border: solid 0.5px grey; margin: 5px;" />
+            <v-btn block large @click="login({email,password})">로그인</v-btn>
           </div>
         </v-card>
       </v-flex>

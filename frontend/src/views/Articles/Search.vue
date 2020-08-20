@@ -1,14 +1,6 @@
 <template>
   <div>
-    <v-app-bar
-      app
-      color="indigo"
-      dark
-      max-width="600"
-      min-width="300"
-      elevate-on-scroll
-      class="mx-auto"
-    >
+    <v-app-bar app max-width="600" min-width="300" elevate-on-scroll class="mx-auto">
       <v-icon class="mx-auto">mdi-magnify</v-icon>
       <v-spacer></v-spacer>
       <v-autocomplete
@@ -32,9 +24,7 @@
     <v-container max-width="600" min-width="300">
       <v-card class="mx-auto pa-5" max-width="600">
         <StackGrid :columnWidth="210" :gutterX="20" :gutterY="20">
-          <!-- you component like this -->
           <div class="stack-item" v-for="(item, index) in searchList" :key="index">
-            <!-- some thing have fixed height-->
             <div v-if="item.user.id != userId" class="stack-item stack-item-6">
               <img
                 :src="`//i3b307.p.ssafy.io/${item.image}`"
@@ -107,9 +97,6 @@ export default {
       for (let t in this.tag) {
         searchWord += "#" + this.tag[t];
       }
-      // const fd = new FormData();
-      // fd.append("hashtags", searchWord);
-      // fd.append("counter", this.counter);
       http
         .post(
           "/articles/search/",
@@ -150,5 +137,3 @@ export default {
   }
 };
 </script>
-<style>
-</style>

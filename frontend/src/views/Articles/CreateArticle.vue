@@ -6,7 +6,6 @@
       </clipper-fixed>
       <v-file-input
         small-chips
-        color="deep-purple accent-4"
         accept="image/*"
         label="Uplode a Image"
         prepend-icon="mdi-plus"
@@ -29,14 +28,14 @@
         dense
       ></v-combobox>
       <v-divider></v-divider>
-      <v-card-text class="text--primary">
+      <v-card-text>
         <v-textarea v-model="content" label="내용" counter maxlength="120" full-width single-line></v-textarea>
       </v-card-text>
 
       <v-divider></v-divider>
-      <v-btn block color="blue-grey" class="ma-2 white--text" @click="upload" v-if="fill">
+      <v-btn block class="ma-2" @click="upload" v-if="fill">
         Upload
-        <v-icon right dark>mdi-cloud-upload</v-icon>
+        <v-icon right>mdi-cloud-upload</v-icon>
       </v-btn>
     </v-card>
   </v-container>
@@ -82,7 +81,6 @@ export default {
       this.reader.onloadend = () => {
         let fileData = this.reader.result;
         this.preview = fileData;
-        // send to server here...
       };
       if (this.file) {
         this.reader.readAsDataURL(this.file);
@@ -96,7 +94,6 @@ export default {
       }
     },
     upload() {
-      // 나중에 create 제거 해야함
       let token = localStorage.getItem("token");
       let config = {
         headers: {
@@ -120,11 +117,11 @@ export default {
         .then(res => {
           console.log(res);
           let snackbarData = {
-            color: 'success',
+            color: "success",
             snackbarMessage: "정상적으로 생성되었습니다.",
-            snackbar: true,
-          }
-          this.$store.commit("setSnackbar", snackbarData)
+            snackbar: true
+          };
+          this.$store.commit("setSnackbar", snackbarData);
           this.$router.push("articlelist");
         })
         .catch(err => {
@@ -175,6 +172,3 @@ export default {
   }
 };
 </script>
-
-<style scoped lang="scss">
-</style>

@@ -48,11 +48,11 @@
 
           <v-dialog v-model="dialog" width="500">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn block color="indigo lighten-2" dark v-bind="attrs" v-on="on">약관 보기</v-btn>
+              <v-btn block v-bind="attrs" v-on="on">약관 보기</v-btn>
             </template>
 
             <v-card>
-              <v-card-title class="headline grey lighten-2">d-link 이용 약관</v-card-title>
+              <v-card-title class="headline">d-link 이용 약관</v-card-title>
 
               <v-card-text>
                 제1조(목적)
@@ -153,7 +153,7 @@
 
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn block color="primary" text @click="dialog = false, checkbox=true">동의합니다.</v-btn>
+                <v-btn block color="indigo" text @click="dialog = false, checkbox=true">동의합니다.</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -169,7 +169,7 @@
             ></v-checkbox>
           </ValidationProvider>
 
-          <v-btn color="primary" :disabled="!valid" class="mr-4" @click="submit">다음</v-btn>
+          <v-btn :disabled="!valid" class="mr-4" @click="submit">다음</v-btn>
         </v-form>
       </ValidationObserver>
     </v-row>

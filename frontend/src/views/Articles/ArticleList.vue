@@ -7,18 +7,17 @@
       </template>
     </v-snackbar>
     <v-card class="mx-auto pa-5" max-width="600">
-      <stack class="pa-5" :column-min-width="210" monitor-images-loaded>
-        <stack-item v-for="(item, index) in items" :key="index" style="transition: transform 300ms">
-          <div class="mx-auto rounded-xl" v-if="item.user.id != userId">
+      <stack :gutter-width="20" :gutter-height="20" :column-min-width="210" monitor-images-loaded>
+        <stack-item v-for="(item, index) in items" :key="index" style="transition: transform 500ms">
+          <div v-if="item.user.id != userId">
             <v-hover>
               <template v-slot:default="{ hover }">
-                <v-card :elevation="hover ? 24 : 0" class="mx-auto" outlined>
+                <v-card :elevation="hover ? 24 : 0" class="mx-auto" outlined min-height="320">
                   <v-img
-                    outlined
+                    class="ma-5 align-center"
                     :src="`//i3b307.p.ssafy.io/${item.image}`"
                     @click="showDetail(item.id)"
                     style="cursor: pointer;"
-                    class="ma-5"
                   />
                   <div class="ma-5">
                     {{ item.scrap.length }}
@@ -164,5 +163,3 @@ export default {
   }
 };
 </script>
-<style>
-</style>

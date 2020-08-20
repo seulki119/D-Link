@@ -1,23 +1,10 @@
 <!-- eslint-disable -->
 <template>
   <v-container max-width="600" min-width="300">
-    <v-snackbar
-      v-model="snackbar"
-      :color="color"
-      :top="y === 'top'"
-      :timeout="timeout"
-    >
+    <v-snackbar v-model="snackbar" :color="color" :top="y === 'top'" :timeout="timeout">
       {{ snackbarMessage }}
-
       <template v-slot:action="{ attrs }">
-        <v-btn
-          dark
-          text
-          v-bind="attrs"
-          @click="this.$store.state.snackbar = false"
-        >
-          Close
-        </v-btn>
+        <v-btn dark text v-bind="attrs" @click="this.$store.state.snackbar = false">Close</v-btn>
       </template>
     </v-snackbar>
     <v-card class="mx-auto pa-5" max-width="600">
@@ -25,7 +12,7 @@
         <v-flex xs12 sm6 md4 lg3 x12>
           <image-input v-model="avatar">
             <div slot="activator">
-              <v-avatar size="136px" v-ripple v-if="!previous && !avatar" class="grey lighten-3">
+              <v-avatar size="136px" v-ripple v-if="!previous && !avatar">
                 <span>Click to add avatar</span>
               </v-avatar>
               <v-avatar size="136px" v-ripple v-else-if="!avatar">
@@ -47,7 +34,7 @@
           </v-slide-x-transition>
           <v-slide-x-transition>
             <div v-if="avatar && saved == false">
-              <v-btn class="primary" @click="uploadImage" :loading="saving">Save Avatar</v-btn>
+              <v-btn @click="uploadImage" :loading="saving">Save Avatar</v-btn>
             </div>
           </v-slide-x-transition>
         </v-flex>
@@ -67,12 +54,12 @@
           </v-container>
         </v-flex>
       </v-layout>
-      <v-btn block color="black" class="ma-2 white--text" @click="update()">
-        <v-icon left dark>mdi-account</v-icon>프로필 수정
+      <v-btn block class="ma-2" @click="update()">
+        <v-icon left>mdi-account</v-icon>프로필 수정
       </v-btn>
     </v-card>
     <v-card class="mx-auto pa-5" max-width="600">
-      <v-tabs centered icons-and-text background-color="white" color="deep-purple accent-4">
+      <v-tabs centered icons-and-text>
         <v-tab>업로드한 게시물</v-tab>
         <v-tab>스크랩한 게시물</v-tab>
         <v-tab-item>
@@ -127,7 +114,7 @@ export default {
       saving: false,
       saved: false,
       timeout: 2000,
-      y: 'top',
+      y: "top"
     };
   },
   components: {
@@ -153,14 +140,14 @@ export default {
     if (this.$store.state.snackbar) {
       setTimeout(() => {
         this.$store.state.snackbar = false;
-      }, 2000)
+      }, 2000);
     }
   },
   computed: {
     ...mapState(["userInfo"]),
     ...mapGetters(["color"]),
     ...mapGetters(["snackbar"]),
-    ...mapGetters(["snackbarMessage"]),
+    ...mapGetters(["snackbarMessage"])
   },
   methods: {
     ...mapActions(["logout"]),
@@ -215,6 +202,6 @@ export default {
       this.saved = false;
     },
     deep: true
-  },
+  }
 };
 </script>

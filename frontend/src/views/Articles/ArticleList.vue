@@ -18,6 +18,7 @@
               :src="`//i3b307.p.ssafy.io/${item.image}`"
               @click="showDetail(item.id)"
               style="cursor: pointer;"
+              aspect-ratio="1"
               min-height="265"
             />
             <div class="ml-5">

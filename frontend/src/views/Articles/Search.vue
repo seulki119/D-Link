@@ -16,10 +16,13 @@
         hide-selected
         deletable-chips
         no-data-text
+        open-on-clear
+        :search-input.sync="searched"
+        @keypress.enter="search()"
         hint="Maximum of 3 tags"
       ></v-autocomplete>
       <v-spacer></v-spacer>
-      <v-btn icon class="mx-auto" v-show="tag.length !==0 " @click="search()">검색</v-btn>
+      <v-btn icon class="mx-auto" v-show="tag.length !==0" @click="search()">검색</v-btn>
     </v-app-bar>
     <v-snackbar v-model="snackbar" :color="color" :top="y === 'top'" :timeout="timeout">
       {{ snackbarMessage }}
@@ -40,6 +43,8 @@
                       :src="`//i3b307.p.ssafy.io/${item.image}`"
                       @click="showDetail(item.id)"
                       style="cursor: pointer;"
+                      aspect-ratio="1"
+                      min-height="265"
                     />
                   </v-card>
                 </template>
@@ -71,7 +76,8 @@ export default {
       y: "top",
       hover: false,
       searchWord: "",
-      test: ""
+      test: "",
+      searched: null
     };
   },
   computed: {
@@ -205,9 +211,15 @@ export default {
   },
   watch: {
     tag(val) {
+      console.log(this.tag);
+
       if (val.length > 3) {
         this.$nextTick(() => this.tag.pop());
       }
+      if (val.length === 0) {
+        this.searchList = [];
+      }
+      this.searched = null;
     },
     bottom(bottom) {
       if (bottom) {

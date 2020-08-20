@@ -1,24 +1,15 @@
 <template>
   <v-container fill-height>
     <v-card class="mx-auto" width="100%" max-width="600">
-      <v-layout column justify-space-between class="pa-10 text-center indigo lighten-2 white--text">
+      <v-layout column justify-space-between class="pa-10 text-center">
         <p v-if="!hidden" style="font-size:x-large" class="mb-0">칵테일 취향 검사</p>
         <p v-else style="font-size:x-large" class="mb-0">{{userName}}님의 취향은...</p>
       </v-layout>
       <hr />
-
-      <v-layout
-        column
-        justify-space-between
-        class="pa-5 text-center indigo lighten-2 white--text"
-        style="font-size:large;"
-      >
-        <!-- tab -->
-        <v-tabs v-show="!hidden" center-active v-model="tab" background-color="white">
+      <v-layout column justify-space-between class="pa-5 text-center" style="font-size:large;">
+        <v-tabs v-show="!hidden" center-active v-model="tab">
           <v-tab class="d-none" v-for="(item, index) in items" :key="item.name">{{ index+1 }}</v-tab>
         </v-tabs>
-
-        <!-- content -->
         <v-tabs-items v-show="!hidden" v-model="tab">
           <v-tab-item v-for="(item, index) in items" :key="item.tab">
             <!-- image -->
@@ -30,12 +21,10 @@
             >
               <template v-slot:placeholder>
                 <v-row class="fill-height ma-0" align="center" justify="center">
-                  <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                  <v-progress-circular indeterminate></v-progress-circular>
                 </v-row>
               </template>
             </v-img>
-
-            <!-- content -->
             <v-card flat>
               <v-layout column justify-space-between class="pa-5">
                 <v-card-text>{{item.content}}</v-card-text>
@@ -48,43 +37,23 @@
                 </v-row>
               </v-layout>
             </v-card>
-            <!-- submit botton : 모든 문항에 응답한 경우, 마지막 검사문항에서 보여줌  -->
             <div class="text-center ma-2">
-              <v-btn
-                block
-                color="indigo lighten-1 white--text"
-                @click="moveNext(index)"
-                v-if="!valid"
-                :disabled="item.score === null"
-              >다음</v-btn>
-              <v-btn
-                block
-                color="indigo lighten-1 white--text"
-                @click="submit"
-                :disabled="!valid"
-                v-else
-              >결과 보기</v-btn>
+              <v-btn block @click="moveNext(index)" v-if="!valid" :disabled="item.score === null">다음</v-btn>
+              <v-btn block @click="submit" :disabled="!valid" v-else>결과 보기</v-btn>
             </div>
           </v-tab-item>
         </v-tabs-items>
-
-        <!-- 결과 레시피 출력 -->
         <v-card v-if="hidden">
-          <v-img
-            :src="require(`@/assets/cocktail/${cocktail}.png`)"
-            class="grey lighten-2 pa-10"
-            max-width="100%"
-          >
+          <v-img :src="require(`@/assets/cocktail/${cocktail}.png`)" class="pa-10" max-width="100%">
             <template v-slot:placeholder>
               <v-row class="fill-height ma-0" align="center" justify="center">
-                <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                <v-progress-circular indeterminate></v-progress-circular>
               </v-row>
             </template>
           </v-img>
-
           <hr />
-          <v-btn color="indigo lighten-1 white--text" @click="clear">다시 검사하기</v-btn>
-          <v-btn color="pink lighten-2 white--text" @click="goRecipes">전체 레시피 보러가기</v-btn>
+          <v-btn @click="clear">다시 검사하기</v-btn>
+          <v-btn @click="goRecipes">전체 레시피 보러가기</v-btn>
         </v-card>
       </v-layout>
     </v-card>

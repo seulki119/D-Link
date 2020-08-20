@@ -4,7 +4,6 @@
     <v-list>
       <template v-if="logs">
         <template v-for="(alarm,index) in logs.slice().reverse()">
-          <!-- <v-subheader :key="index" v-text="messageType[alarm.alarmType]"></v-subheader> -->
           <v-list-item :key="index" router :to="(`article?id=${alarm.articleId}`)">
             <v-list-item-avatar>
               <v-img :src="`//i3b307.p.ssafy.io/${alarm.thumbnailPath}`"></v-img>
@@ -23,12 +22,10 @@
         <span>알람이 없습니다.</span>
       </template>
     </v-list>
-    <!-- <p v-for="(alarm, index) in this.alarms" :key="index">{{ alarm }}</p> -->
   </v-card>
 </template>
 
 <script>
-// import { mapGetters } from "vuex";
 import http from "@/util/http-common";
 export default {
   data() {

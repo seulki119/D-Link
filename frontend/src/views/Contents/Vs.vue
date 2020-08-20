@@ -2,34 +2,34 @@
   <v-container>
     <v-card class="mx-auto pa-5" max-width="600">
       <div v-show="!selected">
-        <v-toolbar dark flat>
+        <v-toolbar>
           <v-toolbar-title>당신의 선택은?</v-toolbar-title>
         </v-toolbar>
         <v-row class="justify-center mx-auto">
           <v-radio-group v-model="choice" mandatory>
             <v-layout row class="align-end">
               <v-flex column xs12 sm6 md6 lg6 x6>
-                <v-img :src="`//i3b307.p.ssafy.io/${image[0]}`" class="grey lighten-2 ma-3"></v-img>
+                <v-img :src="`//i3b307.p.ssafy.io/${image[0]}`" class="ma-3"></v-img>
                 <v-radio value="0"></v-radio>
               </v-flex>
               <v-flex column xs12 sm6 md6 lg6 x6>
-                <v-img :src="`//i3b307.p.ssafy.io/${image[1]}`" class="grey lighten-2 ma-3"></v-img>
+                <v-img :src="`//i3b307.p.ssafy.io/${image[1]}`" class="ma-3"></v-img>
                 <v-radio value="1"></v-radio>
               </v-flex>
             </v-layout>
           </v-radio-group>
         </v-row>
         <v-divider></v-divider>
-        <v-btn block color="indigo lighten-1 white--text" @click="vote()">{{topic[choice]}}에 투표하기</v-btn>
+        <v-btn block @click="vote()">{{topic[choice]}}에 투표하기</v-btn>
       </div>
       <div v-show="selected">
-        <v-toolbar dark flat>
+        <v-toolbar>
           <v-toolbar-title>당신의 선택은 {{topic[last]}}였습니다.</v-toolbar-title>
         </v-toolbar>
         <v-row class="justify-center mx-auto">
           <v-layout row class="align-end">
             <v-flex column xs12 sm6 md6 lg6 x6>
-              <v-img :src="`//i3b307.p.ssafy.io/${image[last]}`" class="grey lighten-2 ma-3"></v-img>
+              <v-img :src="`//i3b307.p.ssafy.io/${image[last]}`" class="ma-3"></v-img>
             </v-flex>
             <v-flex column xs12 sm6 md6 lg6 x6>
               <div class="align-center">
@@ -38,25 +38,36 @@
             </v-flex>
           </v-layout>
         </v-row>
-        <v-toolbar dark flat>
+        <v-toolbar>
           <v-toolbar-title>{{topic[0]}} vs {{topic[1]}}</v-toolbar-title>
         </v-toolbar>
         <v-row class="justify-center mx-auto">
           <section class="chat-area" id="chat-area" v-auto-scroll-bottom>
-            <p
+            <div
               v-for="(item, index) in messages"
               :key="index"
               class="message"
               :class="{ 'message-out': item.username === userName, 'message-in': item.username !== userName }"
-            >{{item.username + ": " + item.message}}</p>
+            >
+              <v-row>
+                <v-col cols="3" class="mr-3">
+                  <v-avatar>
+                    <v-img
+                      v-if="item.profileImage != null"
+                      :src="`//i3b307.p.ssafy.io/${item.profileImage}`"
+                      alt
+                    />
+                  </v-avatar>
+                </v-col>
+                <v-col cols="8">
+                  <p>{{item.username}}</p>
+                  <p class="real pa-3">{{item.message}}</p>
+                </v-col>
+              </v-row>
+            </div>
           </section>
           <v-text-field v-model="mymessage" label="메시지" @keyup.enter="sendChatMessage()"></v-text-field>
-          <v-btn
-            color="blue-grey"
-            class="ma-2 white--text"
-            :disabled="canSend"
-            @click="sendChatMessage()"
-          >전송</v-btn>
+          <v-btn class="ma-2" :disabled="canSend" @click="sendChatMessage()">전송</v-btn>
         </v-row>
       </div>
     </v-card>
@@ -88,7 +99,7 @@ export default {
             return w.config.labels[seriesIndex] + " : " + Math.round(v) + "%";
           },
           style: {
-            colors: ["dark", "dark"]
+            colors: ["dark"]
           }
         },
         chart: {
@@ -209,13 +220,13 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .v-radio {
   text-align: center;
   display: block;
 }
 .chat-area {
-  background: white;
+  /* background: white; */
   height: 50vh;
   padding: 1em 1em;
   margin: 1em;
@@ -226,13 +237,18 @@ export default {
   width: 45%;
   border-radius: 10px;
   padding: 0.5em;
-  /*   margin-bottom: .5em; */
+  margin-bottom: 0.5em;
   font-size: 0.8em;
 }
 .message-out {
-  background: #407fff;
+  /* background: #407fff; */
   color: white;
   margin-left: 50%;
+}
+.message-out .real {
+  background: #407fff;
+  color: white;
+  /* margin-left: 50%; */
 }
 .message-in {
   background: #f1f0f0;

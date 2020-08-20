@@ -1,14 +1,6 @@
 <template>
-  <div>
-    <v-app-bar
-      app
-      color="indigo"
-      dark
-      max-width="600"
-      min-width="300"
-      elevate-on-scroll
-      class="mx-auto"
-    >
+  <v-container max-width="600" min-width="300">
+    <v-app-bar app max-width="600" min-width="300" elevate-on-scroll class="mx-auto">
       <v-icon class="mx-auto">mdi-magnify</v-icon>
       <v-spacer></v-spacer>
       <v-autocomplete
@@ -29,34 +21,48 @@
       <v-spacer></v-spacer>
       <v-btn icon class="mx-auto" v-show="tag.length !==0 " @click="search()">검색</v-btn>
     </v-app-bar>
-    <v-container max-width="600" min-width="300">
-      <v-card class="mx-auto pa-5" max-width="600">
-        <StackGrid :columnWidth="210" :gutterX="20" :gutterY="20">
-          <!-- you component like this -->
-          <div class="stack-item" v-for="(item, index) in searchList" :key="index">
-            <!-- some thing have fixed height-->
-            <div v-if="item.user.id != userId" class="stack-item stack-item-6">
-              <img
-                :src="`//i3b307.p.ssafy.io/${item.image}`"
-                alt
-                @click="showDetail(item.id)"
-                style="cursor: pointer;width:200px;"
-              />
-            </div>
+    <v-snackbar v-model="snackbar" :color="color" :top="y === 'top'" :timeout="timeout">
+      {{ snackbarMessage }}
+      <template v-slot:action="{ attrs }">
+        <v-btn dark text v-bind="attrs" @click="this.$store.state.snackbar = false">Close</v-btn>
+      </template>
+    </v-snackbar>
+    <v-card class="mx-auto pa-5" max-width="600" min-height="100vh">
+      <stack :gutter-width="20" :gutter-height="20" :column-min-width="210" monitor-images-loaded>
+        <stack-item
+          v-for="(item, index) in searchList"
+          :key="index"
+          style="transition: transform 500ms"
+        >
+          <div v-if="item.user.id != userId">
+            <v-hover>
+              <template v-slot:default="{ hover }">
+                <v-card :elevation="hover ? 24 : 0" class="mx-auto" outlined min-height="320">
+                  <v-img
+                    class="ma-5 align-center"
+                    aspect-ratio="1"
+                    :src="`//i3b307.p.ssafy.io/${item.image}`"
+                    @click="showDetail(item.id)"
+                    style="cursor: pointer;"
+                  />
+                </v-card>
+              </template>
+            </v-hover>
           </div>
-        </StackGrid>
-      </v-card>
-    </v-container>
-  </div>
+        </stack-item>
+      </stack>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
-import StackGrid from "vue-stack-grid-component";
+import { Stack, StackItem } from "vue-stack-grid";
 import http from "@/util/http-common";
 import { mapGetters } from "vuex";
 export default {
   components: {
-    StackGrid
+    Stack,
+    StackItem
   },
   data() {
     return {
@@ -64,11 +70,17 @@ export default {
       tags: [],
       searchList: [],
       counter: 0,
-      bottom: false
+      bottom: false,
+      timeout: 2000,
+      y: "top",
+      hover: false
     };
   },
   computed: {
-    ...mapGetters(["userInfo", "userId"])
+    ...mapGetters(["userInfo", "userId"]),
+    ...mapGetters(["color"]),
+    ...mapGetters(["snackbar"]),
+    ...mapGetters(["snackbarMessage"])
   },
   created() {
     window.addEventListener("scroll", () => {
@@ -104,6 +116,8 @@ export default {
     },
 
     search() {
+      this.searchList.length = 0;
+      this.counter = 0;
       let token = localStorage.getItem("token");
 
       let config = {
@@ -134,6 +148,38 @@ export default {
           console.log(err);
         });
     },
+    addList() {
+      let token = localStorage.getItem("token");
+
+      let config = {
+        headers: {
+          Authorization: `Token ${token}`
+        }
+      };
+      let searchWord = "";
+
+      for (let t in this.tag) {
+        searchWord += "#" + this.tag[t];
+      }
+      http
+        .post(
+          "/articles/search/",
+          { hashtags: searchWord, counter: this.counter },
+          config
+        )
+        .then(response => {
+          console.log(response);
+          this.counter += 10;
+          let data = response.data;
+          for (let i = 0; i < data.length; i++) {
+            this.searchList.push(data[i]);
+          }
+          console.log(this.searchList);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
     bottomVisible() {
       const scrollY = window.scrollY;
       const visible = document.documentElement.clientHeight;
@@ -150,12 +196,16 @@ export default {
     },
     bottom(bottom) {
       if (bottom) {
-        this.search();
+        this.addList();
       }
+    }
+  },
+  beforeCreate() {
+    if (this.$store.state.snackbar) {
+      setTimeout(() => {
+        this.$store.state.snackbar = false;
+      }, 2000);
     }
   }
 };
 </script>
-<style>
-/* https://codepen.io/yuhomyan/details/OJMejWJ */
-</style>

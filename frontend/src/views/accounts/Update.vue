@@ -14,20 +14,13 @@
             <v-textarea v-model="intro" label="Intro"></v-textarea>
           </v-container>
           <v-slide-x-transition>
-            <v-btn
-              block
-              color="blue-grey"
-              class="ma-2 white--text"
-              v-if="!updated&&valid"
-              @click="updateInfo"
-              :loading="saving"
-            >
+            <v-btn block class="ma-2" v-if="!updated&&valid" @click="updateInfo" :loading="saving">
               회원정보수정
-              <v-icon right dark>mdi-cloud-upload</v-icon>
+              <v-icon right>mdi-cloud-upload</v-icon>
             </v-btn>
           </v-slide-x-transition>
-          <v-btn block color="black" class="ma-2 white--text" @click="ChangePassword()">
-            <v-icon left dark>mdi-key-variant</v-icon>패스워드 변경
+          <v-btn block class="ma-2" @click="ChangePassword()">
+            <v-icon left>mdi-key-variant</v-icon>패스워드 변경
           </v-btn>
         </v-flex>
       </v-layout>
@@ -171,6 +164,3 @@ export default {
   }
 };
 </script>
-
-<style>
-</style>

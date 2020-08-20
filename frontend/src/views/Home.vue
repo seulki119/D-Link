@@ -2,21 +2,16 @@
 <template>
   <v-app id="inspire">
     <v-main v-if="!isLogin">
-      <v-container class="fill-height" fluid>
+      <v-container class="fill-height">
         <v-row align="center" justify="center">
           <v-col cols="12" sm="8" md="4">
             <v-card class="elevation-12">
-              <v-toolbar v-if="!isLoginError" color="primary" dark flat>
+              <v-toolbar v-if="!isLoginError">
                 <v-toolbar-title>DLINK에 오신걸 환영합니다</v-toolbar-title>
               </v-toolbar>
               <v-alert class="mb-3" v-else type="error">이메일과 비밀번호를 확인해주세요.</v-alert>
               <v-card-actions>
-                <v-tabs
-                  centered
-                  icons-and-text
-                  background-color="white"
-                  color="deep-purple accent-4"
-                >
+                <v-tabs centered icons-and-text>
                   <v-tab>로그인</v-tab>
                   <v-tab>회원가입</v-tab>
                   <v-tab-item>

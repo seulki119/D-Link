@@ -54,10 +54,10 @@
           </v-container>
         </v-flex>
       </v-layout>
-      <v-btn block class="ma-2" @click="update()">
+      <v-btn block dark class="ma-2 mx-auto" @click="update()">
         <v-icon left>mdi-account</v-icon>프로필 수정
       </v-btn>
-      <v-btn block color="black" class="ma-2 white--text" @click="logout()">
+      <v-btn block class="ma-2 mx-auto" @click="logout()">
         <v-icon left dark>mdi-logout</v-icon>로그아웃
       </v-btn>
     </v-card>
@@ -85,8 +85,8 @@
               :items="scrapSet.slice().reverse()"
               :items-per-page="9"
               class="elevation-1"
-            > -->
-              <v-row>
+            >-->
+            <v-row>
               <v-col v-for="n in scrapSet.slice().reverse()" :key="n.image" cols="4">
                 <v-img
                   :src="`//i3b307.p.ssafy.io/${n.image}`"
@@ -95,7 +95,7 @@
                   @click="showDetail(n.id)"
                 ></v-img>
               </v-col>
-              </v-row>
+            </v-row>
             <!-- </v-data-table> -->
           </v-container>
         </v-tab-item>

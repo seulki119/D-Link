@@ -14,13 +14,17 @@
         multiple
         hide-no-data
         hide-selected
-        deletable-chips
+        clearable
         no-data-text
         open-on-clear
         :search-input.sync="searched"
         @keypress.enter="search()"
         hint="Maximum of 3 tags"
-      ></v-autocomplete>
+      >
+        <template #selection="{index, item}">
+          <v-chip close @click:close="remove(item)" :color="colors[index]">{{item}}</v-chip>
+        </template>
+      </v-autocomplete>
       <v-spacer></v-spacer>
       <v-btn icon class="mx-auto" v-show="tag.length !==0" @click="search()">검색</v-btn>
     </v-app-bar>
@@ -77,7 +81,8 @@ export default {
       hover: false,
       searchWord: "",
       test: "",
-      searched: null
+      searched: null,
+      colors: ["red", "blue", "green"]
     };
   },
   computed: {
@@ -207,6 +212,13 @@ export default {
       const pageHeight = document.documentElement.scrollHeight;
       const bottomOfPage = visible + scrollY >= pageHeight;
       return bottomOfPage || pageHeight < visible;
+    },
+    // remove(val) {
+
+    // },
+    remove(item) {
+      const index = this.tag.indexOf(item);
+      if (index >= 0) this.tag.splice(index, 1);
     }
   },
   watch: {

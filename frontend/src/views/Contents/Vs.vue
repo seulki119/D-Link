@@ -130,7 +130,7 @@ export default {
         legend: {
           show: false
         },
-        colors: ["#a1be95", "#ed5752"]
+        colors: ["#99c788", "#178f04"]
       }
     };
   },

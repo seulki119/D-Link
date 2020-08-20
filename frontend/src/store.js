@@ -8,6 +8,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    roomId: 1,
     messages: [],
     userInfo: null,
     isLogin: false,
@@ -117,12 +118,10 @@ export default new Vuex.Store({
     //그때가 아니면 넣게 함 .. 더 좋은 아이디어?
     setMessages(state, payload) {
       if (state.messages.length != 0) {
-        // console.log(payload)
         if (payload.length === undefined) {
           state.messages.push(payload);
         }
       } else {
-        // console.log(payload)
         state.messages = payload;
       }
     },
@@ -190,7 +189,7 @@ export default new Vuex.Store({
       http
         .post("/accounts/user/", data, config)
         .then((response) => {
-          console.log(response);
+          // console.log(response);
 
           let userInfo = {
             pk: response.data.id,
@@ -213,7 +212,7 @@ export default new Vuex.Store({
                 }
               }
               localStorage.setItem("alarmCount", count);
-              console.log(count)
+              // console.log(count)
               commit("setAlarms", 0)
             })
             .catch(err => {
@@ -222,7 +221,7 @@ export default new Vuex.Store({
           //여기서 나중에 userinfo에서 취향 여부를 확인하고 취향을 선택 안 했을경우,
           //taste로 가게 한다.!!
           commit("loginSuccess", userInfo);
-          console.log(userInfo.username)
+          // console.log(userInfo.username)
           if (userInfo.username.includes("@")) {
             alert("소셜 로그인 가입 하신 분은 유저네임을 정해주세요!");
             router.push({ name: "username" })
@@ -248,11 +247,11 @@ export default new Vuex.Store({
           Authorization: `Token ${token}`,
         },
       }
-      console.log(payload.addr)
+      // console.log(payload.addr)
       http
         .patch(payload.addr, { counter: payload.counter }, config)
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           context.commit("setItems", response.data);
         })
         .catch(() => {
@@ -260,6 +259,7 @@ export default new Vuex.Store({
         });
     },
     getMessages(context) {
+      // console.log(payload);
       let token = localStorage.getItem("token");
 
       let config = {
@@ -267,8 +267,11 @@ export default new Vuex.Store({
           Authorization: `Token ${token}`,
         },
       }
+
+      // console.log(this.state.roomId)
+
       http
-        .get("/alarms/room/1/", config)
+        .get(`/alarms/room/${this.state.roomId}/`, config)
         .then((response) => {
           // console.log(response.data);
           context.commit("setMessages", response.data);
@@ -289,7 +292,7 @@ export default new Vuex.Store({
       http
         .get(payload, config)
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           context.commit("setItem", response.data);
         })
         .catch(() => {
@@ -308,7 +311,7 @@ export default new Vuex.Store({
         .get(payload.url, config)
         .then((response) => {
           console.log(response);
-          console.log(payload.url);
+          // console.log(payload.url);
         })
         .catch((response) => {
           console.log(response);
@@ -325,7 +328,7 @@ export default new Vuex.Store({
           redirect_uri: "postmessage",
         })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           let token = res.data.key;
           localStorage.setItem("token", token);
           this.dispatch("getUserInfo");
@@ -407,6 +410,7 @@ export default new Vuex.Store({
           var socket = new WebSocket(`${SERVER_URL}/ws/chat/${payload.token}/room_${payload.room}`);
         }
         else if (chatSocket.url.split('/')[6] != `room_${payload.room}`) {
+          this.state.messages = []
           chatSocket.close()
           var socket = new WebSocket(`${SERVER_URL}/ws/chat/${payload.token}/room_${payload.room}`);
         }
@@ -420,7 +424,6 @@ export default new Vuex.Store({
           }
           else {
             // 채팅
-            console.log(msg)
             commit("setMessages", msg);
           }
         };

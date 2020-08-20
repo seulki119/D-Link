@@ -42,7 +42,7 @@
               fill-height
               router
               flat
-              :to="{ name: 'vs' }"
+              :to="{ name: 'vslist' }"
             >
               <div id="container">
                 <div class="glass">

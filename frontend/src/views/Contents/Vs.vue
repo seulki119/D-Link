@@ -39,7 +39,9 @@
           </v-layout>
         </v-row>
         <v-toolbar>
+          <v-spacer></v-spacer>
           <v-toolbar-title>{{topic[0]}} vs {{topic[1]}}</v-toolbar-title>
+          <v-spacer></v-spacer>
         </v-toolbar>
         <v-row class="justify-center mx-auto">
           <section class="chat-area" id="chat-area" v-auto-scroll-bottom>
@@ -49,7 +51,7 @@
               class="message"
               :class="{ 'message-out': item.username === userName, 'message-in': item.username !== userName }"
             >
-              <v-row>
+              <v-row class="d-block">
                 <!-- <v-avatar>
                   <v-img
                     v-if="item.profileImage != null"

@@ -31,7 +31,6 @@
     <div style="height:36px">
       <v-bottom-navigation
         v-if="isLogin"
-        grow
         center
         max-width="600"
         min-width="300"

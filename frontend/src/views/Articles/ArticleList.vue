@@ -10,26 +10,26 @@
       <stack :gutter-width="20" :gutter-height="20" :column-min-width="210" monitor-images-loaded>
         <stack-item v-for="(item, index) in items" :key="index" style="transition: transform 500ms">
           <div v-if="item.user.id != userId">
-            <v-hover>
+            <!-- <v-hover>
               <template v-slot:default="{ hover }">
-                <v-card :elevation="hover ? 24 : 0" class="mx-auto" outlined min-height="320">
-                  <v-img
-                    class="ma-5 align-center"
-                    :src="`//i3b307.p.ssafy.io/${item.image}`"
-                    @click="showDetail(item.id)"
-                    style="cursor: pointer;"
-                  />
-                  <div class="ma-5">
-                    <span style="vertical-align:top;">{{ item.scrap.length }}</span>
-                    <img
-                      style="cursor: pointer;"
-                      @click="scrapAct(index, item.id, item.user.id, item.image)"
-                      :src="scrap[index] ? scrapYes : scrapNo"
-                    />
-                  </div>
-                </v-card>
+            <v-card :elevation="hover ? 24 : 0" class="mx-auto" outlined min-height="320">-->
+            <v-img
+              class="ma-5 align-center"
+              :src="`//i3b307.p.ssafy.io/${item.image}`"
+              @click="showDetail(item.id)"
+              style="cursor: pointer;"
+            />
+            <div class="ma-5">
+              <img
+                style="cursor: pointer;float:right"
+                @click="scrapAct(index, item.id, item.user.id, item.image)"
+                :src="scrap[index] ? scrapYes : scrapNo"
+              />
+              <span style="float:right">{{ item.scrap.length }}</span>
+            </div>
+            <!-- </v-card>
               </template>
-            </v-hover>
+            </v-hover>-->
           </div>
         </stack-item>
       </stack>

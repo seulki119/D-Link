@@ -138,8 +138,7 @@ export default {
     ...mapGetters(["profileImage"])
   },
   created() {
-    // this.$store.dispatch("getMessages");
-    console.log(this.messages);
+    this.$store.dispatch("getMessages");
 
     let token = localStorage.getItem("token");
     let config = {
@@ -223,7 +222,6 @@ export default {
   },
   beforeCreate() {
     let room = this.$store.state.roomId;
-    console.log(room);
     let token = localStorage.getItem("token");
     this.$store.dispatch("socketConnect", {
       token: token,

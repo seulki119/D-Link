@@ -20,7 +20,7 @@
                     style="cursor: pointer;"
                   />
                   <div class="ma-5">
-                    {{ item.scrap.length }}
+                    <span style="vertical-align:top;">{{ item.scrap.length }}</span>
                     <img
                       style="cursor: pointer;"
                       @click="scrapAct(index, item.id, item.user.id, item.image)"

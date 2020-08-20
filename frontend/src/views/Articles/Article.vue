@@ -35,8 +35,9 @@
       <div v-if="!modeUpdate">
         <v-card-text>
           <div class="scrapInfo">
-            {{ item.scrap.length }}
+            <span style="vertical-align:top; font-size:1.3em">{{ item.scrap.length }}</span>
             <img
+              style="cursor: pointer;"
               v-if="!item.scrap.includes(userId)"
               class="scrapInfo"
               @click="scrapAct(item.id, item.user.id, item.image)"

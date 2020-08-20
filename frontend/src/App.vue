@@ -9,6 +9,9 @@
       elevate-on-scroll
       class="mx-auto"
     >
+      <template v-slot:img="{ props }">
+        <v-img v-bind="props" contain :src="require(`@/assets/dlink_logo.png`)"></v-img>
+      </template>
       <v-btn icon class="mx-auto" v-if="canBack" @click="$router.go(-1)">
         <v-icon>mdi-history</v-icon>
       </v-btn>
@@ -16,7 +19,7 @@
         <v-icon>mdi-history</v-icon>
       </v-btn>
       <div icon class="mx-auto">
-        <v-icon>D L I N K</v-icon>
+        <!-- <v-icon>D L I N K</v-icon> -->
       </div>
       <v-btn icon class="mx-auto" router :to="{ name: 'notifications' }">
         <v-badge left overlap>

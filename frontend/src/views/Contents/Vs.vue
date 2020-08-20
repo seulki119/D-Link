@@ -57,7 +57,7 @@
                     alt
                   />
                 </v-avatar>-->
-                <v-col cols="auto">
+                <v-col cols="auto" class="pl-6">
                   <p class="font-weight-bold mb-0 text-subtitle-1">
                     <v-avatar
                       :class="{'first':item.choice===0,'second':item.choice===1}"
@@ -65,7 +65,7 @@
                     />
                     {{item.username}}
                   </p>
-                  <p class="real pa-3">{{item.message}}</p>
+                  <p class="real pa-3 mb-0">{{item.message}}</p>
                 </v-col>
               </v-row>
             </div>
@@ -246,7 +246,7 @@ export default {
   /* background: white; */
   height: 50vh;
   padding: 1em 1em;
-  margin: 1em;
+  /* margin: 1em; */
   overflow-y: scroll;
   box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.3);
 }
@@ -281,5 +281,8 @@ export default {
 }
 .second {
   background: #3498db;
+}
+.pl-6 {
+  padding: 0px 0px 0px 6px !important;
 }
 </style>

@@ -379,7 +379,6 @@ export default new Vuex.Store({
       http
         .post(payload.url, body, config)
         .then(() => {
-
           return;
         }).catch(err => {
           console.log(err)

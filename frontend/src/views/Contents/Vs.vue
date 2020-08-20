@@ -80,7 +80,7 @@ import http from "@/util/http-common";
 export default {
   data() {
     return {
-      roomId: this.$route.params.id,
+      // roomId: this.$route.params.id,
       no: this.$route.params.no,
 
       canSend: false,
@@ -138,6 +138,9 @@ export default {
     ...mapGetters(["profileImage"])
   },
   created() {
+    // this.$store.dispatch("getMessages");
+    console.log(this.messages);
+
     let token = localStorage.getItem("token");
     let config = {
       headers: {
@@ -171,13 +174,13 @@ export default {
         console.log(err);
       });
 
-    let room = this.roomId;
-    this.$store.dispatch("socketConnect", {
-      token: token,
-      room: room,
-      type: 1
-    });
-    this.$store.dispatch("getMessages", room);
+    // let room = this.roomId;
+    // this.$store.dispatch("socketConnect", {
+    //   token: token,
+    //   room: room,
+    //   type: 1
+    // });
+    // this.$store.dispatch("getMessages", room);
   },
   methods: {
     vote() {
@@ -219,15 +222,14 @@ export default {
     }
   },
   beforeCreate() {
-    // console.log(this.roomId);
-    // let room = this.roomId;
-    // let token = localStorage.getItem("token");
-    // this.$store.dispatch("socketConnect", {
-    //   token: token,
-    //   room: room,
-    //   type: 1
-    // });
-    // this.$store.dispatch("getMessages");
+    let room = this.$store.state.roomId;
+    console.log(room);
+    let token = localStorage.getItem("token");
+    this.$store.dispatch("socketConnect", {
+      token: token,
+      room: room,
+      type: 1
+    });
   }
 };
 </script>

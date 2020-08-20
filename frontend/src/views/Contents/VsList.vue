@@ -5,7 +5,8 @@
         <v-row dense>
           <v-col v-for="(item, i) in items" :key="i" cols="12">
             <!-- prop이나 param으로 index 전달하기. -->
-            <v-card :to="{ name: 'vs', params:{id:item.id, no:i} }">
+            <!-- <v-card :to="{ name: 'vs', params:{id:item.id, no:i} }"> -->
+            <v-card @click="showDetail(i, item.id)">
               <div class="d-flex flex-no-wrap justify-space-between">
                 <!-- <v-col cols="6" sm="4"> -->
                 <v-avatar class="ma-auto" size="40%" tile>
@@ -76,32 +77,15 @@ export default {
       .catch(err => {
         console.log(err);
       });
+  },
+  methods: {
+    showDetail(index, id) {
+      console.log(this.$store.state.roomId);
+
+      this.$store.state.roomId = id;
+      console.log(this.$store.state.roomId);
+      this.$router.push({ name: "vs", params: { no: index } });
+    }
   }
 };
 </script>
-
-<style >
-.img {
-  position: relative;
-  background-image: url(`//i3b307.p.ssafy.io/${item[0].image[1]}`);
-  height: 100vh;
-  background-size: cover;
-}
-.img-cover {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  z-index: 1;
-}
-.img .content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 5rem;
-  color: white;
-  z-index: 2;
-  text-align: center;
-}
-</style>

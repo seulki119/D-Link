@@ -8,6 +8,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    roomId: 1,
     messages: [],
     userInfo: null,
     isLogin: false,
@@ -259,8 +260,8 @@ export default new Vuex.Store({
           alert("에러가 발생했습니다.");
         });
     },
-    getMessages(context, payload) {
-      console.log(payload);
+    getMessages(context) {
+      // console.log(payload);
       let token = localStorage.getItem("token");
 
       let config = {
@@ -268,8 +269,11 @@ export default new Vuex.Store({
           Authorization: `Token ${token}`,
         },
       }
+
+      console.log(this.state.roomId)
+
       http
-        .get(`/alarms/room/${payload}/`, config)
+        .get(`/alarms/room/${this.state.roomId}/`, config)
         .then((response) => {
           console.log(response.data);
           context.commit("setMessages", response.data);
@@ -408,6 +412,7 @@ export default new Vuex.Store({
           var socket = new WebSocket(`${SERVER_URL}/ws/chat/${payload.token}/room_${payload.room}`);
         }
         else if (chatSocket.url.split('/')[6] != `room_${payload.room}`) {
+          this.state.messages = []
           chatSocket.close()
           var socket = new WebSocket(`${SERVER_URL}/ws/chat/${payload.token}/room_${payload.room}`);
         }

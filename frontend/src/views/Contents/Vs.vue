@@ -57,7 +57,7 @@
                     alt
                   />
                 </v-avatar>-->
-                <v-col cols="auto">
+                <v-col cols="auto" class="pl-6">
                   <p class="font-weight-bold mb-0 text-subtitle-1">
                     <v-avatar
                       :class="{'first':item.choice===0,'second':item.choice===1}"
@@ -65,7 +65,7 @@
                     />
                     {{item.username}}
                   </p>
-                  <p class="real pa-3">{{item.message}}</p>
+                  <p class="real pa-3 mb-0">{{item.message}}</p>
                 </v-col>
               </v-row>
             </div>
@@ -84,6 +84,9 @@ import http from "@/util/http-common";
 export default {
   data() {
     return {
+      // roomId: this.$route.params.id,
+      no: this.$route.params.no,
+
       canSend: false,
       mymessage: "",
       id: [],
@@ -140,6 +143,8 @@ export default {
     ...mapGetters(["profileImage"])
   },
   created() {
+    this.$store.dispatch("getMessages");
+
     let token = localStorage.getItem("token");
     let config = {
       headers: {
@@ -149,7 +154,7 @@ export default {
     http
       .get("versus", config)
       .then(res => {
-        let data = res.data[0];
+        let data = res.data[this.no];
         this.id = data.id;
         this.createdAt = data.createdAt;
         this.image.push(data.image_A);
@@ -172,6 +177,14 @@ export default {
       .catch(err => {
         console.log(err);
       });
+
+    // let room = this.roomId;
+    // this.$store.dispatch("socketConnect", {
+    //   token: token,
+    //   room: room,
+    //   type: 1
+    // });
+    // this.$store.dispatch("getMessages", room);
   },
   methods: {
     vote() {
@@ -213,14 +226,13 @@ export default {
     }
   },
   beforeCreate() {
-    let room = "1";
+    let room = this.$store.state.roomId;
     let token = localStorage.getItem("token");
     this.$store.dispatch("socketConnect", {
       token: token,
       room: room,
       type: 1
     });
-    this.$store.dispatch("getMessages");
   }
 };
 </script>
@@ -234,7 +246,7 @@ export default {
   /* background: white; */
   height: 50vh;
   padding: 1em 1em;
-  margin: 1em;
+  /* margin: 1em; */
   overflow-y: scroll;
   box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.3);
 }
@@ -265,9 +277,12 @@ export default {
   border-radius: 10px;
 }
 .first {
-  background: #407fff;
+  background: #f5b041;
 }
 .second {
-  background: red;
+  background: #3498db;
+}
+.pl-6 {
+  padding: 0px 0px 0px 6px !important;
 }
 </style>

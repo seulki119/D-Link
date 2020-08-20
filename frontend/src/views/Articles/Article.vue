@@ -35,15 +35,21 @@
       <div v-if="!modeUpdate">
         <v-card-text>
           <div class="scrapInfo">
-            <span style="vertical-align:top; font-size:1.3em">{{ item.scrap.length }}</span>
             <img
-              style="cursor: pointer;"
+              style="cursor: pointer;float:right;"
               v-if="!item.scrap.includes(userId)"
               class="scrapInfo"
               @click="scrapAct(item.id, item.user.id, item.image)"
               :src="(scrapSrc = scrapNo)"
             />
-            <img v-else class="scrapInfo" @click="scrapAct(item.id)" :src="(scrapSrc = scrapYes)" />
+            <img
+              v-else
+              class="scrapInfo"
+              @click="scrapAct(item.id)"
+              style="cursor: pointer;float:right;"
+              :src="(scrapSrc = scrapYes)"
+            />
+            <span style="font-size:1.3em;float:right">{{ item.scrap.length }}</span>
           </div>
         </v-card-text>
         <v-card-text>

@@ -80,7 +80,9 @@ import http from "@/util/http-common";
 export default {
   data() {
     return {
+      roomId: this.$route.params.id,
       no: this.$route.params.no,
+
       canSend: false,
       mymessage: "",
       id: [],
@@ -168,6 +170,14 @@ export default {
       .catch(err => {
         console.log(err);
       });
+
+    let room = this.roomId;
+    this.$store.dispatch("socketConnect", {
+      token: token,
+      room: room,
+      type: 1
+    });
+    this.$store.dispatch("getMessages", room);
   },
   methods: {
     vote() {
@@ -209,14 +219,15 @@ export default {
     }
   },
   beforeCreate() {
-    let room = this.no;
-    let token = localStorage.getItem("token");
-    this.$store.dispatch("socketConnect", {
-      token: token,
-      room: room,
-      type: 1
-    });
-    this.$store.dispatch("getMessages");
+    // console.log(this.roomId);
+    // let room = this.roomId;
+    // let token = localStorage.getItem("token");
+    // this.$store.dispatch("socketConnect", {
+    //   token: token,
+    //   room: room,
+    //   type: 1
+    // });
+    // this.$store.dispatch("getMessages");
   }
 };
 </script>

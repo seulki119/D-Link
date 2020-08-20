@@ -5,7 +5,7 @@
         <v-row dense>
           <v-col v-for="(item, i) in items" :key="i" cols="12">
             <!-- prop이나 param으로 index 전달하기. -->
-            <v-card :to="{ name: 'vs', params:{no:i} }">
+            <v-card :to="{ name: 'vs', params:{id:item.id, no:i} }">
               <div class="d-flex flex-no-wrap justify-space-between">
                 <!-- <v-col cols="6" sm="4"> -->
                 <v-avatar class="ma-auto" size="40%" tile>
@@ -49,7 +49,6 @@ export default {
         // console.log(res.data);
 
         for (let index = 0; index < res.data.length; index++) {
-          //   const element = array[index];
           let data = res.data[index];
           let tmp = { id: [], image: [], topic: [], createdAt: "" };
 

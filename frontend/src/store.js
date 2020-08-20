@@ -259,7 +259,8 @@ export default new Vuex.Store({
           alert("에러가 발생했습니다.");
         });
     },
-    getMessages(context) {
+    getMessages(context, payload) {
+      console.log(payload);
       let token = localStorage.getItem("token");
 
       let config = {
@@ -268,9 +269,9 @@ export default new Vuex.Store({
         },
       }
       http
-        .get("/alarms/room/1/", config)
+        .get(`/alarms/room/${payload}/`, config)
         .then((response) => {
-          // console.log(response.data);
+          console.log(response.data);
           context.commit("setMessages", response.data);
         })
         .catch(() => {
@@ -420,7 +421,6 @@ export default new Vuex.Store({
           }
           else {
             // 채팅
-            console.log(msg)
             commit("setMessages", msg);
           }
         };

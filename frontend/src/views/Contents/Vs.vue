@@ -184,7 +184,7 @@ export default {
           message: trimed,
           username: this.$store.getters.userName,
           profileImage: this.$store.getters.profileImage,
-          choice: this.topic[this.last]
+          choice: this.last
         };
         socket.send(JSON.stringify(data));
         this.mymessage = "";

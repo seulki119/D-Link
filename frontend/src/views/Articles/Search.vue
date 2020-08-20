@@ -1,39 +1,33 @@
 <template>
   <v-container max-width="600" min-width="300">
-    <v-card class="mx-auto pa-5" max-width="600" max-height="300">
-      <v-app-bar app max-width="600" min-width="300" elevate-on-scroll class="mx-auto">
-        <v-icon class="mx-auto">mdi-magnify</v-icon>
-        <v-spacer></v-spacer>
-        <v-autocomplete
-          class="pt-2"
-          v-model="tag"
-          :items="tags"
-          :counter="3"
-          dense
-          chips
-          small-chips
-          multiple
-          hide-no-data
-          hide-selected
-          deletable-chips
-          no-data-text
-          hint="Maximum of 3 tags"
-        ></v-autocomplete>
-        <v-spacer></v-spacer>
-        <v-btn icon class="mx-auto" v-show="tag.length !==0 " @click="search()">검색</v-btn>
-      </v-app-bar>
-      <!-- <StackGrid :columnWidth="210" :gutterX="20" :gutterY="20">
-          <div class="stack-item" v-for="(item, index) in searchList" :key="index">
-            <div v-if="item.user.id != userId" class="stack-item stack-item-6">
-              <img
-                :src="`//i3b307.p.ssafy.io/${item.image}`"
-                alt
-                @click="showDetail(item.id)"
-                style="cursor: pointer;width:200px;"
-              />
-            </div>
-          </div>
-      </StackGrid>-->
+    <v-app-bar app max-width="600" min-width="300" elevate-on-scroll class="mx-auto">
+      <v-icon class="mx-auto">mdi-magnify</v-icon>
+      <v-spacer></v-spacer>
+      <v-autocomplete
+        class="pt-2"
+        v-model="tag"
+        :items="tags"
+        :counter="3"
+        dense
+        chips
+        small-chips
+        multiple
+        hide-no-data
+        hide-selected
+        deletable-chips
+        no-data-text
+        hint="Maximum of 3 tags"
+      ></v-autocomplete>
+      <v-spacer></v-spacer>
+      <v-btn icon class="mx-auto" v-show="tag.length !==0 " @click="search()">검색</v-btn>
+    </v-app-bar>
+    <v-snackbar v-model="snackbar" :color="color" :top="y === 'top'" :timeout="timeout">
+      {{ snackbarMessage }}
+      <template v-slot:action="{ attrs }">
+        <v-btn dark text v-bind="attrs" @click="this.$store.state.snackbar = false">Close</v-btn>
+      </template>
+    </v-snackbar>
+    <v-card class="mx-auto pa-5" max-width="600" min-height="100vh">
       <stack :gutter-width="20" :gutter-height="20" :column-min-width="210" monitor-images-loaded>
         <stack-item
           v-for="(item, index) in searchList"
@@ -43,8 +37,10 @@
           <div v-if="item.user.id != userId">
             <v-hover>
               <template v-slot:default="{ hover }">
-                <v-card :elevation="hover ? 24 : 0" class="mx-auto" outlined>
+                <v-card :elevation="hover ? 24 : 0" class="mx-auto" outlined min-height="320">
                   <v-img
+                    class="ma-5 align-center"
+                    aspect-ratio="1"
                     :src="`//i3b307.p.ssafy.io/${item.image}`"
                     @click="showDetail(item.id)"
                     style="cursor: pointer;"
@@ -61,12 +57,10 @@
 
 <script>
 import { Stack, StackItem } from "vue-stack-grid";
-// import StackGrid from "vue-stack-grid-component";
 import http from "@/util/http-common";
 import { mapGetters } from "vuex";
 export default {
   components: {
-    // StackGrid
     Stack,
     StackItem
   },
@@ -76,11 +70,17 @@ export default {
       tags: [],
       searchList: [],
       counter: 0,
-      bottom: false
+      bottom: false,
+      timeout: 2000,
+      y: "top",
+      hover: false
     };
   },
   computed: {
-    ...mapGetters(["userInfo", "userId"])
+    ...mapGetters(["userInfo", "userId"]),
+    ...mapGetters(["color"]),
+    ...mapGetters(["snackbar"]),
+    ...mapGetters(["snackbarMessage"])
   },
   created() {
     window.addEventListener("scroll", () => {
@@ -148,7 +148,6 @@ export default {
           console.log(err);
         });
     },
-    //asdfadsfasdfasdkfjadsklfjdklasfjklasdfjklasdfjasdfjl
     addList() {
       let token = localStorage.getItem("token");
 
@@ -199,6 +198,13 @@ export default {
       if (bottom) {
         this.addList();
       }
+    }
+  },
+  beforeCreate() {
+    if (this.$store.state.snackbar) {
+      setTimeout(() => {
+        this.$store.state.snackbar = false;
+      }, 2000);
     }
   }
 };

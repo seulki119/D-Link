@@ -43,12 +43,28 @@
         </v-toolbar>
         <v-row class="justify-center mx-auto">
           <section class="chat-area" id="chat-area" v-auto-scroll-bottom>
-            <p
+            <div
               v-for="(item, index) in messages"
               :key="index"
               class="message"
               :class="{ 'message-out': item.username === userName, 'message-in': item.username !== userName }"
-            >{{item.username + ": " + item.message}}</p>
+            >
+              <v-row>
+                <v-col cols="3" class="mr-3">
+                  <v-avatar>
+                    <v-img
+                      v-if="item.profileImage != null"
+                      :src="`//i3b307.p.ssafy.io/${item.profileImage}`"
+                      alt
+                    />
+                  </v-avatar>
+                </v-col>
+                <v-col cols="8">
+                  <p>{{item.username}}</p>
+                  <p class="real pa-3">{{item.message}}</p>
+                </v-col>
+              </v-row>
+            </div>
           </section>
           <v-text-field v-model="mymessage" label="메시지" @keyup.enter="sendChatMessage()"></v-text-field>
           <v-btn class="ma-2" :disabled="canSend" @click="sendChatMessage()">전송</v-btn>
@@ -215,22 +231,27 @@ export default {
   padding: 1em 1em;
   margin: 1em;
   overflow-y: scroll;
-  /* box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.3); */
+  box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.3);
 }
 .message {
   width: 45%;
   border-radius: 10px;
   padding: 0.5em;
-  /*   margin-bottom: .5em; */
+  margin-bottom: 0.5em;
   font-size: 0.8em;
 }
 .message-out {
-  /* background: #407fff;
-  color: white; */
+  /* background: #407fff; */
+  color: white;
   margin-left: 50%;
 }
+.message-out .real {
+  background: #407fff;
+  color: white;
+  /* margin-left: 50%; */
+}
 .message-in {
-  /* background: #f1f0f0;
-  color: black; */
+  background: #f1f0f0;
+  color: black;
 }
 </style>

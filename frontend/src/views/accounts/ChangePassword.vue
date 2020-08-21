@@ -1,48 +1,65 @@
 <template>
-  <v-container max-width="600" min-width="300">
-    <v-row align="center" justify="center">
-      <ValidationObserver ref="observer">
-        <v-form v-model="valid">
-          <ValidationProvider name="previous" rules="required|min:8|max:16" v-slot="{ errors }">
-            <v-text-field
-              v-model="previous"
-              type="password"
-              :error-messages="errors"
-              label="기존 비밀번호"
-              required
-            ></v-text-field>
-          </ValidationProvider>
-          <ValidationProvider name="password" rules="required|min:8|max:16" v-slot="{ errors }">
-            <v-text-field
-              v-model="password"
-              :counter="16"
-              type="password"
-              :error-messages="errors"
-              label="변경할 비밀번호"
-              required
-            ></v-text-field>
-          </ValidationProvider>
+  <v-container class="fill-height" style="max-width:450px">
+    <v-row align-center row wrap>
+      <v-flex xs12>
+        <v-card>
+          <v-toolbar flat justify-space-between>
+            <v-toolbar-title>비밀번호 변경</v-toolbar-title>
+          </v-toolbar>
+          <div class="pa-3">
+            <ValidationObserver ref="observer">
+              <v-form v-model="valid">
+                <ValidationProvider
+                  name="previous"
+                  rules="required|min:8|max:16"
+                  v-slot="{ errors }"
+                >
+                  <v-text-field
+                    v-model="previous"
+                    type="password"
+                    :error-messages="errors"
+                    label="기존 비밀번호"
+                    required
+                  ></v-text-field>
+                </ValidationProvider>
+                <ValidationProvider
+                  name="password"
+                  rules="required|min:8|max:16"
+                  v-slot="{ errors }"
+                >
+                  <v-text-field
+                    v-model="password"
+                    :counter="16"
+                    type="password"
+                    :error-messages="errors"
+                    label="변경할 비밀번호"
+                    required
+                  ></v-text-field>
+                </ValidationProvider>
 
-          <ValidationProvider
-            name="confirm"
-            rules="required|passswordConfirm:@password"
-            v-slot="{ errors }"
-          >
-            <v-text-field
-              v-model="confirmation"
-              :counter="password.length"
-              type="password"
-              :error-messages="errors"
-              label="비밀번호 확인"
-              required
-            ></v-text-field>
-          </ValidationProvider>
-          <v-btn :disabled="!valid" class="mr-4" @click="submit">비밀번호 변경</v-btn>
-          <v-btn block class="ma-2" @click="unsubscribe()">
-            <v-icon left>mdi-delete</v-icon>탈퇴하기
-          </v-btn>
-        </v-form>
-      </ValidationObserver>
+                <ValidationProvider
+                  name="confirm"
+                  rules="required|passswordConfirm:@password"
+                  v-slot="{ errors }"
+                >
+                  <v-text-field
+                    v-model="confirmation"
+                    :counter="password.length"
+                    type="password"
+                    :error-messages="errors"
+                    label="비밀번호 확인"
+                    required
+                  ></v-text-field>
+                </ValidationProvider>
+              </v-form>
+            </ValidationObserver>
+            <v-btn class="ma-2 mx-auto" block :disabled="!valid" @click="submit">비밀번호 변경</v-btn>
+            <v-btn class="ma-2 mx-auto" block @click="unsubscribe()">
+              <v-icon left>mdi-delete</v-icon>탈퇴하기
+            </v-btn>
+          </div>
+        </v-card>
+      </v-flex>
     </v-row>
   </v-container>
 </template>

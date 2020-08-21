@@ -9,6 +9,9 @@
       elevate-on-scroll
       class="mx-auto"
     >
+      <template v-slot:img="{ props }">
+        <v-img v-bind="props" contain :src="require(`@/assets/dlink_logo.png`)"></v-img>
+      </template>
       <v-btn icon class="mx-auto" v-if="canBack" @click="$router.go(-1)">
         <v-icon>mdi-history</v-icon>
       </v-btn>
@@ -16,7 +19,7 @@
         <v-icon>mdi-history</v-icon>
       </v-btn>
       <div icon class="mx-auto">
-        <v-icon>D L I N K</v-icon>
+        <!-- <v-icon>D L I N K</v-icon> -->
       </div>
       <v-btn icon class="mx-auto" router :to="{ name: 'notifications' }">
         <v-badge left overlap>
@@ -31,7 +34,6 @@
     <div style="height:36px">
       <v-bottom-navigation
         v-if="isLogin"
-        grow
         center
         max-width="600"
         min-width="300"
@@ -41,23 +43,23 @@
   right: 0;"
       >
         <v-btn icon router :to="{ name: 'articlelist' }">
-          홈
+          <span>홈</span>
           <v-icon>mdi-home</v-icon>
         </v-btn>
         <v-btn icon router :to="{ name: 'search' }">
-          검색
+          <span>검색</span>
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
         <v-btn prepend-icon="mdi-plus" icon router :to="{ name: 'createArticle' }">
-          업로드
+          <span>업로드</span>
           <v-icon>mdi-plus</v-icon>
         </v-btn>
         <v-btn icon router :to="{ name: 'contentlist' }">
-          컨텐츠
+          <span>컨텐츠</span>
           <v-icon>mdi-dialpad</v-icon>
         </v-btn>
         <v-btn icon router :to="{ name: 'mypage' }">
-          마이페이지
+          <span>MY</span>
           <v-icon>mdi-account</v-icon>
         </v-btn>
       </v-bottom-navigation>

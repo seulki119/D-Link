@@ -14,12 +14,19 @@
             <v-textarea v-model="intro" label="Intro"></v-textarea>
           </v-container>
           <v-slide-x-transition>
-            <v-btn block class="ma-2" v-if="!updated&&valid" @click="updateInfo" :loading="saving">
+            <v-btn
+              block
+              dark
+              class="ma-2 mx-auto"
+              v-if="!updated&&valid"
+              @click="updateInfo"
+              :loading="saving"
+            >
               회원정보수정
               <v-icon right>mdi-cloud-upload</v-icon>
             </v-btn>
           </v-slide-x-transition>
-          <v-btn block class="ma-2" @click="ChangePassword()">
+          <v-btn block class="ma-2 mx-auto" @click="ChangePassword()">
             <v-icon left>mdi-key-variant</v-icon>패스워드 변경
           </v-btn>
         </v-flex>

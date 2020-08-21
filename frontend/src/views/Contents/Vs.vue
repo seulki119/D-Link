@@ -24,7 +24,9 @@
       </div>
       <div v-show="selected">
         <v-toolbar>
+          <v-spacer></v-spacer>
           <v-toolbar-title>당신의 선택은 {{topic[last]}}였습니다.</v-toolbar-title>
+          <v-spacer></v-spacer>
         </v-toolbar>
         <v-row class="justify-center mx-auto">
           <v-layout row class="align-end">

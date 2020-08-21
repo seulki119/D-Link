@@ -12,13 +12,13 @@
         <v-flex xs12 sm6 md4 lg3 x12>
           <image-input v-model="avatar">
             <div slot="activator">
-              <v-avatar size="136px" v-ripple v-if="!previous && !avatar">
-                <span>Click to add avatar</span>
+              <v-avatar size="120px" v-ripple v-if="!previous && !avatar">
+                <img :src="require(`@/assets/default_profile.svg`)" alt="click to add avartar">
               </v-avatar>
-              <v-avatar size="136px" v-ripple v-else-if="!avatar">
+              <v-avatar size="120px" v-ripple v-else-if="!avatar">
                 <img :src="`//i3b307.p.ssafy.io/${previous}`" alt />
               </v-avatar>
-              <v-avatar size="136px" v-ripple v-else>
+              <v-avatar size="120px" v-ripple v-else>
                 <img :src="avatar.imageURL" alt="avatar" />
               </v-avatar>
             </div>

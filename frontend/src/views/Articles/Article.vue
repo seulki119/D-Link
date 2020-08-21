@@ -10,6 +10,7 @@
       <v-list-item>
         <v-list-item-avatar>
           <v-img v-if="item.user.image != null" :src="`//i3b307.p.ssafy.io/${item.user.image}`"></v-img>
+          <v-img v-if="item.user.image == null" :src="require(`@/assets/default_profile.svg`)"></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>{{ item.user.username }}</v-list-item-title>

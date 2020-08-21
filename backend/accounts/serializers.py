@@ -31,6 +31,13 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'intro', 'taste1', 'taste2')
+        extra_kwargs = {
+                'intro': {
+                    # Tell DRF that the link field is not required.
+                    'required': False,
+                    'allow_blank': True,
+                 }
+            }
 
 class UserImageUpdateSerializer(serializers.ModelSerializer):
 

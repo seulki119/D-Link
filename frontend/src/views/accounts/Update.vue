@@ -131,7 +131,7 @@ export default {
       const fd = new FormData();
       fd.append("username", this.username);
       fd.append("intro", this.intro);
-      http.put("/accounts/{username}/", fd, config).then(() => {
+      http.put(`/accounts/${this.$store.state.userInfo.username}/`, fd, config).then(() => {
         // console.log(res);
       });
     },
